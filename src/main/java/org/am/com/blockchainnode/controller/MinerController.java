@@ -1,6 +1,6 @@
 package org.am.com.blockchainnode.controller;
 
-import org.am.com.blockchainnode.domain.Block;
+import org.am.com.blockchainnode.domain.block.Block;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
