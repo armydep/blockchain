@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.am.com.blockchainnode.GenesisLoadConfig;
 import org.am.com.blockchainnode.domain.block.*;
-import org.am.com.blockchainnode.domain.TransactionRequest;
 import org.am.com.blockchainnode.domain.wallet.Balance;
 import org.am.com.blockchainnode.domain.wallet.api.SendRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Slf4j

@@ -14,7 +14,7 @@ import java.util.List;
 public class NodeController {
 
     //private static final String NODE_ID = "123456";
-    private MempoolService mempoolService;
+    //private MempoolService mempoolService;
 
     //node
     @GetMapping("/node")
@@ -40,10 +40,10 @@ public class NodeController {
     }
 
     //wallet send
-    @PostMapping("/tx")
-    public void addTransactionToMempool(@RequestBody TransactionRequest transactionRequest) {
-        mempoolService.addTransaction(transactionRequest);
-    }
+//    @PostMapping("/tx")
+//    public void addTransactionToMempool(@RequestBody TransactionRequest transactionRequest) {
+//        mempoolService.addTransaction(transactionRequest);
+//    }
 
     //wallet
 //    @GetMapping("/tx")
