@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/node/api")
 public class NodeController {
 
-    private static final String NODE_ID = "123456";
+    //private static final String NODE_ID = "123456";
     private MempoolService mempoolService;
 
     //node
@@ -46,20 +46,20 @@ public class NodeController {
     }
 
     //wallet
-    @GetMapping("/tx")
-    public String getTransactionStatus(@RequestParam String transactionId) {
-        return "";
-    }
+//    @GetMapping("/tx")
+//    public String getTransactionStatus(@RequestParam String transactionId) {
+//        return "";
+//    }
 
     //miner
-    @GetMapping("/mempool")
-    public TransactionRequest getTransactionFromMempool(@RequestParam String tx) {
-        return mempoolService.getTransaction();
-    }
+//    @GetMapping("/mempool")
+//    public TransactionRequest getTransactionFromMempool(@RequestParam String tx) {
+//        return mempoolService.getTransaction();
+//    }
 
     //miner
-    @PostMapping("/block")
-    public String submitBlock(String address) {
-        return "";
-    }
+//    @PostMapping("/block")
+//    public String submitBlock(String address) {
+//        return "";
+//    }
 }

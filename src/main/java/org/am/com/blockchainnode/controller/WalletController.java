@@ -30,42 +30,42 @@ public class WalletController {
         return genesisLoadConfig.getJsonData();//getBlocks();
     }
 
-    private static ArrayList<Block> getBlocks() {
-        ArrayList<Block> blocks = new ArrayList<>();
+//    private static ArrayList<Block> getBlocks() {
+//        ArrayList<Block> blocks = new ArrayList<>();
+//
+//        Block block1 = new Block();
+//        block1.setIndex(1L);
+//        block1.setHash("123456");
+//        block1.setPreviousHash("000000");
+//        block1.setData("Block 1 data: " + new Date());
+//
+//        TxInEntry txInEntry = new TxInEntry("t11", 0, null);
+//        TxOutEntry txOutEntry = new TxOutEntry(2, "ad123", 4);
+//        List<TxInEntry> txInEntries = new ArrayList<>();
+//        txInEntries.add(txInEntry);
+//        List<TxOutEntry> txOutEntries = new ArrayList<>();
+//        txOutEntries.add(txOutEntry);
+//        TX tx = new TX("t10000", txInEntries, txOutEntries);
+//        List<TX> txList = new ArrayList<>();
+//        txList.add(tx);
+//        block1.setTx(txList);
+//
+//        Block block2 = new Block();
+//        block2.setIndex(2L);
+//        block2.setHash("789012");
+//        block2.setPreviousHash("123456");
+//        block2.setData("Block 2 data: " + new Date());
+//
+//        blocks.add(block1);
+//        blocks.add(block2);
+//
+//        return blocks;
+//    }
 
-        Block block1 = new Block();
-        block1.setIndex(1L);
-        block1.setHash("123456");
-        block1.setPreviousHash("000000");
-        block1.setData("Block 1 data: " + new Date());
-
-        TxInEntry txInEntry = new TxInEntry("t11", 0, null);
-        TxOutEntry txOutEntry = new TxOutEntry(2, "ad123", 4);
-        List<TxInEntry> txInEntries = new ArrayList<>();
-        txInEntries.add(txInEntry);
-        List<TxOutEntry> txOutEntries = new ArrayList<>();
-        txOutEntries.add(txOutEntry);
-        TX tx = new TX("t10000", txInEntries, txOutEntries);
-        List<TX> txList = new ArrayList<>();
-        txList.add(tx);
-        block1.setTx(txList);
-
-        Block block2 = new Block();
-        block2.setIndex(2L);
-        block2.setHash("789012");
-        block2.setPreviousHash("123456");
-        block2.setData("Block 2 data: " + new Date());
-
-        blocks.add(block1);
-        blocks.add(block2);
-
-        return blocks;
-    }
-
-    @GetMapping("/tx")
-    public void getTransactionStatus(TransactionRequest transactionRequest) {
-        //mempoolService.addTransaction(transactionRequest);
-    }
+//    @GetMapping("/tx")
+//    public void getTransactionStatus(TransactionRequest transactionRequest) {
+//        mempoolService.addTransaction(transactionRequest);
+//    }
 
     @GetMapping("/balance/{address}")
     public Balance getBalance(@PathVariable String address) {
@@ -73,7 +73,7 @@ public class WalletController {
     }
 
     private boolean isValid(SendRequest sendRequest) {
-        return true;
+        return sendRequest != null;
     }
 
     @PostMapping("/send")
@@ -81,7 +81,6 @@ public class WalletController {
         if (!isValid(sendRequest)) {
             return ResponseEntity.badRequest().build();
         }
-
         return ResponseEntity.ok().build();
     }
 

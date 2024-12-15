@@ -3,7 +3,6 @@ package org.am.com.blockchainnode.domain.block;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -21,18 +20,18 @@ public class Block {
         if (tx == null || tx.isEmpty()) {
             return null;
         }
-        TX firstTx = tx.get(0);
+        TX firstTx = tx.getFirst();
         try {
             List<TxInEntry> vin = firstTx.getVin();
             List<TxOutEntry> vout = firstTx.getVout();
             if (vin != null && vin.size() == 1 && vout != null && vout.size() == 1) {
-                if (vin.get(0).getCoinbase() != null && !vin.get(0).getCoinbase().isEmpty()) {
-                    TxOutEntry txout = firstTx.getVout().get(0);
+                if (vin.getFirst().getCoinbase() != null && !vin.getFirst().getCoinbase().isEmpty()) {
+                    TxOutEntry txout = firstTx.getVout().getFirst();
                     CoinBaseEntry coinBaseEntry = new CoinBaseEntry(txout.getValue(),
                             txout.getAddress(),
                             txout.getN(),
                             firstTx.getTxid());
-                    tx.remove(0);
+                    tx.removeFirst();
                     return coinBaseEntry;
                 }
             }

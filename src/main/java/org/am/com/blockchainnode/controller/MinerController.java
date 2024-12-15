@@ -38,7 +38,7 @@ public class MinerController {
 
     @PostMapping("/block")
     public String submitBlock(String address) {
-        return "";
+        return address;
     }
 
     @GetMapping("/tx")
