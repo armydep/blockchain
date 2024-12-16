@@ -32,9 +32,14 @@
         ],
         "vout": [
           {
-            "value": 5.0,
+            "value": 5,
             "address": "am-addr-100",
             "n": 0
+          },
+          {
+            "value": 45,
+            "address": "satoshiAddr100",
+            "n": 1
           }
         ]
       }
