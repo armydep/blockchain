@@ -6,7 +6,6 @@ import org.am.com.blockchainnode.GenesisLoadConfig;
 import org.am.com.blockchainnode.domain.block.*;
 import org.am.com.blockchainnode.domain.wallet.Balance;
 import org.am.com.blockchainnode.domain.wallet.api.SendRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -20,8 +19,11 @@ import java.util.*;
 @RequestMapping("/wallet/api")
 public class WalletController {
 
-    @Autowired
-    private GenesisLoadConfig genesisLoadConfig;
+    private final GenesisLoadConfig genesisLoadConfig;
+
+    public WalletController(GenesisLoadConfig genesisLoadConfig) {
+        this.genesisLoadConfig = genesisLoadConfig;
+    }
 
     @GetMapping("/node")
     public List<Block> getBlocksTmp() {

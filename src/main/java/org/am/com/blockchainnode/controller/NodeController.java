@@ -2,7 +2,6 @@ package org.am.com.blockchainnode.controller;
 
 import org.am.com.blockchainnode.GenesisLoadConfig;
 import org.am.com.blockchainnode.domain.block.Block;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +14,11 @@ import java.util.List;
 @RequestMapping("/node/api")
 public class NodeController {
 
-    @Autowired
-    private GenesisLoadConfig genesisLoadConfig;
+    private final GenesisLoadConfig genesisLoadConfig;
+
+    public NodeController(GenesisLoadConfig genesisLoadConfig) {
+        this.genesisLoadConfig = genesisLoadConfig;
+    }
 
     @GetMapping("/node")
     public ResponseEntity<List<Block>> getBlocks() {
