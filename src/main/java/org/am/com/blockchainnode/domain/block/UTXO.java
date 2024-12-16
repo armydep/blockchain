@@ -10,5 +10,4 @@ public class UTXO {
     float value;
     String address;
     int vout;
-    //int index;
 }

@@ -1,13 +1,21 @@
 package org.am.com.blockchainnode.domain.wallet;
 
-import lombok.Value;
+import lombok.Data;
+import org.am.com.blockchainnode.domain.block.UTXO;
 
-@Value
+@Data
 public class Balance {
-    int btc;
-    int satoshi;
+    float balance;
     String address;
     String date = new java.util.Date().toString();
-    String currency = "BTC";
 
+    public Balance(UTXO utxo) {
+        this.balance = utxo.getValue();
+        this.address = utxo.getAddress();
+    }
+
+    public Balance(float v, String address) {
+        this.balance = v;
+        this.address = address;
+    }
 }

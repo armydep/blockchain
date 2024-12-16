@@ -7,12 +7,12 @@ import org.am.com.blockchainnode.domain.block.*;
 import org.am.com.blockchainnode.domain.wallet.Balance;
 import org.am.com.blockchainnode.domain.wallet.api.SendRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Validated
@@ -28,46 +28,42 @@ public class WalletController {
         return genesisLoadConfig.getJsonData();
     }
 
-//    private static ArrayList<Block> getBlocks() {
-//        ArrayList<Block> blocks = new ArrayList<>();
-//
-//        Block block1 = new Block();
-//        block1.setIndex(1L);
-//        block1.setHash("123456");
-//        block1.setPreviousHash("000000");
-//        block1.setData("Block 1 data: " + new Date());
-//
-//        TxInEntry txInEntry = new TxInEntry("t11", 0, null);
-//        TxOutEntry txOutEntry = new TxOutEntry(2, "ad123", 4);
-//        List<TxInEntry> txInEntries = new ArrayList<>();
-//        txInEntries.add(txInEntry);
-//        List<TxOutEntry> txOutEntries = new ArrayList<>();
-//        txOutEntries.add(txOutEntry);
-//        TX tx = new TX("t10000", txInEntries, txOutEntries);
-//        List<TX> txList = new ArrayList<>();
-//        txList.add(tx);
-//        block1.setTx(txList);
-//
-//        Block block2 = new Block();
-//        block2.setIndex(2L);
-//        block2.setHash("789012");
-//        block2.setPreviousHash("123456");
-//        block2.setData("Block 2 data: " + new Date());
-//
-//        blocks.add(block1);
-//        blocks.add(block2);
-//
-//        return blocks;
-//    }
-
-//    @GetMapping("/tx")
-//    public void getTransactionStatus(TransactionRequest transactionRequest) {
-//        mempoolService.addTransaction(transactionRequest);
-//    }
-
     @GetMapping("/balance/{address}")
-    public Balance getBalance(@PathVariable String address) {
-        return new Balance(3, 100, address);
+    public ResponseEntity<Optional<Balance>> getBalance(@PathVariable String address) {
+        List<Balance> balances = getBalances();
+        Optional<Balance> balanceOptional = findBalanceByAddress(balances, address);
+        return ResponseEntity.ok(balanceOptional);
+    }
+
+    private Optional<Balance> findBalanceByAddress(List<Balance> balances, String address) {
+        return balances.stream()
+                .filter(balance -> balance.getAddress().equals(address))
+                .findFirst();
+    }
+
+    @GetMapping("/balance")
+    public ResponseEntity<List<Balance>> getAllBalances() {
+        List<Balance> list = getBalances();
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    private List<Balance> getBalances() {
+        Map<String, Balance> balancesMap = new HashMap<>();
+        List<Balance> list = new ArrayList<>(List.of());
+        List<UTXO> utxos = getUTXO();
+        for (UTXO utxo : utxos) {
+            String address = utxo.getAddress();
+            Balance balance;
+            if (balancesMap.containsKey(address)) {
+                balance = balancesMap.get(address);
+                balance.setBalance(balance.getBalance() + utxo.getValue());
+            } else {
+                balance = new Balance(utxo);
+                balancesMap.put(address, balance);
+            }
+        }
+        list.addAll(balancesMap.values());
+        return list;
     }
 
     private boolean isValid(SendRequest sendRequest) {
@@ -84,7 +80,7 @@ public class WalletController {
 
     @GetMapping("/utxo")
     public List<UTXO> getUTXO() {
-        List<Block> blocks = genesisLoadConfig.getJsonData();//getBlocks();
+        List<Block> blocks = genesisLoadConfig.getJsonData();
         List<UTXO> utxoData = new ArrayList<>();
         for (Block block : blocks) {
             CoinBaseEntry coinBaseEntry = block.getCoinBaseEntry();
@@ -135,5 +131,4 @@ public class WalletController {
                 .tx(coinBaseEntry.getTxid())
                 .build();
     }
-
 }
