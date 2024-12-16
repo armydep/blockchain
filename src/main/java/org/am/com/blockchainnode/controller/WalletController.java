@@ -72,11 +72,25 @@ public class WalletController {
         return sendRequest != null;
     }
 
+    //api - show commission fee
+    //make tx mempool persist data into json
+    //option to load mempool from json
+    //should check that target address exists?
+        /*
+            1. is valid?
+                -add from?
+                -addr to?
+                -amount?
+                -is enough balance on sender address + fee commission?
+             2. create TX
+             3. put on tx mempool service
+         */
     @PostMapping("/send")
     public ResponseEntity<Void> send(@Valid @RequestBody SendRequest sendRequest) {
         if (!isValid(sendRequest)) {
             return ResponseEntity.badRequest().build();
         }
+
         return ResponseEntity.ok().build();
     }
 

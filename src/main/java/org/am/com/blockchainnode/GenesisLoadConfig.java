@@ -16,24 +16,23 @@ import java.util.List;
 @Component
 public class GenesisLoadConfig {
 
-        private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-        @Getter
-        private List<Block> jsonData;
+    public GenesisLoadConfig(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
-        public GenesisLoadConfig(ObjectMapper objectMapper) {
-            this.objectMapper = objectMapper;
+    public List<Block> getJsonData() {
+        try {
+            ClassPathResource resource = new ClassPathResource("genesis.json");
+            List<Block> data = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {
+            });
+            log.info("Loaded JSON Data: " + data);
+            return data;
+        } catch (IOException e) {
+            log.error("Failed to load JSON: " + e.getMessage());
         }
-
-        @PostConstruct
-        public void loadData() {
-            try {
-                ClassPathResource resource = new ClassPathResource("genesis.json");
-                jsonData = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {});
-                log.info("Loaded JSON Data: " + jsonData);
-            } catch (IOException e) {
-                log.error("Failed to load JSON: " + e.getMessage());
-            }
-        }
+        return List.of();
+    }
 
 }

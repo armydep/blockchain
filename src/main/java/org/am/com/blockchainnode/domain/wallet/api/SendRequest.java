@@ -1,5 +1,6 @@
 package org.am.com.blockchainnode.domain.wallet.api;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
@@ -15,5 +16,6 @@ public class SendRequest {
     @Min(value = 0, message = "BTC amount must be at least 0")
     private int btc;
     @Min(value = 0, message = "Sat amount must be at least 0")
+    @Max(value = 99999999, message = "Sat amount must be at less than 100M")
     private int sat;
 }
