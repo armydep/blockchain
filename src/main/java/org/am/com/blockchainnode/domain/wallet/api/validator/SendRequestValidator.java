@@ -9,9 +9,16 @@ public class SendRequestValidator implements ConstraintValidator<ValidSendReques
     @Override
     public boolean isValid(SendRequest sendRequest, ConstraintValidatorContext context) {
         if (sendRequest.getBtc() == 0 && sendRequest.getSat() == 0) {
+            String msg = "BTC and Satoshi cannot be zero";
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("Satoshi cannot be zero when BTC is zero")
+            context.buildConstraintViolationWithTemplate(msg)
                     .addConstraintViolation();
+            return false;
+        }
+        if (sendRequest.getFrom().equals(sendRequest.getTo())) {
+            String msg = "From and to addresses cannot be the same";
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(msg).addConstraintViolation();
             return false;
         }
         return true;
