@@ -25,7 +25,7 @@ public class WalletController {
 
     @GetMapping("/node")
     public List<Block> getBlocksTmp() {
-        return genesisLoadConfig.getJsonData();//getBlocks();
+        return genesisLoadConfig.getJsonData();
     }
 
 //    private static ArrayList<Block> getBlocks() {
