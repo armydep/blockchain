@@ -1,7 +1,7 @@
-package org.am.com.blockchainnode.domain.wallet;
+package org.am.com.blockchainnode.model.wallet;
 
 import lombok.Data;
-import org.am.com.blockchainnode.domain.block.UTXO;
+import org.am.com.blockchainnode.model.block.UTXO;
 
 @Data
 public class Balance {

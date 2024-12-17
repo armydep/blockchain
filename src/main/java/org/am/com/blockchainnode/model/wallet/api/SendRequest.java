@@ -1,10 +1,10 @@
-package org.am.com.blockchainnode.domain.wallet.api;
+package org.am.com.blockchainnode.model.wallet.api;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
-import org.am.com.blockchainnode.domain.wallet.api.validator.ValidSendRequest;
+import org.am.com.blockchainnode.model.wallet.api.validator.ValidSendRequest;
 
 @Data
 @ValidSendRequest

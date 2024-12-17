@@ -3,10 +3,11 @@ package org.am.com.blockchainnode.controller;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.am.com.blockchainnode.api.CreateTxResponse;
-import org.am.com.blockchainnode.domain.MempoolTransaction;
-import org.am.com.blockchainnode.domain.block.*;
-import org.am.com.blockchainnode.domain.wallet.Balance;
-import org.am.com.blockchainnode.domain.wallet.api.SendRequest;
+import org.am.com.blockchainnode.model.MempoolTransaction;
+import org.am.com.blockchainnode.model.block.Block;
+import org.am.com.blockchainnode.model.block.UTXO;
+import org.am.com.blockchainnode.model.wallet.Balance;
+import org.am.com.blockchainnode.model.wallet.api.SendRequest;
 import org.am.com.blockchainnode.service.BlockChainService;
 import org.am.com.blockchainnode.service.MempoolService;
 import org.am.com.blockchainnode.util.BtcOperation;
@@ -15,7 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Validated
@@ -29,7 +31,6 @@ public class WalletController {
     private final BlockChainService blockChainService;
 
     public WalletController(MempoolService mempoolService, BlockChainService blockChainService) {
-        //this.genesisLoadConfig = genesisLoadConfig;
         this.mempoolService = mempoolService;
         this.blockChainService = blockChainService;
     }
@@ -46,7 +47,7 @@ public class WalletController {
     }
 
     private Optional<Balance> findBalanceByAddress(String address) {
-        List<Balance> balances = getBalances();
+        List<Balance> balances = blockChainService.getBalances();
         return balances.stream()
                 .filter(balance -> balance.getAddress().equals(address))
                 .findFirst();
@@ -54,27 +55,8 @@ public class WalletController {
 
     @GetMapping("/balance")
     public ResponseEntity<List<Balance>> getAllBalances() {
-        List<Balance> list = getBalances();
+        List<Balance> list = blockChainService.getBalances();
         return new ResponseEntity<>(list, HttpStatus.OK);
-    }
-
-    private List<Balance> getBalances() {
-        Map<String, Balance> balancesMap = new HashMap<>();
-        List<Balance> list = new ArrayList<>(List.of());
-        List<UTXO> utxos = getUTXO();
-        for (UTXO utxo : utxos) {
-            String address = utxo.getAddress();
-            Balance balance;
-            if (balancesMap.containsKey(address)) {
-                balance = balancesMap.get(address);
-                balance.setBalance(balance.getBalance() + utxo.getValue());
-            } else {
-                balance = new Balance(utxo);
-                balancesMap.put(address, balance);
-            }
-        }
-        list.addAll(balancesMap.values());
-        return list;
     }
 
     private boolean isValid(SendRequest sendRequest) {
@@ -129,56 +111,6 @@ public class WalletController {
 
     @GetMapping("/utxo")
     public List<UTXO> getUTXO() {
-        List<Block> blocks = blockChainService.getBlocks();
-        List<UTXO> utxoData = new ArrayList<>();
-        for (Block block : blocks) {
-            CoinBaseEntry coinBaseEntry = block.getCoinBaseEntry();
-            if (coinBaseEntry != null) {
-                UTXO utxo = generateCoinBaseUTXO(coinBaseEntry);
-                if (utxo != null) {
-                    utxoData.add(utxo);
-                }
-            }
-            for (TX tx : block.getTx()) {
-                List<TxInEntry> txInEntries = tx.getVin();
-                for (TxInEntry txInEntry : txInEntries) {
-                    discardUTXOByTxIn(txInEntry, utxoData);
-                }
-                List<TxOutEntry> txOutEntries = tx.getVout();
-                for (TxOutEntry txOutEntry : txOutEntries) {
-                    generateAndInsertUTXOByTxOut(txOutEntry, utxoData, tx.getTxid());
-                }
-            }
-        }
-        return utxoData;
-    }
-
-    private void generateAndInsertUTXOByTxOut(TxOutEntry txOutEntry, List<UTXO> utxoData,
-                                              String txid) {
-        UTXO utxo = UTXO.builder().
-                value(txOutEntry.getValue())
-                .address(txOutEntry.getAddress())
-                .vout(txOutEntry.getN())
-                .tx(txid)
-                .build();
-        utxoData.add(utxo);
-    }
-
-    private void discardUTXOByTxIn(TxInEntry txInEntry, List<UTXO> utxoData) {
-        for (UTXO utxo : utxoData) {
-            if (utxo.getTx().equals(txInEntry.getTxid()) && utxo.getVout() == txInEntry.getVout()) {
-                utxoData.remove(utxo);
-                break;
-            }
-        }
-    }
-
-    private UTXO generateCoinBaseUTXO(CoinBaseEntry coinBaseEntry) {
-        return UTXO.builder().
-                value(coinBaseEntry.getValue())
-                .address(coinBaseEntry.getAddress())
-                .vout(coinBaseEntry.getN())
-                .tx(coinBaseEntry.getTxid())
-                .build();
+        return blockChainService.getUTXO();
     }
 }

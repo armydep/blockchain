@@ -1,4 +1,4 @@
-package org.am.com.blockchainnode.domain.block;
+package org.am.com.blockchainnode.model.block;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;

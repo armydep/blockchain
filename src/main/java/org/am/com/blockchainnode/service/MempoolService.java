@@ -1,6 +1,6 @@
 package org.am.com.blockchainnode.service;
 
-import org.am.com.blockchainnode.domain.MempoolTransaction;
+import org.am.com.blockchainnode.model.MempoolTransaction;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

@@ -1,8 +1,8 @@
-package org.am.com.blockchainnode.domain.wallet.api.validator;
+package org.am.com.blockchainnode.model.wallet.api.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.am.com.blockchainnode.domain.wallet.api.SendRequest;
+import org.am.com.blockchainnode.model.wallet.api.SendRequest;
 
 public class SendRequestValidator implements ConstraintValidator<ValidSendRequest, SendRequest> {
 

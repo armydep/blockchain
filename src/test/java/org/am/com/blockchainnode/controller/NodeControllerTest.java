@@ -1,9 +1,9 @@
 package org.am.com.blockchainnode.controller;
 
-import org.am.com.blockchainnode.domain.block.Block;
-import org.am.com.blockchainnode.domain.block.TX;
-import org.am.com.blockchainnode.domain.block.TxInEntry;
-import org.am.com.blockchainnode.domain.block.TxOutEntry;
+import org.am.com.blockchainnode.model.block.Block;
+import org.am.com.blockchainnode.model.block.TX;
+import org.am.com.blockchainnode.model.block.TxInEntry;
+import org.am.com.blockchainnode.model.block.TxOutEntry;
 import org.am.com.blockchainnode.service.BlockChainService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

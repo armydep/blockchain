@@ -2,8 +2,8 @@ package org.am.com.blockchainnode.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.am.com.blockchainnode.domain.MempoolTransaction;
-import org.am.com.blockchainnode.domain.block.Block;
+import org.am.com.blockchainnode.model.MempoolTransaction;
+import org.am.com.blockchainnode.model.block.Block;
 import org.am.com.blockchainnode.service.MempoolService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

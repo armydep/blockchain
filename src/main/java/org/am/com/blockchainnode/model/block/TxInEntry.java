@@ -1,4 +1,4 @@
-package org.am.com.blockchainnode.domain.block;
+package org.am.com.blockchainnode.model.block;
 
 import lombok.Value;
 
