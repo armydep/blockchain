@@ -1,4 +1,4 @@
-package org.am.com.blockchainnode.controller;
+package org.am.com.blockchainnode.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
