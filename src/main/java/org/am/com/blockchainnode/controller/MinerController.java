@@ -1,48 +1,82 @@
 package org.am.com.blockchainnode.controller;
 
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.am.com.blockchainnode.domain.MempoolTransaction;
 import org.am.com.blockchainnode.domain.block.Block;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.am.com.blockchainnode.service.MempoolService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collections;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
+
+@Slf4j
+@AllArgsConstructor
 @RestController
 @RequestMapping("/miner/api")
 public class MinerController {
+    //private final BlockChain blockChain;
+    private final MempoolService mempoolService;
+    private final static List<MempoolTransaction> localpool = Collections
+            .synchronizedList(new ArrayList<>());
 
-    @GetMapping("/node")
-    public List<Block> getBlocks() {
-        List<Block> blocks = new ArrayList<>();
+    /*
+        private final localPool
 
-        Block block1 = new Block();
-        block1.setIndex(1L);
-        block1.setHash("123456");
-        block1.setPreviousHash("000000");
-        block1.setData("Block 1 data: " + new Date());
+        isFinished all tasks?(){
+            if(localpool.is empty){
+                return true
+            }
+            else{
+                log. print "busy"
+                return;
+            }
+        }
 
-        Block block2 = new Block();
-        block2.setIndex(2L);
-        block2.setHash("789012");
-        block2.setPreviousHash("123456");
-        block2.setData("Block 2 data: " + new Date());
+        if mempool is empty{
 
-        blocks.add(block1);
-        blocks.add(block2);
+        }
+        else{
+            tx <- mempool.take()
 
-        return blocks;
+        }
+     */
+
+    //@Scheduled(fixedRate = 20000, initialDelay = 10000)
+    private void invokeMiner() {
+        log.info("Invoke Miner. mempool size: " + mempoolService.getMempool().size());
+        if (localpool.isEmpty()) {
+            log.info("Miner is Idle");
+            if (mempoolService.getMempool().isEmpty()) {
+                log.info("Mempool is empty. Nothing to mine.");
+            } else {
+                MempoolTransaction tx = mempoolService.getMempool().getFirst();
+                localpool.add(tx);
+                log.info("Taking: " + tx);
+                mine(tx);
+                //*****
+                Block block = createBlock(tx);
+                localpool.remove(tx);
+                log.info("Mined: " + tx);
+            }
+        } else {
+            log.info("Miner is busy");
+        }
     }
 
-    @PostMapping("/block")
-    public String submitBlock(String address) {
-        return address;
+    private Block createBlock(MempoolTransaction tx) {
+        return null;
     }
 
-    @GetMapping("/tx")
-    public String getStatus() {
-        return "";
+    private void mine(MempoolTransaction tx) {
+        try {
+            sleep(30000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -2,13 +2,14 @@ package org.am.com.blockchainnode.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.am.com.blockchainnode.BtcOperation;
-import org.am.com.blockchainnode.GenesisLoadConfig;
-import org.am.com.blockchainnode.MempoolService;
 import org.am.com.blockchainnode.api.CreateTxResponse;
+import org.am.com.blockchainnode.domain.MempoolTransaction;
 import org.am.com.blockchainnode.domain.block.*;
 import org.am.com.blockchainnode.domain.wallet.Balance;
 import org.am.com.blockchainnode.domain.wallet.api.SendRequest;
+import org.am.com.blockchainnode.service.BlockChainService;
+import org.am.com.blockchainnode.service.MempoolService;
+import org.am.com.blockchainnode.util.BtcOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -24,17 +25,18 @@ public class WalletController {
 
     public static final int FEE_SATOSHI = 1;
     //public static final float FEE = 0.1f;
-    private final GenesisLoadConfig genesisLoadConfig;
     private final MempoolService mempoolService;
+    private final BlockChainService blockChainService;
 
-    public WalletController(GenesisLoadConfig genesisLoadConfig, MempoolService mempoolService) {
-        this.genesisLoadConfig = genesisLoadConfig;
+    public WalletController(MempoolService mempoolService, BlockChainService blockChainService) {
+        //this.genesisLoadConfig = genesisLoadConfig;
         this.mempoolService = mempoolService;
+        this.blockChainService = blockChainService;
     }
 
     @GetMapping("/node")
     public List<Block> getBlocksTmp() {
-        return genesisLoadConfig.getJsonData();
+        return blockChainService.getBlocks();
     }
 
     @GetMapping("/balance/{address}")
@@ -127,7 +129,7 @@ public class WalletController {
 
     @GetMapping("/utxo")
     public List<UTXO> getUTXO() {
-        List<Block> blocks = genesisLoadConfig.getJsonData();
+        List<Block> blocks = blockChainService.getBlocks();
         List<UTXO> utxoData = new ArrayList<>();
         for (Block block : blocks) {
             CoinBaseEntry coinBaseEntry = block.getCoinBaseEntry();

@@ -1,9 +1,10 @@
 package org.am.com.blockchainnode.controller;
 
 import lombok.AllArgsConstructor;
-import org.am.com.blockchainnode.GenesisLoadConfig;
-import org.am.com.blockchainnode.MempoolService;
+import org.am.com.blockchainnode.domain.MempoolTransaction;
 import org.am.com.blockchainnode.domain.block.Block;
+import org.am.com.blockchainnode.service.BlockChainService;
+import org.am.com.blockchainnode.service.MempoolService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,19 +17,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/node/api")
 public class NodeController {
-
-    private final GenesisLoadConfig genesisLoadConfig;
     private final MempoolService mempoolService;
-
-/*
-    public NodeController(GenesisLoadConfig genesisLoadConfig) {
-        this.genesisLoadConfig = genesisLoadConfig;
-    }
-*/
+    private final BlockChainService blockChainService;
 
     @GetMapping("/node")
     public ResponseEntity<List<Block>> getBlocks() {
-        return new ResponseEntity<>(genesisLoadConfig.getJsonData(), HttpStatus.OK);
+        return new ResponseEntity<>(blockChainService.getBlocks(), HttpStatus.OK);
     }
 
     @GetMapping("/mempool")

@@ -1,4 +1,4 @@
-package org.am.com.blockchainnode.controller;
+package org.am.com.blockchainnode.domain;
 
 import lombok.Value;
 

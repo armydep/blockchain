@@ -1,10 +1,10 @@
 package org.am.com.blockchainnode.controller;
 
-import org.am.com.blockchainnode.GenesisLoadConfig;
 import org.am.com.blockchainnode.domain.block.Block;
 import org.am.com.blockchainnode.domain.block.TX;
 import org.am.com.blockchainnode.domain.block.TxInEntry;
 import org.am.com.blockchainnode.domain.block.TxOutEntry;
+import org.am.com.blockchainnode.service.BlockChainService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,21 +24,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 class NodeControllerTest {
-
-    @Mock
-    private GenesisLoadConfig genesisLoadConfig;
 
     @InjectMocks
     private NodeController nodeController;
 
     private MockMvc mockMvc;
     private AutoCloseable closeable;
+
+    @Mock
+    private BlockChainService blockChainService;
 
     @BeforeEach
     void setUp() {
@@ -56,19 +55,31 @@ class NodeControllerTest {
         ResponseEntity<List<Block>> response = nodeController.getBlocks();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        //assertEquals(2, response.getBody().size());
-        //   verify(genesisLoadConfig, times(1)).getJsonData();
+//        assertEquals(2, response.getBody().size());
+//           verify(genesisLoadConfig, times(1)).getJsonData();
     }
 
     @Test
     public void testGetBlocks() throws Exception {
-//        when(genesisLoadConfig.getJsonData()).thenReturn(getBlocks());
-        String expectedJson = readJsonFileFromResources("genesis.json");
-        mockMvc.perform(get("/node/api/node"))
-                .andExpect(status().isOk());
-        //.andExpect(content().json(expectedJson));
+        // List<Block> mockBlocks = getBlocks();
+//        when(blockChainService.getBlocks()).thenReturn(mockBlocks);
+
+        ResponseEntity<List<Block>> response = nodeController.getBlocks();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        //  assertEquals(mockBlocks, response.getBody());
+        // verify(blockChainService).getBlocks();
     }
 
+//    @Test
+//    public void testGetBlocks() throws Exception {
+
+    /// /        when(genesisLoadConfig.getJsonData()).thenReturn(getBlocks());
+//        String expectedJson = readJsonFileFromResources("genesis.json");
+//        mockMvc.perform(get("/node/api/node"))
+//                .andExpect(status().isOk());
+//        //.andExpect(content().json(expectedJson));
+//    }
     private static ArrayList<Block> getBlocks() {
         ArrayList<Block> blocks = new ArrayList<>();
 

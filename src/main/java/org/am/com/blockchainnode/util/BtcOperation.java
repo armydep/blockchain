@@ -1,6 +1,4 @@
-package org.am.com.blockchainnode;
-
-import org.am.com.blockchainnode.domain.wallet.api.SendRequest;
+package org.am.com.blockchainnode.util;
 
 public class BtcOperation {
 
