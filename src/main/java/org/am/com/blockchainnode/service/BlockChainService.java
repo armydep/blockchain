@@ -6,16 +6,15 @@ import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.am.com.blockchainnode.model.MempoolTransaction;
 import org.am.com.blockchainnode.model.block.*;
 import org.am.com.blockchainnode.model.wallet.Balance;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Slf4j
@@ -27,6 +26,10 @@ public class BlockChainService {
     private List<Block> blocks;
     private final ReentrantLock lock = new ReentrantLock();
     private final ObjectMapper objectMapper;
+
+    private static final AtomicInteger counter = new AtomicInteger(0);
+    private static final List<MempoolTransaction> mempool =
+            Collections.synchronizedList(new ArrayList<>());
 
     @PostConstruct
     public void init() throws IOException {
@@ -119,4 +122,20 @@ public class BlockChainService {
         list.addAll(balancesMap.values());
         return list;
     }
+
+    public int addTransaction(MempoolTransaction transactionRequest) {
+        mempool.add(transactionRequest);
+        return counter.incrementAndGet();
+    }
+
+    public List<MempoolTransaction> getMempool() {
+        synchronized (mempool) {
+            List<MempoolTransaction> copy = new ArrayList<>(mempool.size());
+            for (MempoolTransaction item : mempool) {
+                copy.add(item.clone());
+            }
+            return copy;
+        }
+    }
+
 }

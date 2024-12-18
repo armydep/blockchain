@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.am.com.blockchainnode.model.MempoolTransaction;
 import org.am.com.blockchainnode.model.block.Block;
-import org.am.com.blockchainnode.service.MempoolService;
+import org.am.com.blockchainnode.service.BlockChainService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,8 +19,7 @@ import static java.lang.Thread.sleep;
 @RestController
 @RequestMapping("/miner/api")
 public class MinerController {
-    //private final BlockChain blockChain;
-    private final MempoolService mempoolService;
+    private final BlockChainService  blockChainService;
     private final static List<MempoolTransaction> localpool = Collections
             .synchronizedList(new ArrayList<>());
 
@@ -48,13 +47,13 @@ public class MinerController {
 
     //@Scheduled(fixedRate = 20000, initialDelay = 10000)
     private void invokeMiner() {
-        log.info("Invoke Miner. mempool size: " + mempoolService.getMempool().size());
+        log.info("Invoke Miner. mempool size: " + blockChainService.getMempool().size());
         if (localpool.isEmpty()) {
             log.info("Miner is Idle");
-            if (mempoolService.getMempool().isEmpty()) {
+            if (blockChainService.getMempool().isEmpty()) {
                 log.info("Mempool is empty. Nothing to mine.");
             } else {
-                MempoolTransaction tx = mempoolService.getMempool().getFirst();
+                MempoolTransaction tx = blockChainService.getMempool().getFirst();
                 localpool.add(tx);
                 log.info("Taking: " + tx);
                 mine(tx);

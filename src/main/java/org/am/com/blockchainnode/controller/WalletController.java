@@ -9,7 +9,6 @@ import org.am.com.blockchainnode.model.block.UTXO;
 import org.am.com.blockchainnode.model.wallet.Balance;
 import org.am.com.blockchainnode.model.wallet.api.SendRequest;
 import org.am.com.blockchainnode.service.BlockChainService;
-import org.am.com.blockchainnode.service.MempoolService;
 import org.am.com.blockchainnode.util.BtcOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,11 +26,9 @@ public class WalletController {
 
     public static final int FEE_SATOSHI = 1;
     //public static final float FEE = 0.1f;
-    private final MempoolService mempoolService;
     private final BlockChainService blockChainService;
 
-    public WalletController(MempoolService mempoolService, BlockChainService blockChainService) {
-        this.mempoolService = mempoolService;
+    public WalletController(BlockChainService blockChainService) {
         this.blockChainService = blockChainService;
     }
 
@@ -96,7 +93,7 @@ public class WalletController {
                 MempoolTransaction mempoolTransaction =
                         new MempoolTransaction(sendRequest.getFrom(),
                                 sendRequest.getTo(), sum, System.nanoTime());
-                createTxResponse.setTxid("" + mempoolService.addTransaction(mempoolTransaction));
+                createTxResponse.setTxid("" + blockChainService.addTransaction(mempoolTransaction));
                 createTxResponse.setSubmitted(true);
                 createTxResponse.setTotalToSend(sum);
                 createTxResponse.setRemaining(remaining);
