@@ -1,23 +1,23 @@
 package org.am.com.blockchainnode.model;
 
 import lombok.Value;
+import org.am.com.blockchainnode.model.block.UTXO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Value
 public class MempoolTransaction {
-    String txid;
+    //String txid;
     String from;
     String to;
     float amount;
     Long timestamp;
-    //walled id
-    //node id
+    List<UTXO> txCoversSum;
+    float change;
 
     public MempoolTransaction clone() {
-        return new MempoolTransaction(
-                this.getTxid(),
-                this.getFrom(),
-                this.getTo(),
-                this.getAmount(),
-                this.getTimestamp());
+        return new MempoolTransaction(from, to, amount, timestamp,
+                new ArrayList<>(txCoversSum), change);
     }
 }

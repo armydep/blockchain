@@ -1,21 +1,34 @@
 package org.am.com.blockchainnode.model.wallet;
 
-import lombok.Data;
+import lombok.Getter;
 import org.am.com.blockchainnode.model.block.UTXO;
 
-@Data
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+
 public class Balance {
-    float balance;
-    String address;
-    String date = new java.util.Date().toString();
+    @Getter
+    private final String address;
+    List<UTXO> utxos;
 
     public Balance(UTXO utxo) {
-        this.balance = utxo.getValue();
+        utxos = new ArrayList<>(List.of(utxo.clone()));
         this.address = utxo.getAddress();
     }
 
-    public Balance(float v, String address) {
-        this.balance = v;
-        this.address = address;
+    public float getAmount() {
+        return (float) utxos.stream().mapToDouble(UTXO::getValue).sum();
+    }
+
+    public void addUTXO(UTXO utxo) {
+        utxos.add(utxo);
+    }
+
+    public List<UTXO> getUtxos() {
+        List<UTXO> destination = new ArrayList<>(Collections.nCopies(utxos.size(), null));
+        Collections.copy(destination, utxos);
+        return destination;
     }
 }

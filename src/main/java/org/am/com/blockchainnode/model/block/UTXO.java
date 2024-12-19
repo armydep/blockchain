@@ -2,13 +2,17 @@ package org.am.com.blockchainnode.model.block;
 
 import lombok.*;
 
-@Getter
 @Builder
-public class UTXO {
+@Value
+public class UTXO implements Cloneable {
     String tx;
+    //todo replace by double
     float value;
     String address;
     int vout;
-    @Setter
-    private boolean locked = false;
+
+    @Override
+    public UTXO clone() {
+        return UTXO.builder().tx(tx).value(value).address(address).build();
+    }
 }

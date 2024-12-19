@@ -2,8 +2,7 @@ package org.am.com.blockchainnode.util;
 
 public class BtcOperation {
 
-
-    public static float sum(int baseBTC, int baseSatoshi , int addSatoshi) {
+    public static float sum(int baseBTC, int baseSatoshi, int addSatoshi) {
         int totalBase = baseBTC;
         int totalSatoshi = baseSatoshi + addSatoshi;
         if (totalSatoshi >= 100_000_000) {
@@ -14,22 +13,14 @@ public class BtcOperation {
         float satFloat = Float.parseFloat(decimalPartStr);
         return totalBase + satFloat;
     }
+
+    public static float sumFloats(float left, float right) {
+        int leftSatoshi = convertToSatoshis(left);
+        int rightSatoshi = convertToSatoshis(right);
+        return (float) (leftSatoshi + rightSatoshi) / 100_000_000;
+    }
+
+    public static int convertToSatoshis(float btc) {
+        return (int) (btc * 100_000_000);
+    }
 }
-/*
-to fix
-send
-{
-  "from": "satoshiAddr100",
-  "to": "string",
-  "btc": 2,
-  "sat": 35
-}
-fee 0.1
-result
-{
-  "txid": "0",
-  "submitted": true,
-  "totalToSend": 2.3600001,
-  "remaining": 42.64
-}
- */

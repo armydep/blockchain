@@ -2,10 +2,7 @@ package org.am.com.blockchainnode.miner;
 
 import lombok.extern.slf4j.Slf4j;
 import org.am.com.blockchainnode.model.MempoolTransaction;
-import org.am.com.blockchainnode.model.block.Block;
-import org.am.com.blockchainnode.model.block.TX;
-import org.am.com.blockchainnode.model.block.TxInEntry;
-import org.am.com.blockchainnode.model.block.TxOutEntry;
+import org.am.com.blockchainnode.model.block.*;
 import org.am.com.blockchainnode.service.BlockChainService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -75,9 +72,31 @@ public class Miner {
     }
 
     private TX generateTX(MempoolTransaction mpTx, String txid) {
-        TxInEntry txInEntry = new TxInEntry(mpTx.getTxid(), 0, null);
-        TxOutEntry txOutEntry = new TxOutEntry(COINBASE, MY_ADDRESS, 0);
-        return new TX(txid, List.of(txInEntry), List.of(txOutEntry));
+        List<TxInEntry> txInEntries = createTxInFromUTXOs(mpTx.getTxCoversSum());
+        List<TxOutEntry> txOutEntries = new ArrayList<>();
+        TxOutEntry txOutEntry = new TxOutEntry(mpTx.getAmount(), mpTx.getTo(), 0);
+        txOutEntries.add(txOutEntry);
+        if (mpTx.getChange() > 0) {
+            TxOutEntry txOutEntryChange = new TxOutEntry(mpTx.getChange(), mpTx.getFrom(), 1);
+            txOutEntries.add(txOutEntryChange);
+        }
+        return new TX(txid, txInEntries, txOutEntries);
+    }
+
+/*
+    private float calculateChange(List<TxInEntry> txInEntries, float amount) {
+        return 0;
+    }
+*/
+
+    private List<TxInEntry> createTxInFromUTXOs(List<UTXO> txCoversSum) {
+        List<TxInEntry> txInEntries = new ArrayList<>();
+        for (int i = 0; i < txCoversSum.size(); i++) {
+            UTXO utxo = txCoversSum.get(i);
+            TxInEntry txInEntry = new TxInEntry(utxo.getTx(), i, null);
+            txInEntries.add(txInEntry);
+        }
+        return txInEntries;
     }
 
     private TX generateCoinBaseTX(int i) {
@@ -97,13 +116,12 @@ public class Miner {
             log.info("Solving puzzle");
             Thread.sleep(20000);
             solved = count.get();
-            log.info("Solved puzzle {}", solved);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            log.error("Mining interrupted", e);
+            log.error("Solving interrupted", e);
         } finally {
             mining = false;
-            log.info("Mining finished: {}, count: {}", mining, solved);
+            log.info("Solving finished: {}, count: {}", mining, solved);
         }
         return solved;
     }

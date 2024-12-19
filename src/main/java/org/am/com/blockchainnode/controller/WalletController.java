@@ -10,6 +10,7 @@ import org.am.com.blockchainnode.model.wallet.Balance;
 import org.am.com.blockchainnode.model.wallet.api.SendRequest;
 import org.am.com.blockchainnode.service.BlockChainService;
 import org.am.com.blockchainnode.util.BtcOperation;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -24,7 +25,7 @@ import java.util.Optional;
 @RequestMapping("/wallet/api")
 public class WalletController {
 
-    public static final int FEE_SATOSHI = 1;
+    public static final int FEE_SATOSHI = 5;
     //public static final float FEE = 0.1f;
     private final BlockChainService blockChainService;
 
@@ -32,22 +33,10 @@ public class WalletController {
         this.blockChainService = blockChainService;
     }
 
-    @GetMapping("/node")
-    public List<Block> getBlocksTmp() {
-        return blockChainService.getBlocks();
-    }
-
     @GetMapping("/balance/{address}")
     public ResponseEntity<Optional<Balance>> getBalance(@PathVariable String address) {
-        Optional<Balance> balanceOptional = findBalanceByAddress(address);
+        Optional<Balance> balanceOptional = blockChainService.findBalanceByAddress(address);
         return ResponseEntity.ok(balanceOptional);
-    }
-
-    private Optional<Balance> findBalanceByAddress(String address) {
-        List<Balance> balances = blockChainService.getBalances();
-        return balances.stream()
-                .filter(balance -> balance.getAddress().equals(address))
-                .findFirst();
     }
 
     @GetMapping("/balance")
@@ -83,28 +72,44 @@ public class WalletController {
         return ResponseEntity.ok(response);
     }
 
-    //should be synchronized
     private CreateTxResponse createTXAndPutInMempool(@Valid SendRequest sendRequest) {
-        Optional<Balance> balanceOptional = findBalanceByAddress(sendRequest.getFrom());
+        Optional<Balance> balanceOptional =
+                blockChainService.findBalanceByAddress(sendRequest.getFrom());
         CreateTxResponse createTxResponse = new CreateTxResponse();
-        balanceOptional.ifPresent(balance -> {
+        if (balanceOptional.isPresent()) {
+            Balance balance = balanceOptional.get();
             float sum = BtcOperation.sum(sendRequest.getBtc(), sendRequest.getSat(), FEE_SATOSHI);
-            float remaining = balance.getBalance() - sum;
-            if (balance.getBalance() >= sum) {
-                MempoolTransaction mempoolTransaction =
-                        new MempoolTransaction("mp_tx_" + sendRequest.getFrom() + "1111",
-                                sendRequest.getFrom(),
-                                sendRequest.getTo(), sum, System.nanoTime());
-                createTxResponse.setTxid("" + blockChainService.addTransaction(mempoolTransaction));
+            float remaining = balance.getAmount() - sum;
+            if (balance.getAmount() >= sum) {
+
+                long ts = System.currentTimeMillis() / 1000;
+                Pair<List<UTXO>, Float> balancePair = blockChainService
+                        .getBalanceCoversSumForAddress(sendRequest.getFrom(), sum);
+                MempoolTransaction mpTx = new MempoolTransaction(sendRequest.getFrom(),
+                        sendRequest.getTo(), sum, ts, balancePair.getLeft(),
+                        balancePair.getRight());
+                //if (remaining > 0) {
+                    /*MempoolTransaction changeTx = new MempoolTransaction(
+                            sendRequest.getFrom(), sendRequest.getFrom(), remaining, ts);
+                    blockChainService.addTransaction(changeTx);*/
+                //  mpTx.addChangeTxOut(remaining);
+                //}
+                blockChainService.addTransaction(mpTx);
+                String txid = "w_mp_tx_" + sendRequest.getFrom() + "_" + ts;
+                createTxResponse.setTxid(txid);
                 createTxResponse.setSubmitted(true);
                 createTxResponse.setTotalToSend(sum);
                 createTxResponse.setRemaining(remaining);
             } else {
-                log.error("Not enough balance");
+                log.info("Not enough balance for sending tx {}", sendRequest);
                 createTxResponse.setSubmitted(false);
-                createTxResponse.setMessage("Not enough balance");
+                createTxResponse.setMessage("Not enough balance. Fee: 0." + FEE_SATOSHI + " btc");
             }
-        });
+        } else {
+            log.info("No balance for sending tx {}", sendRequest);
+            createTxResponse.setSubmitted(false);
+            createTxResponse.setMessage("No balance for sending tx");
+        }
         return createTxResponse;
     }
 

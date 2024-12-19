@@ -3,12 +3,15 @@ package org.am.com.blockchainnode.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.am.com.blockchainnode.model.MempoolTransaction;
 import org.am.com.blockchainnode.model.block.*;
 import org.am.com.blockchainnode.model.wallet.Balance;
+import org.am.com.blockchainnode.util.BtcOperation;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +28,6 @@ public class BlockChainService {
     @Getter
     private List<Block> blocks;
     private final ObjectMapper objectMapper;
-
-    private static final AtomicInteger counter = new AtomicInteger(0);
     private static final List<MempoolTransaction> mempool =
             Collections.synchronizedList(new ArrayList<>());
 
@@ -86,11 +87,16 @@ public class BlockChainService {
     }
 
     private void discardUTXOByTxIn(TxInEntry txInEntry, List<UTXO> utxoData) {
+        boolean removed = false;
         for (UTXO utxo : utxoData) {
             if (utxo.getTx().equals(txInEntry.getTxid()) && utxo.getVout() == txInEntry.getVout()) {
                 utxoData.remove(utxo);
+                removed = true;
                 break;
             }
+        }
+        if (!removed) {
+            log.warn("Not found UTXO for discard: " + txInEntry.getTxid());
         }
     }
 
@@ -112,7 +118,7 @@ public class BlockChainService {
             Balance balance;
             if (balancesMap.containsKey(address)) {
                 balance = balancesMap.get(address);
-                balance.setBalance(balance.getBalance() + utxo.getValue());
+                balance.addUTXO(utxo);
             } else {
                 balance = new Balance(utxo);
                 balancesMap.put(address, balance);
@@ -122,9 +128,15 @@ public class BlockChainService {
         return list;
     }
 
-    public int addTransaction(MempoolTransaction transactionRequest) {
+    public Optional<Balance> findBalanceByAddress(String address) {
+        List<Balance> balances = getBalances();
+        return balances.stream()
+                .filter(balance -> balance.getAddress().equals(address))
+                .findFirst();
+    }
+
+    public void addTransaction(MempoolTransaction transactionRequest) {
         mempool.add(transactionRequest);
-        return counter.incrementAndGet();
     }
 
     public List<MempoolTransaction> getMempool() {
@@ -141,20 +153,44 @@ public class BlockChainService {
         if (batchSize <= 0 || mempool.isEmpty()) {
             return List.of();
         }
-        return mempool.subList(0, Math.min(batchSize, mempool.size() - 1));
+        return mempool.subList(0, Math.min(batchSize, mempool.size()));
     }
 
     public void submitBlock(Block block) {
-        
+        blocks.add(block);
     }
 
     public void clearMempoolTX(List<MempoolTransaction> validMempoolTransactions) {
+        for (MempoolTransaction mempoolTransaction : validMempoolTransactions) {
+            mempool.remove(mempoolTransaction);
+        }
     }
 
     public void updateUTXO() {
+        log.warn("Not implemented yet!");
     }
 
     public Block getLatestBlock() {
-        return null;
+        return blocks.getLast();
+    }
+
+    //todo: replace naive method by specific algorithm
+    public Pair<List<UTXO>, Float> getBalanceCoversSumForAddress(String from, float sum) {
+        Optional<Balance> optionalBalance = findBalanceByAddress(from);
+        if (optionalBalance.isEmpty()) {
+            return Pair.of(List.of(), 0f);
+        }
+        Balance balance = optionalBalance.get();
+        List<UTXO> utxos = balance.getUtxos();
+        List<UTXO> result = new ArrayList<>();
+        float currentSum = 0;
+        for (UTXO utxo : utxos) {
+            currentSum = BtcOperation.sumFloats(utxo.getValue(), currentSum);
+            result.add(utxo);
+            if (currentSum >= sum) {
+                break;
+            }
+        }
+        return Pair.of(result, currentSum - sum);
     }
 }
