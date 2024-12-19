@@ -1,43 +1,43 @@
 [
   {
-    "hash": "",
+    "hash": "genesis#",
     "previousHash": "",
     "timeStamp": 0,
     "nonce": 0,
     "index": 0,
     "tx": [
       {
-        "txid": "genesis-tx-000",
+        "txid": "genesis-tx-001",
         "vin": [
           {
-            "coinbase": "abcdef"
+            "coinbase": "true"
           }
         ],
         "vout": [
           {
-            "value": 50.0,
-            "address": "satoshiAddr100",
+            "value": 50,
+            "address": "satoshiaddr100",
             "n": 0
           }
         ]
       },
       {
-        "txid": "tx2",
+        "txid": "genesis-tx-002",
         "vin": [
           {
-            "txid": "genesis-tx-000",
+            "txid": "genesis-tx-001",
             "vout": 0
           }
         ],
         "vout": [
           {
             "value": 5,
-            "address": "am-addr-100",
+            "address": "amaddr100",
             "n": 0
           },
           {
             "value": 45,
-            "address": "satoshiAddr100",
+            "address": "satoshiaddr100",
             "n": 1
           }
         ]

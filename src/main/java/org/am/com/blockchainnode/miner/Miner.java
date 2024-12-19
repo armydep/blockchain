@@ -45,7 +45,7 @@ public class Miner {
             Block block = assemblyBlock(validMempoolTransactions);
             blockChainService.submitBlock(block);
             blockChainService.clearMempoolTX(validMempoolTransactions);
-            blockChainService.updateUTXO();
+            blockChainService.updateUTXO(validMempoolTransactions);
         } else {
             log.info("No valid mempool transactions");
         }
@@ -60,7 +60,7 @@ public class Miner {
         int nonce = solvePuzzle();
         int size = count.get();
         int index = previousBlock.getIndex() + 1;
-        String previousHash = previousBlock.getPreviousHash();
+        String previousHash = previousBlock.getHash();
         String hash = previousHash + timestamp + nonce + size + index + merkleRoot;
         List<TX> txs = new ArrayList<>();
         TX coinbase = generateCoinBaseTX(count.get());
@@ -83,17 +83,11 @@ public class Miner {
         return new TX(txid, txInEntries, txOutEntries);
     }
 
-/*
-    private float calculateChange(List<TxInEntry> txInEntries, float amount) {
-        return 0;
-    }
-*/
-
     private List<TxInEntry> createTxInFromUTXOs(List<UTXO> txCoversSum) {
         List<TxInEntry> txInEntries = new ArrayList<>();
         for (int i = 0; i < txCoversSum.size(); i++) {
             UTXO utxo = txCoversSum.get(i);
-            TxInEntry txInEntry = new TxInEntry(utxo.getTx(), i, null);
+            TxInEntry txInEntry = new TxInEntry(utxo.getTx(), utxo.getVout(), null);
             txInEntries.add(txInEntry);
         }
         return txInEntries;
@@ -101,7 +95,7 @@ public class Miner {
 
     private TX generateCoinBaseTX(int i) {
         String txid = "txid_cb_" + i;
-        TxInEntry txInEntry = new TxInEntry(txid, 0, "true");
+        TxInEntry txInEntry = new TxInEntry("", 0, "true");
         TxOutEntry txOutEntry = new TxOutEntry(COINBASE, MY_ADDRESS, 0);
         return new TX(txid, List.of(txInEntry), List.of(txOutEntry));
     }

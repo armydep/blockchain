@@ -7,6 +7,6 @@ import lombok.Value;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TxInEntry {
     String txid;
-    int vout;
+    Integer vout;
     String coinbase;
 }

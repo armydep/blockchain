@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.am.com.blockchainnode.api.CreateTxResponse;
 import org.am.com.blockchainnode.model.MempoolTransaction;
-import org.am.com.blockchainnode.model.block.Block;
 import org.am.com.blockchainnode.model.block.UTXO;
 import org.am.com.blockchainnode.model.wallet.Balance;
 import org.am.com.blockchainnode.model.wallet.api.SendRequest;
@@ -49,20 +48,6 @@ public class WalletController {
         return sendRequest != null;
     }
 
-    //api - show commission fee
-    //make tx mempool persist data into json
-    //option to load mempool from json
-    //should check that target address exists?
-        /*
-            1. is valid?
-                -add from?
-                -addr to?
-                -amount?
-                -is enough balance on sender address + fee commission?
-             2. create TX
-             3. put on tx mempool service
-             4. lock utxo *****
-         */
     @PostMapping("/send")
     public ResponseEntity<CreateTxResponse> send(@Valid @RequestBody SendRequest sendRequest) {
         if (!isValid(sendRequest)) {
@@ -88,12 +73,6 @@ public class WalletController {
                 MempoolTransaction mpTx = new MempoolTransaction(sendRequest.getFrom(),
                         sendRequest.getTo(), sum, ts, balancePair.getLeft(),
                         balancePair.getRight());
-                //if (remaining > 0) {
-                    /*MempoolTransaction changeTx = new MempoolTransaction(
-                            sendRequest.getFrom(), sendRequest.getFrom(), remaining, ts);
-                    blockChainService.addTransaction(changeTx);*/
-                //  mpTx.addChangeTxOut(remaining);
-                //}
                 blockChainService.addTransaction(mpTx);
                 String txid = "w_mp_tx_" + sendRequest.getFrom() + "_" + ts;
                 createTxResponse.setTxid(txid);
