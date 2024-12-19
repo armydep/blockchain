@@ -1,9 +1,6 @@
 package org.am.com.blockchainnode.controller;
 
 import org.am.com.blockchainnode.model.block.Block;
-import org.am.com.blockchainnode.model.block.TX;
-import org.am.com.blockchainnode.model.block.TxInEntry;
-import org.am.com.blockchainnode.model.block.TxOutEntry;
 import org.am.com.blockchainnode.service.BlockChainService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,12 +17,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @ExtendWith(MockitoExtension.class)
 class NodeControllerTest {
@@ -80,6 +74,7 @@ class NodeControllerTest {
 //                .andExpect(status().isOk());
 //        //.andExpect(content().json(expectedJson));
 //    }
+/*
     private static ArrayList<Block> getBlocks() {
         ArrayList<Block> blocks = new ArrayList<>();
 
@@ -103,6 +98,7 @@ class NodeControllerTest {
         blocks.add(block1);
         return blocks;
     }
+*/
 
     private String readJsonFileFromResources(String fileName) throws Exception {
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName)) {

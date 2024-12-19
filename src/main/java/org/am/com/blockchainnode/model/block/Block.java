@@ -1,19 +1,18 @@
 package org.am.com.blockchainnode.model.block;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import lombok.Value;
 
 import java.util.List;
 
-@Data
+@Value
 public class Block {
-    private String hash;
-    private String previousHash;
-    private String data;
-    private long timeStamp;
-    private int nonce;
-    private Long index;
-    private List<TX> tx;
+    String hash;
+    String previousHash;
+    long timeStamp;
+    int nonce;
+    Integer index;
+    List<TX> tx;
 
     @JsonIgnore
     public CoinBaseEntry getCoinBaseEntry() {

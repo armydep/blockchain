@@ -24,7 +24,6 @@ public class BlockChainService {
     //should be deep cloned in getter
     @Getter
     private List<Block> blocks;
-    private final ReentrantLock lock = new ReentrantLock();
     private final ObjectMapper objectMapper;
 
     private static final AtomicInteger counter = new AtomicInteger(0);
@@ -138,4 +137,24 @@ public class BlockChainService {
         }
     }
 
+    public List<MempoolTransaction> getBatch(int batchSize) {
+        if (batchSize <= 0 || mempool.isEmpty()) {
+            return List.of();
+        }
+        return mempool.subList(0, Math.min(batchSize, mempool.size() - 1));
+    }
+
+    public void submitBlock(Block block) {
+        
+    }
+
+    public void clearMempoolTX(List<MempoolTransaction> validMempoolTransactions) {
+    }
+
+    public void updateUTXO() {
+    }
+
+    public Block getLatestBlock() {
+        return null;
+    }
 }

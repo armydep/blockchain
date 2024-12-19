@@ -83,6 +83,7 @@ public class WalletController {
         return ResponseEntity.ok(response);
     }
 
+    //should be synchronized
     private CreateTxResponse createTXAndPutInMempool(@Valid SendRequest sendRequest) {
         Optional<Balance> balanceOptional = findBalanceByAddress(sendRequest.getFrom());
         CreateTxResponse createTxResponse = new CreateTxResponse();
@@ -91,7 +92,8 @@ public class WalletController {
             float remaining = balance.getBalance() - sum;
             if (balance.getBalance() >= sum) {
                 MempoolTransaction mempoolTransaction =
-                        new MempoolTransaction(sendRequest.getFrom(),
+                        new MempoolTransaction("mp_tx_" + sendRequest.getFrom() + "1111",
+                                sendRequest.getFrom(),
                                 sendRequest.getTo(), sum, System.nanoTime());
                 createTxResponse.setTxid("" + blockChainService.addTransaction(mempoolTransaction));
                 createTxResponse.setSubmitted(true);

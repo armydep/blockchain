@@ -4,7 +4,7 @@ import lombok.Value;
 
 @Value
 public class MempoolTransaction {
-    //public String txid;
+    String txid;
     String from;
     String to;
     float amount;
@@ -13,7 +13,9 @@ public class MempoolTransaction {
     //node id
 
     public MempoolTransaction clone() {
-        return new MempoolTransaction(this.getFrom(),
+        return new MempoolTransaction(
+                this.getTxid(),
+                this.getFrom(),
                 this.getTo(),
                 this.getAmount(),
                 this.getTimestamp());
