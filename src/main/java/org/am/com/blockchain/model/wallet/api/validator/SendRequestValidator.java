@@ -15,7 +15,7 @@ public class SendRequestValidator implements ConstraintValidator<ValidSendReques
                     .addConstraintViolation();
             return false;
         }
-        if (sendRequest.getFrom().equals(sendRequest.getTo())) {
+        if (sendRequest.getSender().equals(sendRequest.getRecipient())) {
             String msg = "From and to addresses cannot be the same";
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(msg).addConstraintViolation();

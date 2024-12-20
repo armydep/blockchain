@@ -10,9 +10,9 @@ import org.am.com.blockchain.model.wallet.api.validator.ValidSendRequest;
 @ValidSendRequest
 public class SendRequest {
     @NotEmpty(message = "Sender address cannot be empty")
-    private String from;
+    private String sender;
     @NotEmpty(message = "Receiver address cannot be empty")
-    private String to;
+    private String recipient;
     @Min(value = 0, message = "BTC amount must be at least 0")
     private int btc;
     @Min(value = 0, message = "Sat amount must be at least 0")

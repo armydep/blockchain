@@ -185,7 +185,7 @@ public class BlockChainService {
     }
 
     public CreateTxResponse submitTransaction(SendRequest sendRequest) {
-        Optional<Balance> balanceOptional = findBalanceByAddress(sendRequest.getFrom());
+        Optional<Balance> balanceOptional = findBalanceByAddress(sendRequest.getSender());
         if (balanceOptional.isEmpty()) {
             return CreateTxResponse.builder()
                     .submitted(false)
@@ -198,12 +198,12 @@ public class BlockChainService {
         if (balance.getAmount() >= sum) {
             long ts = System.currentTimeMillis() / 1000;
             Pair<List<UTXO>, Double> balancePair =
-                    getBalanceCoversSumForAddress(sendRequest.getFrom(), sum);
-            MempoolTransaction mpTx = new MempoolTransaction(sendRequest.getFrom(),
-                    sendRequest.getTo(), sum, ts, balancePair.getLeft(),
+                    getBalanceCoversSumForAddress(sendRequest.getSender(), sum);
+            MempoolTransaction mpTx = new MempoolTransaction(sendRequest.getSender(),
+                    sendRequest.getRecipient(), sum, ts, balancePair.getLeft(),
                     balancePair.getRight());
             addTransaction(mpTx);
-            String txid = "w_mp_tx_" + sendRequest.getFrom() + "_" + ts;
+            String txid = "w_mp_tx_" + sendRequest.getSender() + "_" + ts;
             return CreateTxResponse.builder()
                     .txid(txid)
                     .submitted(true)
