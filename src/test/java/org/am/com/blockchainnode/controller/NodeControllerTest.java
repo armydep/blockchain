@@ -1,7 +1,8 @@
 package org.am.com.blockchainnode.controller;
 
-import org.am.com.blockchainnode.model.block.Block;
-import org.am.com.blockchainnode.service.BlockChainService;
+import org.am.com.blockchain.controller.NodeController;
+import org.am.com.blockchain.model.block.Block;
+import org.am.com.blockchain.service.BlockChainService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

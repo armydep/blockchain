@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.am.com</groupId>
-    <artifactId>blockchain-node</artifactId>
+    <artifactId>blockchain</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>blockchain-node</name>
+    <name>blockchain</name>
     <description>blockchain-node</description>
     <url/>
     <licenses>
