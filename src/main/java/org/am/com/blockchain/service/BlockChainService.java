@@ -40,9 +40,8 @@ public class BlockChainService {
 
     private List<Block> loadBlocks() throws IOException {
         ClassPathResource resource = new ClassPathResource("genesis.json");
-        List<Block> data = objectMapper.readValue(resource.getInputStream(),
-                new TypeReference<>() {
-                });
+        List<Block> data = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {
+        });
         log.info("Loaded JSON Data: " + data);
         return data;
     }
