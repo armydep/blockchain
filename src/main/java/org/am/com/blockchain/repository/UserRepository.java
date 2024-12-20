@@ -50,7 +50,7 @@ public class UserRepository {
             return null;
         }
         users.add(user);
-        saveUserToFile();
+        save();
         return user.getId();
     }
 
@@ -64,12 +64,22 @@ public class UserRepository {
         return false;
     }
 
-    private void saveUserToFile() {
+    public void save() {
         try {
             objectMapper.writeValue(new File(usersStorageFileName), users);
             log.info("Users saved as JSON in file: " + usersStorageFileName);
         } catch (IOException e) {
             log.error("Error while saving the users to file: " + e.getMessage());
         }
+    }
+
+    public User getUserById(Integer userid) {
+        for (User user : users) {
+            if (user.getId().equals(userid)) {
+                log.info("User {} found", userid);
+                return user;
+            }
+        }
+        return null;
     }
 }

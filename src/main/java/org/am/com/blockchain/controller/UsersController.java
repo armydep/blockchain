@@ -27,7 +27,18 @@ public class UsersController {
         if (id != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body(String.valueOf(id));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add user.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add user");
+        }
+    }
+
+    @PostMapping("/key/{userid}/{label}")
+    public ResponseEntity<String> generateKey(@PathVariable Integer userid,
+                                              @PathVariable String label) throws Exception {
+        Integer id = usersService.generateKey(userid, label);
+        if (id != null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(String.valueOf(id));
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to generate key");
         }
     }
 }

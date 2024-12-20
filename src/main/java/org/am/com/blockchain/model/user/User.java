@@ -13,5 +13,12 @@ public class User {
     String name;
     @NotEmpty(message = "Password cannot be empty")
     String password;
-    List<Key> keys = new ArrayList<>();
+    List<Key> keys;
+
+    public void addKey(Key key) {
+        if (keys == null) {
+            keys = new ArrayList<>();
+        }
+        keys.add(key);
+    }
 }
