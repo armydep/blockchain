@@ -19,8 +19,8 @@ public class BtcOperation {
     public static double sumFloats(Double left, Double right) {
         BigDecimal leftSatoshi = convertToSatoshis(left);
         BigDecimal rightSatoshi = convertToSatoshis(right);
-        double result = leftSatoshi.add(rightSatoshi).divide(new BigDecimal(100_000_000), BigDecimal.ROUND_HALF_UP).floatValue();
-        return result;
+        return leftSatoshi.add(rightSatoshi).divide(new BigDecimal(100_000_000),
+                BigDecimal.ROUND_HALF_UP).floatValue();
     }
 
     public static BigDecimal convertToSatoshis(Double btc) {
