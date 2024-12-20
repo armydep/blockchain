@@ -25,7 +25,7 @@ public class Miner {
         this.blockChainService = blockChainService;
     }
 
-    @Scheduled(fixedDelay = 100000, initialDelay = 10000)
+    @Scheduled(fixedDelay = 20000, initialDelay = 10000)
     private void invokeMiner() {
         mining = true;
         int currentCount = count.incrementAndGet();
