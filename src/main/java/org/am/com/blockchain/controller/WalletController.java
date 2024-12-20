@@ -21,7 +21,7 @@ import java.util.Optional;
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("/wallet/api")
+@RequestMapping("/api")
 public class WalletController {
 
     public static final int FEE_SATOSHI = 5;
@@ -90,10 +90,5 @@ public class WalletController {
             createTxResponse.setMessage("No balance for sending tx");
         }
         return createTxResponse;
-    }
-
-    @GetMapping("/utxo")
-    public List<UTXO> getUTXO() {
-        return blockChainService.getUTXO();
     }
 }

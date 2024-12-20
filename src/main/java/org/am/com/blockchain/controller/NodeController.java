@@ -3,6 +3,7 @@ package org.am.com.blockchain.controller;
 import lombok.AllArgsConstructor;
 import org.am.com.blockchain.model.MempoolTransaction;
 import org.am.com.blockchain.model.block.Block;
+import org.am.com.blockchain.model.block.UTXO;
 import org.am.com.blockchain.service.BlockChainService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +15,11 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/node/api")
+@RequestMapping("/api")
 public class NodeController {
     private final BlockChainService blockChainService;
 
-    @GetMapping("/node")
+    @GetMapping("/blocks")
     public ResponseEntity<List<Block>> getBlocks() {
         return new ResponseEntity<>(blockChainService.getBlocks(), HttpStatus.OK);
     }
@@ -26,5 +27,10 @@ public class NodeController {
     @GetMapping("/mempool")
     public ResponseEntity<List<MempoolTransaction>> getMempool() {
         return new ResponseEntity<>(blockChainService.getMempool(), HttpStatus.OK);
+    }
+
+    @GetMapping("/utxo")
+    public List<UTXO> getUTXO() {
+        return blockChainService.getUTXO();
     }
 }
