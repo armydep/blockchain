@@ -5,9 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.am.com.blockchain.api.CreateTxResponse;
 import org.am.com.blockchain.model.MempoolTransaction;
 import org.am.com.blockchain.model.block.*;
 import org.am.com.blockchain.model.wallet.Balance;
+import org.am.com.blockchain.model.wallet.api.SendRequest;
 import org.am.com.blockchain.util.BtcOperation;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.core.io.ClassPathResource;
@@ -25,6 +27,7 @@ public class BlockChainService {
     private static final List<MempoolTransaction> mempool =
             Collections.synchronizedList(new ArrayList<>());
     private final Object lock = new Object();
+    private final int FEE_SATOSHI = 5;
 
     @PostConstruct
     public void init() throws IOException {
@@ -182,6 +185,39 @@ public class BlockChainService {
         return blocks.getLast();
     }
 
+    public CreateTxResponse submitTransaction(SendRequest sendRequest) {
+        Optional<Balance> balanceOptional = findBalanceByAddress(sendRequest.getFrom());
+        CreateTxResponse createTxResponse = new CreateTxResponse();
+        if (balanceOptional.isPresent()) {
+            Balance balance = balanceOptional.get();
+            float sum = BtcOperation.sum(sendRequest.getBtc(), sendRequest.getSat(), FEE_SATOSHI);
+            float remaining = balance.getAmount() - sum;
+            if (balance.getAmount() >= sum) {
+                long ts = System.currentTimeMillis() / 1000;
+                Pair<List<UTXO>, Float> balancePair =
+                        getBalanceCoversSumForAddress(sendRequest.getFrom(), sum);
+                MempoolTransaction mpTx = new MempoolTransaction(sendRequest.getFrom(),
+                        sendRequest.getTo(), sum, ts, balancePair.getLeft(),
+                        balancePair.getRight());
+                addTransaction(mpTx);
+                String txid = "w_mp_tx_" + sendRequest.getFrom() + "_" + ts;
+                createTxResponse.setTxid(txid);
+                createTxResponse.setSubmitted(true);
+                createTxResponse.setTotalToSend(sum);
+                createTxResponse.setRemaining(remaining);
+            } else {
+                log.info("Not enough balance for sending tx {}", sendRequest);
+                createTxResponse.setSubmitted(false);
+                createTxResponse.setMessage("Not enough balance. Fee: 0." + FEE_SATOSHI + " btc");
+            }
+        } else {
+            log.info("No balance for sending tx {}", sendRequest);
+            createTxResponse.setSubmitted(false);
+            createTxResponse.setMessage("No balance for sending tx");
+        }
+        return createTxResponse;
+    }
+
     //todo: replace naive method by specific algorithm
     public Pair<List<UTXO>, Float> getBalanceCoversSumForAddress(String from, float sum) {
         synchronized (lock) {
@@ -194,7 +230,8 @@ public class BlockChainService {
             List<UTXO> result = new ArrayList<>();
             float currentSum = 0;
             for (UTXO utxo : utxos) {
-                currentSum = (float)BtcOperation.sumFloats((double)utxo.getValue(), (double)currentSum);
+                currentSum = (float) BtcOperation.sumFloats((double) utxo.getValue(),
+                        (double) currentSum);
                 result.add(utxo);
                 if (currentSum >= sum) {
                     break;
