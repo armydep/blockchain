@@ -19,7 +19,7 @@ public class Miner {
     private final AtomicInteger count = new AtomicInteger(0);
     private final int BATCH_SIZE = 2;
     private final String MY_ADDRESS = "mineraddr127001";
-    private final float COINBASE = 3f;
+    private final double COINBASE = 3d;
 
     public Miner(BlockChainService blockChainService) {
         this.blockChainService = blockChainService;

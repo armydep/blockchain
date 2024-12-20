@@ -11,6 +11,6 @@ public class CreateTxResponse {
     String txid;
     String message;
     boolean submitted;
-    float totalToSend;
-    float remaining;
+    double totalToSend;
+    double remaining;
 }

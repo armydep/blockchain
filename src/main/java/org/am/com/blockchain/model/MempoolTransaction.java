@@ -11,10 +11,10 @@ public class MempoolTransaction {
     //String txid;
     String from;
     String to;
-    Float amount;
+    Double amount;
     Long timestamp;
     List<UTXO> txCoversSum;
-    Float change;
+    Double change;
 
     public MempoolTransaction clone() {
         return new MempoolTransaction(from, to, amount, timestamp,

@@ -27,7 +27,7 @@ public class BlockChainService {
     private static final List<MempoolTransaction> mempool =
             Collections.synchronizedList(new ArrayList<>());
     private final Object lock = new Object();
-    private final int FEE_SATOSHI = 5;
+    private final int FEE_SATOSHI = 5_000_000;
 
     @PostConstruct
     public void init() throws IOException {
@@ -194,11 +194,11 @@ public class BlockChainService {
                     .build();
         }
         Balance balance = balanceOptional.get();
-        float sum = BtcOperation.sum(sendRequest.getBtc(), sendRequest.getSat(), FEE_SATOSHI);
-        float remaining = balance.getAmount() - sum;
+        double sum = BtcOperation.sumInts(sendRequest.getBtc(), sendRequest.getSat(), FEE_SATOSHI);
+        double remaining = balance.getAmount() - sum;
         if (balance.getAmount() >= sum) {
             long ts = System.currentTimeMillis() / 1000;
-            Pair<List<UTXO>, Float> balancePair =
+            Pair<List<UTXO>, Double> balancePair =
                     getBalanceCoversSumForAddress(sendRequest.getFrom(), sum);
             MempoolTransaction mpTx = new MempoolTransaction(sendRequest.getFrom(),
                     sendRequest.getTo(), sum, ts, balancePair.getLeft(),
@@ -222,19 +222,18 @@ public class BlockChainService {
     }
 
     //todo: replace naive method by specific algorithm
-    public Pair<List<UTXO>, Float> getBalanceCoversSumForAddress(String from, float sum) {
+    public Pair<List<UTXO>, Double> getBalanceCoversSumForAddress(String from, double sum) {
         synchronized (lock) {
             Optional<Balance> optionalBalance = findBalanceByAddress(from);
             if (optionalBalance.isEmpty()) {
-                return Pair.of(List.of(), 0f);
+                return Pair.of(List.of(), 0d);
             }
             Balance balance = optionalBalance.get();
             List<UTXO> utxos = balance.getUtxos();
             List<UTXO> result = new ArrayList<>();
-            float currentSum = 0;
+            double currentSum = 0;
             for (UTXO utxo : utxos) {
-                currentSum = (float) BtcOperation.sumFloats((double) utxo.getValue(),
-                        (double) currentSum);
+                currentSum = BtcOperation.sumDoubles(utxo.getValue(), currentSum);
                 result.add(utxo);
                 if (currentSum >= sum) {
                     break;

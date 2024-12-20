@@ -4,7 +4,7 @@ import lombok.Value;
 
 @Value
 public class CoinBaseEntry {
-    float value;
+    double value;
     String address;
     int n;
     String txid;

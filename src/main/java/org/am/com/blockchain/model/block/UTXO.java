@@ -6,7 +6,7 @@ import lombok.*;
 public class UTXO implements Cloneable {
     String tx;
     //todo replace by double
-    Float value;
+    Double value;
     String address;
     Integer vout;
 

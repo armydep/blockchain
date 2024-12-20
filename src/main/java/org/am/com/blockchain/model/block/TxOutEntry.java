@@ -4,7 +4,7 @@ import lombok.Value;
 
 @Value
 public class TxOutEntry {
-    Float value;
+    Double value;
     String address;
     Integer n;
 }
