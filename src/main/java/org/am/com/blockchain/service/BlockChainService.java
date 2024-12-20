@@ -187,35 +187,38 @@ public class BlockChainService {
 
     public CreateTxResponse submitTransaction(SendRequest sendRequest) {
         Optional<Balance> balanceOptional = findBalanceByAddress(sendRequest.getFrom());
-        CreateTxResponse createTxResponse = new CreateTxResponse();
-        if (balanceOptional.isPresent()) {
-            Balance balance = balanceOptional.get();
-            float sum = BtcOperation.sum(sendRequest.getBtc(), sendRequest.getSat(), FEE_SATOSHI);
-            float remaining = balance.getAmount() - sum;
-            if (balance.getAmount() >= sum) {
-                long ts = System.currentTimeMillis() / 1000;
-                Pair<List<UTXO>, Float> balancePair =
-                        getBalanceCoversSumForAddress(sendRequest.getFrom(), sum);
-                MempoolTransaction mpTx = new MempoolTransaction(sendRequest.getFrom(),
-                        sendRequest.getTo(), sum, ts, balancePair.getLeft(),
-                        balancePair.getRight());
-                addTransaction(mpTx);
-                String txid = "w_mp_tx_" + sendRequest.getFrom() + "_" + ts;
-                createTxResponse.setTxid(txid);
-                createTxResponse.setSubmitted(true);
-                createTxResponse.setTotalToSend(sum);
-                createTxResponse.setRemaining(remaining);
-            } else {
-                log.info("Not enough balance for sending tx {}", sendRequest);
-                createTxResponse.setSubmitted(false);
-                createTxResponse.setMessage("Not enough balance. Fee: 0." + FEE_SATOSHI + " btc");
-            }
-        } else {
-            log.info("No balance for sending tx {}", sendRequest);
-            createTxResponse.setSubmitted(false);
-            createTxResponse.setMessage("No balance for sending tx");
+        if (balanceOptional.isEmpty()) {
+            return CreateTxResponse.builder()
+                    .submitted(false)
+                    .message("No balance for sending tx")
+                    .build();
         }
-        return createTxResponse;
+        Balance balance = balanceOptional.get();
+        float sum = BtcOperation.sum(sendRequest.getBtc(), sendRequest.getSat(), FEE_SATOSHI);
+        float remaining = balance.getAmount() - sum;
+        if (balance.getAmount() >= sum) {
+            long ts = System.currentTimeMillis() / 1000;
+            Pair<List<UTXO>, Float> balancePair =
+                    getBalanceCoversSumForAddress(sendRequest.getFrom(), sum);
+            MempoolTransaction mpTx = new MempoolTransaction(sendRequest.getFrom(),
+                    sendRequest.getTo(), sum, ts, balancePair.getLeft(),
+                    balancePair.getRight());
+            addTransaction(mpTx);
+            String txid = "w_mp_tx_" + sendRequest.getFrom() + "_" + ts;
+            return CreateTxResponse.builder()
+                    .txid(txid)
+                    .submitted(true)
+                    .totalToSend(sum)
+                    .remaining(remaining)
+                    .build();
+        } else {
+            return CreateTxResponse
+                    .builder()
+                    .submitted(false)
+                    .message("Not enough balance. Fee: 0." + FEE_SATOSHI + " btc")
+                    .build();
+        }
+
     }
 
     //todo: replace naive method by specific algorithm
