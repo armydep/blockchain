@@ -55,8 +55,8 @@ public class UserRepository {
     }
 
     private boolean isExist(User user) {
-        for (User user1 : users) {
-            if (user1.getId() == user.getId() || user1.getName().equals(user.getName())) {
+        for (User u : users) {
+            if (u.getId().equals(user.getId()) || u.getName().equals(user.getName())) {
                 log.info("User {} already exists", user.getId());
                 return true;
             }

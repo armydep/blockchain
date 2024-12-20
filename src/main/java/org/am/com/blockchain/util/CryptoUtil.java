@@ -18,34 +18,6 @@ public class CryptoUtil {
         Security.addProvider(new BouncyCastleProvider());
     }
 
-    public static void generateKeys1(Key key) throws NoSuchAlgorithmException {
-        // 1. Create a KeyPairGenerator object for RSA
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-
-        // 2. Initialize the generator with a key size
-        keyPairGenerator.initialize(2048); // Use 2048 or 4096 bits for stronger keys
-
-        // 3. Generate the key pair
-        KeyPair keyPair = keyPairGenerator.generateKeyPair();
-
-        // 4. Extract the public and private keys
-        PublicKey publicKey = keyPair.getPublic();
-        PrivateKey privateKey = keyPair.getPrivate();
-        log.info("Public Key:\n" + publicKey);
-        log.info("Private Key:\n" + privateKey);
-
-        // 5. Encode keys as Base64 (Optional for readability)
-        String publicKeyEncoded = Base64.getEncoder().encodeToString(publicKey.getEncoded());
-        String privateKeyEncoded = Base64.getEncoder().encodeToString(privateKey.getEncoded());
-
-        // 6. Print the keys
-        log.info("Public Key encoded:\n" + publicKeyEncoded);
-        log.info("Private Key encoded:\n" + privateKeyEncoded);
-
-        key.setPrivateKey(privateKeyEncoded);
-        key.setPublicKey(publicKeyEncoded);
-    }
-
     public static void generateKeys(Key key) throws Exception {
         // Step 1: Generate a key pair (private and public keys)
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EC", "BC");

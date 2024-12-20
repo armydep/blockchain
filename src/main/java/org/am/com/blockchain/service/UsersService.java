@@ -8,7 +8,6 @@ import org.am.com.blockchain.repository.UserRepository;
 import org.am.com.blockchain.util.CryptoUtil;
 import org.springframework.stereotype.Service;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Slf4j
