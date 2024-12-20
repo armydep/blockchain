@@ -1,12 +1,18 @@
 package org.am.com.blockchain.miner;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.am.com.blockchain.model.MempoolTransaction;
 import org.am.com.blockchain.model.block.*;
+import org.am.com.blockchain.model.user.Key;
 import org.am.com.blockchain.service.BlockChainService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -15,22 +21,34 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 public class Miner {
     private final BlockChainService blockChainService;
-    private volatile Boolean mining = false;
     private final AtomicInteger count = new AtomicInteger(0);
     private final int BATCH_SIZE = 2;
-    private final String MY_ADDRESS = "mineraddr127001";
-    private final double COINBASE = 3d;
+    private final double COINBASE = 3;
+    private final Key key;
+    private final ObjectMapper objectMapper;
+    private final String minerFileName;
 
-    public Miner(BlockChainService blockChainService) {
+    public Miner(BlockChainService blockChainService,
+                 ObjectMapper objectMapper,
+                 @Value("${miner.data}") String minerFileName) throws IOException {
         this.blockChainService = blockChainService;
+        this.minerFileName = minerFileName;
+        this.objectMapper = objectMapper;
+        key = loadMinerJson();
+    }
+
+    private Key loadMinerJson() throws IOException {
+        ClassPathResource resource = new ClassPathResource(minerFileName);
+        Key data = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {
+        });
+        log.info("Loaded miner JSON Data: " + data);
+        return data;
     }
 
     @Scheduled(fixedDelay = 20000, initialDelay = 10000)
     private void invokeMiner() {
-        mining = true;
         int currentCount = count.incrementAndGet();
-        log.info("Mining started: {}, count: {}", mining, currentCount);
-
+        log.info("Mining started. count: {}", currentCount);
         List<MempoolTransaction> mempoolTransactions = blockChainService.getBatch(BATCH_SIZE);
         List<MempoolTransaction> validMempoolTransactions = new ArrayList<>();
         for (int i = 0; i < mempoolTransactions.size(); i++) {
@@ -49,8 +67,7 @@ public class Miner {
         } else {
             log.info("No valid mempool transactions");
         }
-        mining = false;
-        log.info("Mining finished: {}, count: {}", mining, currentCount);
+        log.info("Mining finished., count: {}", currentCount);
     }
 
     private Block assemblyBlock(List<MempoolTransaction> validMempoolTransactions) {
@@ -96,7 +113,7 @@ public class Miner {
     private TX generateCoinBaseTX(int i) {
         String txid = "txid_cb_" + i;
         TxInEntry txInEntry = new TxInEntry("", 0, "true");
-        TxOutEntry txOutEntry = new TxOutEntry(COINBASE, MY_ADDRESS, 0);
+        TxOutEntry txOutEntry = new TxOutEntry(COINBASE, key.getAddress(), 0);
         return new TX(txid, List.of(txInEntry), List.of(txOutEntry));
     }
 
@@ -108,14 +125,13 @@ public class Miner {
         int solved = 0;
         try {
             log.info("Solving puzzle");
-            Thread.sleep(20000);
+            Thread.sleep(10000);
             solved = count.get();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             log.error("Solving interrupted", e);
         } finally {
-            mining = false;
-            log.info("Solving finished: {}, count: {}", mining, solved);
+            log.info("Solving finished. count: {}", solved);
         }
         return solved;
     }

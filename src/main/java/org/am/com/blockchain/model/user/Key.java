@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class Key {
-    Integer id;
-    String label;
-    String publicKey;
-    String privateKey;
-    String address;
+    private Integer id;
+    private String label;
+    private String publicKey;
+    private String privateKey;
+    private String address;
 }
