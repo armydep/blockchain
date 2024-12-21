@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.am.com.blockchain.model.block.Block;
 import org.am.com.blockchain.model.block.InsertionOnlyList;
 import org.am.com.blockchain.model.block.TX;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -17,7 +19,6 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.instrument.UnmodifiableClassException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -34,12 +35,17 @@ class BlockChainRepositoryTest {
     private BlockChainRepository repository;
     private final String genesisFileName = "test-genesis.json";
     private final String storageFileName = "test-storage.json";
-
+    private AutoCloseable closeable;
 
     @BeforeEach
     public void setUp() {
-        AutoCloseable closeable = MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this);
         repository = new BlockChainRepository(objectMapper, genesisFileName, storageFileName);
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
     }
 
     private static Stream<Arguments> provideBlocks() {
@@ -58,11 +64,8 @@ class BlockChainRepositoryTest {
         when(resource.getInputStream()).thenReturn(mockInputStream);
         when(objectMapper.readValue(any(InputStream.class),
                 ArgumentMatchers.<TypeReference<List<Block>>>any())).thenReturn(mockBlocks);
-
         repository.init();
-
         List<Block> blocks = repository.getBlocks();
-
         assertEquals(2, blocks.size());
         assertEquals(InsertionOnlyList.class, blocks.getClass());
         verify(objectMapper, times(1))
@@ -108,15 +111,25 @@ class BlockChainRepositoryTest {
     @MethodSource("provideBlocks")
     void initShouldLoadBlocksSuccessfully(Block block) throws IOException {
         List<Block> mockBlocks = Arrays.asList(block);
-
         when(objectMapper.readValue(any(InputStream.class), any(TypeReference.class)))
                 .thenReturn(mockBlocks);
-
         repository.init();
-
         assertFalse(repository.getBlocks().isEmpty());
         assertEquals(1, repository.getBlocks().size());
         verify(objectMapper).readValue(any(InputStream.class), any(TypeReference.class));
+    }
+
+    @Test
+    public void testFailureOnEmptyList() throws Exception {
+        List<Block> mockBlocks = List.of();
+        ClassPathResource resource = mock(ClassPathResource.class);
+        InputStream mockInputStream = mock(InputStream.class);
+        when(resource.getInputStream()).thenReturn(mockInputStream);
+        when(objectMapper.readValue(any(InputStream.class),
+                ArgumentMatchers.<TypeReference<List<Block>>>any())).thenReturn(mockBlocks);
+        assertThrows(RuntimeException.class, () -> {
+            repository.init();
+        });
     }
 
 }
