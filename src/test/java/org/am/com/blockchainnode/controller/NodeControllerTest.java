@@ -66,41 +66,6 @@ class NodeControllerTest {
         // verify(blockChainService).getBlocks();
     }
 
-//    @Test
-//    public void testGetBlocks() throws Exception {
-
-    /// /        when(genesisLoadConfig.getJsonData()).thenReturn(getBlocks());
-//        String expectedJson = readJsonFileFromResources("genesis.json");
-//        mockMvc.perform(get("/node/api/node"))
-//                .andExpect(status().isOk());
-//        //.andExpect(content().json(expectedJson));
-//    }
-/*
-    private static ArrayList<Block> getBlocks() {
-        ArrayList<Block> blocks = new ArrayList<>();
-
-        Block block1 = new Block();
-        block1.setIndex(1L);
-        block1.setHash("123456");
-        block1.setPreviousHash("000000");
-        block1.setData("Block 1 data: ");
-
-        TxInEntry txInEntry = new TxInEntry("t11", 0, null);
-        TxOutEntry txOutEntry = new TxOutEntry(2, "ad123", 4);
-        List<TxInEntry> txInEntries = new ArrayList<>();
-        txInEntries.add(txInEntry);
-        List<TxOutEntry> txOutEntries = new ArrayList<>();
-        txOutEntries.add(txOutEntry);
-        TX tx = new TX("t10000", txInEntries, txOutEntries);
-        List<TX> txList = new ArrayList<>();
-        txList.add(tx);
-        block1.setTx(txList);
-
-        blocks.add(block1);
-        return blocks;
-    }
-*/
-
     private String readJsonFileFromResources(String fileName) throws Exception {
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName)) {
             if (inputStream == null) {

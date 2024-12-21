@@ -29,11 +29,11 @@ public class Block {
                  List<TX> tx) {
         this.hash = hash;
         this.previousHash = previousHash;
-        this.timeStamp = timeStamp;
-        this.nonce = nonce;
-        this.index = index;
         this.merkleRoot = merkleRoot;
+        this.nonce = nonce;
         this.size = size;
+        this.timeStamp = timeStamp;
+        this.index = index;
         this.tx = Collections.unmodifiableList(tx);
     }
 

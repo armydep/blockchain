@@ -48,6 +48,7 @@
   - Enable components: miner, wallet
   - Fee 
   - Coinbase reward
+  - Single point of load from json
 - ### Documentation
   - Code documentation
   - Diagrams

@@ -25,7 +25,7 @@ public class BlockChainService {
 
 
     public List<Block> getBlocks() {
-        return blockChainRepository.gBlocks();
+        return blockChainRepository.getBlocks();
     }
 
     public List<UTXO> getUTXO() {

@@ -3,6 +3,7 @@ package org.am.com.blockchain.repository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.am.com.blockchain.model.block.Block;
 import org.am.com.blockchain.model.block.InsertionOnlyList;
@@ -17,6 +18,7 @@ import java.util.List;
 @Slf4j
 @Repository
 public class BlockChainRepository {
+    @Getter
     private List<Block> blocks;
     private final ObjectMapper objectMapper;
     private final String genesisFileName;
@@ -43,10 +45,6 @@ public class BlockChainRepository {
         });
         log.info("Loaded JSON Data: " + data);
         return data;
-    }
-
-    public List<Block> gBlocks() {
-        return blocks;
     }
 
     public void addBlock(Block block) {
