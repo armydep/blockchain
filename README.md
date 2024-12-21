@@ -1,58 +1,62 @@
 # bitcoin-node
 
-Roadmap:
-- Java 9
+## Roadmap:
+- ### Java 9
   - Records
   - Streams
-  - Concurrent
-- Rest API
+  - Thread safeness
+- ### Concurrent
+- ### Rest API
   - Response codes 
   - Resume balance 
   - Add userinfo to balance
   - Authentication jwt
   - Miner status
-  - Dasboard statistics
+  - Dashboard statistics
   - Dashboard status
+  - Standalone wallet
+  - Standalone miner
+  - Standalone node
+  - Wallet
+    - Telegram bot wallet
+    - Nodejs
+    - JS
+    - Python
+    - React/Angular
+    - Spring boot
     
-- CRUD
-- Persistence DB
-- Persistence Cache
-- Tests
+- ### CRUD
+  - Persistence DB
+  - Persistence Cache
+- ### Tests
   - Address validation
   - Block validation
   - 
-- Blockchain
+- ### Blockchain
   - Accept from outside
     - Send
     - Submit block
     - Discover nodes
+    - Keys import 
+    - Keys export
     - 
-- Refactoring
-- Keys import
-- Keys export
-- Configuration
+- ### Refactoring
+- 
+- ### Configuration
   - Storage enable
   - 
-- Documentation
+- ### Documentation
   - Code documentation
   - Diagrams
   - Readme
-- Thread safeness
-- Standalone wallet
-- Standalone miner
-- Standalone node
-- Wallet
-  - Telegram bot wallet
-  - Nodejs
-  - JS
-  - Python
-  - React/Angular
-  - Spring boot
+- 
 - 
 - Dockerize
 - Github actions
 - Run on cloud
-- 
+- Git
+  - Branches: main, dev, release
+  - Rebase
 
 Done:
 - Proof of work
