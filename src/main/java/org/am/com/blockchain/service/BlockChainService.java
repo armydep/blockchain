@@ -18,15 +18,12 @@ import java.util.*;
 @Service
 @AllArgsConstructor
 public class BlockChainService {
+
     private final BlockChainRepository blockChainRepository;
     private final List<MempoolTransaction> mempool =
             Collections.synchronizedList(new ArrayList<>());
     private final int FEE_SATOSHI = 5_000_000;
 
-
-    public List<Block> getBlocks() {
-        return blockChainRepository.getBlocks();
-    }
 
     public List<UTXO> getUTXO() {
         List<Block> blocks = getBlocks();
@@ -53,7 +50,6 @@ public class BlockChainService {
             }
         }
         return utxoData;
-
     }
 
     private void generateAndInsertUTXOByTxOut(TxOutEntry txOutEntry, List<UTXO> utxoData,
@@ -138,7 +134,7 @@ public class BlockChainService {
     }
 
     public void updateUTXO(List<MempoolTransaction> validMempoolTransactions) {
-        log.warn("Not implemented yet!");
+        log.warn("Not implemented");
     }
 
     public Block getLatestBlock() {
@@ -199,5 +195,9 @@ public class BlockChainService {
             }
         }
         return Pair.of(result, currentSum - sum);
+    }
+
+    public List<Block> getBlocks() {
+        return blockChainRepository.getBlocks();
     }
 }

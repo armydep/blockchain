@@ -7,8 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Value
-public class MempoolTransaction {
-    //String txid;
+public class MempoolTransaction implements Cloneable {
     String from;
     String to;
     Double amount;
@@ -16,6 +15,7 @@ public class MempoolTransaction {
     List<UTXO> txCoversSum;
     Double change;
 
+    @Override
     public MempoolTransaction clone() {
         return new MempoolTransaction(from, to, amount, timestamp,
                 new ArrayList<>(txCoversSum), change);

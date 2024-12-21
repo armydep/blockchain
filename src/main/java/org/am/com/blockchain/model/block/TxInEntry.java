@@ -1,6 +1,8 @@
 package org.am.com.blockchain.model.block;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
 
 @Value
@@ -9,4 +11,13 @@ public class TxInEntry {
     String txid;
     Integer vout;
     String coinbase;
+
+    @JsonCreator
+    public TxInEntry(@JsonProperty("txid") String txid,
+                     @JsonProperty("vout") Integer vout,
+                     @JsonProperty("coinbase") String coinbase) {
+        this.txid = txid;
+        this.vout = vout;
+        this.coinbase = coinbase;
+    }
 }

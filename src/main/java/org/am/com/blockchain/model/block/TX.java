@@ -1,5 +1,7 @@
 package org.am.com.blockchain.model.block;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
 
 import java.util.Collections;
@@ -11,7 +13,10 @@ public class TX {
     List<TxInEntry> vin;
     List<TxOutEntry> vout;
 
-    public TX(String txid, List<TxInEntry> vin, List<TxOutEntry> vout) {
+    @JsonCreator
+    public TX(@JsonProperty("txid") String txid,
+              @JsonProperty("vin") List<TxInEntry> vin,
+              @JsonProperty("vout") List<TxOutEntry> vout) {
         this.txid = txid;
         this.vin = Collections.unmodifiableList(vin);
         this.vout = Collections.unmodifiableList(vout);

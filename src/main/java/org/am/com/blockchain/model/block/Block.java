@@ -2,6 +2,7 @@ package org.am.com.blockchain.model.block;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
 
 import java.util.Collections;
@@ -19,14 +20,14 @@ public class Block {
     List<TX> tx;
 
     @JsonCreator
-    public Block(String hash,
-                 String previousHash,
-                 String merkleRoot,
-                 Integer nonce,
-                 Integer size,
-                 Long timeStamp,
-                 Integer index,
-                 List<TX> tx) {
+    public Block(@JsonProperty("hash") String hash,
+                 @JsonProperty("previousHash") String previousHash,
+                 @JsonProperty("merkleRoot") String merkleRoot,
+                 @JsonProperty("nonce") Integer nonce,
+                 @JsonProperty("size") Integer size,
+                 @JsonProperty("timeStamp") Long timeStamp,
+                 @JsonProperty("index") Integer index,
+                 @JsonProperty("tx") List<TX> tx) {
         this.hash = hash;
         this.previousHash = previousHash;
         this.merkleRoot = merkleRoot;

@@ -28,7 +28,7 @@ class NodeControllerTest {
     @InjectMocks
     private NodeController nodeController;
 
-    private MockMvc mockMvc;
+    //private MockMvc mockMvc;
     private AutoCloseable closeable;
 
     @Mock
@@ -37,7 +37,8 @@ class NodeControllerTest {
     @BeforeEach
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(nodeController).build();
+        //mockMvc = MockMvcBuilders.standaloneSetup(nodeController).build();
+        MockMvcBuilders.standaloneSetup(nodeController).build();
     }
 
     @AfterEach
@@ -48,9 +49,8 @@ class NodeControllerTest {
     @Test
     void getBlocks_whenValidRequest_shouldReturnBlockListWithStatusOk() {
         ResponseEntity<List<Block>> response = nodeController.getBlocks();
-
         assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals(2, response.getBody().size());
+        assertEquals(0, response.getBody().size());
 //           verify(genesisLoadConfig, times(1)).getJsonData();
     }
 
@@ -58,7 +58,6 @@ class NodeControllerTest {
     public void testGetBlocks() throws Exception {
         // List<Block> mockBlocks = getBlocks();
 //        when(blockChainService.getBlocks()).thenReturn(mockBlocks);
-
         ResponseEntity<List<Block>> response = nodeController.getBlocks();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());

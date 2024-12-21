@@ -20,7 +20,7 @@ import java.util.List;
 public class BlockChainRepository {
 
     @Getter
-    private List<Block> blocks = new InsertionOnlyList<>();
+    private final List<Block> blocks = new InsertionOnlyList<>();
     private final ObjectMapper objectMapper;
     private final String genesisFileName;
     private final String storageFileName;

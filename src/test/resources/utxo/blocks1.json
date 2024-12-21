@@ -1,0 +1,49 @@
+[
+  {
+    "hash": "genesis#",
+    "previousHash": "",
+    "merkleRoot": "mr0",
+    "nonce": 0,
+    "size": 1,
+    "timeStamp": 0,
+    "index": 0,
+    "tx": [
+      {
+        "txid": "genesis-tx-001",
+        "vin": [
+          {
+            "coinbase": "true"
+          }
+        ],
+        "vout": [
+          {
+            "value": 50,
+            "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
+            "n": 0
+          }
+        ]
+      },
+      {
+        "txid": "genesis-tx-002",
+        "vin": [
+          {
+            "txid": "genesis-tx-001",
+            "vout": 0
+          }
+        ],
+        "vout": [
+          {
+            "value": 5,
+            "address": "1CQJ8AiLCqKWX3ESF32ouSfnaMh8RVp6bN",
+            "n": 0
+          },
+          {
+            "value": 45,
+            "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
+            "n": 1
+          }
+        ]
+      }
+    ]
+  }
+]
