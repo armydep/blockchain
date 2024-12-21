@@ -1,11 +1,11 @@
 # bitcoin-node
 
-## Roadmap:
+## Roadmap
 - ### Java 9
   - Records
   - Streams
   - Thread safeness
-- ### Concurrent
+- ### Concurrency aspect
 - ### Rest API
   - Response codes 
   - Resume balance 
@@ -24,14 +24,12 @@
     - Python
     - React/Angular
     - Spring boot
-    
 - ### CRUD
   - Persistence DB
   - Persistence Cache
 - ### Tests
   - Address validation
   - Block validation
-  - 
 - ### Blockchain
   - Accept from outside
     - Send
@@ -39,34 +37,23 @@
     - Discover nodes
     - Keys import 
     - Keys export
-    - 
 - ### Refactoring
-- 
+  - Continuous refactoring
 - ### Configuration
   - Storage enable
-  - 
+  - Difficulty
+  - Miner scheduling rate
+  - Enable components: miner, wallet
 - ### Documentation
   - Code documentation
   - Diagrams
   - Readme
-- 
-- 
-- Dockerize
-- Github actions
-- Run on cloud
-- Git
-  - Branches: main, dev, release
-  - Rebase
-
-Done:
-- Proof of work
-- Users management
-- Users keys management
-- Address management
-- balance
-- send
-- blockchain
-- utxo
-- tx
-- address
-
+- ### CI/CD
+  - Dockerization
+  - Github actions
+  - Deployment on cloud
+  - Tests
+  - Pull requests
+  - Git
+    - Branches: main, dev, release
+    - Rebase
