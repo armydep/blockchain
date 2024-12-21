@@ -29,6 +29,9 @@
   - Address validation
   - Block validation
 - ### Blockchain
+  - Prevent double spend
+    - Lock balance
+    - Reflect transfer in progress for sender and recipient
   - Accept from outside
     - Send
     - Submit block
