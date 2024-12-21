@@ -39,6 +39,7 @@
     - Keys import 
     - Keys export
 - ### Refactoring
+  - Classes, variables, methods names
   - Continuous refactoring
 - ### Configuration
   - Storage enable
