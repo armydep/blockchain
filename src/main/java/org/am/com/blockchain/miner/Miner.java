@@ -7,6 +7,7 @@ import org.am.com.blockchain.model.MempoolTransaction;
 import org.am.com.blockchain.model.block.*;
 import org.am.com.blockchain.model.user.Key;
 import org.am.com.blockchain.service.BlockChainService;
+import org.am.com.blockchain.util.crypto.CryptoUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,6 +25,7 @@ public class Miner {
     private final AtomicInteger count = new AtomicInteger(0);
     private final int BATCH_SIZE = 2;
     private final double COINBASE = 3;
+    private final int DIFFICULTY = 6;
     private final Key key;
     private final ObjectMapper objectMapper;
     private final String minerFileName;
@@ -71,21 +73,44 @@ public class Miner {
     }
 
     private Block assemblyBlock(List<MempoolTransaction> validMempoolTransactions) {
-        Block previousBlock = blockChainService.getLatestBlock();
-        String merkleRoot = "merkleRoot" + count.get();
-        long timestamp = System.currentTimeMillis() / 1000;
-        int nonce = solvePuzzle();
-        int size = count.get();
-        int index = previousBlock.getIndex() + 1;
-        String previousHash = previousBlock.getHash();
-        String hash = previousHash + timestamp + nonce + size + index + merkleRoot;
+        //1. Body - tx
+        final List<TX> txs = buildTX(validMempoolTransactions);
+        //2. Header
+        Header header = createHeader(new ArrayList<>(txs));
+        return new Block(header, txs);
+    }
+
+    private List<TX> buildTX(List<MempoolTransaction> validMempoolTransactions) {
         List<TX> txs = new ArrayList<>();
         TX coinbase = generateCoinBaseTX(count.get());
         txs.add(coinbase);
         for (int i = 0; i < validMempoolTransactions.size(); i++) {
             txs.add(generateTX(validMempoolTransactions.get(i), "txid_" + count.get()));
         }
-        return new Block(hash, previousHash, timestamp, nonce, index, txs);
+        return txs;
+    }
+
+    public record MinerData(String previousHash, String merkleRoot, long timestamp, int index) {
+    }
+
+    private Header createHeader(List<TX> txs) {
+        Block previousBlock = blockChainService.getLatestBlock();
+        int index = previousBlock.getIndex() + 1;
+        String previousHash = previousBlock.getHash();
+        long timestamp = System.currentTimeMillis() / 1000;
+        String merkleRoot = createMerkleRoot(txs);
+        MinerData mdata = new MinerData(previousHash, merkleRoot, timestamp, index);
+        Header minedHeader = mine(mdata, DIFFICULTY);
+        int size = calculateBlockSize(minedHeader, txs);
+        return new Header(minedHeader, size);
+    }
+
+    private int calculateBlockSize(Header minedHeader, List<TX> txs) {
+        return 0;
+    }
+
+    private String createMerkleRoot(List<TX> txs) {
+        return null;
     }
 
     private TX generateTX(MempoolTransaction mpTx, String txid) {
@@ -121,18 +146,34 @@ public class Miner {
         return true;
     }
 
-    private int solvePuzzle() {
-        int solved = 0;
-        try {
-            log.info("Solving puzzle");
-            Thread.sleep(10000);
-            solved = count.get();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            log.error("Solving interrupted", e);
-        } finally {
-            log.info("Solving finished. count: {}", solved);
+    private Header mine(MinerData data, final int difficulty) {
+        log.info("Mining started. Difficulty: {}", difficulty);
+        long startTime = System.currentTimeMillis();
+        String target = "0".repeat(difficulty);
+        int nonce = 0;
+        String hash;
+        Header header;
+        while (true) {
+            header = buildHeader(data, nonce);
+            hash = CryptoUtil.generateSHA256(header.toString());
+            if (hash.startsWith(target)) {
+                log.info("Block mined with nonce: " + nonce);
+                break;
+            }
+            nonce++;
         }
-        return solved;
+        log.info("Mining finished. Time took: {}", (System.currentTimeMillis() - startTime) / 1000);
+        return new Header(header, hash);
+    }
+
+    private Header buildHeader(MinerData data, int nonce) {
+        return new Header(
+                null,
+                data.previousHash,
+                data.merkleRoot,
+                nonce,
+                data.timestamp,
+                data.index,
+                null);
     }
 }

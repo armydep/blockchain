@@ -6,6 +6,7 @@ import org.am.com.blockchain.model.user.Key;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.Arrays;
 
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.ECGenParameterSpec;
 import java.util.Base64;
@@ -101,5 +102,32 @@ public class CryptoUtil {
             sb.insert(0, '1');
         }
         return sb.toString();
+    }
+
+
+    // Method to generate SHA-256 hash
+    public static String generateSHA256(String input) {
+        try {
+            // Create a MessageDigest instance for SHA-256
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+
+            // Apply SHA-256 to the input string and return the hash as bytes
+            byte[] hashBytes = digest.digest(input.getBytes(StandardCharsets.UTF_8));
+
+            // Convert the hash bytes to a hexadecimal string
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashBytes) {
+                String hex = Integer.toHexString(0xff & b); // Mask byte to ensure positive value
+                if (hex.length() == 1) hexString.append('0'); // Add leading zero if necessary
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("SHA-256 algorithm not found!", e);
+        }
+    }
+
+    public static String generateDoubleSHA256(String hashData) {
+        return generateSHA256(generateSHA256(hashData));
     }
 }

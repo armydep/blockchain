@@ -62,7 +62,6 @@ public class WalletController {
             log.info("User with address {} is not exist", sendRequest.getSender());
             return false;
         }
-/*
         if (!BitcoinAddressValidator.validateBitcoinAddress(sendRequest.getRecipient())) {
             log.info("Recipients address format invalid {}", sendRequest.getRecipient());
             return false;
@@ -71,7 +70,6 @@ public class WalletController {
             log.info("Sender address format invalid {}", sendRequest.getSender());
             return false;
         }
-*/
         return true;
     }
 }
