@@ -1,4 +1,4 @@
-package org.am.com.blockchain.util;
+package org.am.com.blockchain.util.crypto;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;

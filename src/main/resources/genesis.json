@@ -16,7 +16,7 @@
         "vout": [
           {
             "value": 50,
-            "address": "satoshiaddr100",
+            "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
             "n": 0
           }
         ]
@@ -32,12 +32,12 @@
         "vout": [
           {
             "value": 5,
-            "address": "amaddr100",
+            "address": "1CQJ8AiLCqKWX3ESF32ouSfnaMh8RVp6bN",
             "n": 0
           },
           {
             "value": 45,
-            "address": "satoshiaddr100",
+            "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
             "n": 1
           }
         ]

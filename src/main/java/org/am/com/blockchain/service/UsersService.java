@@ -1,11 +1,12 @@
 package org.am.com.blockchain.service;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.am.com.blockchain.model.user.Key;
 import org.am.com.blockchain.model.user.User;
 import org.am.com.blockchain.repository.UserRepository;
-import org.am.com.blockchain.util.CryptoUtil;
+import org.am.com.blockchain.util.crypto.CryptoUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,12 +28,10 @@ public class UsersService {
     public Integer generateKey(Integer userid, String label) throws Exception {
         User user = usersRepository.getUserById(userid);
         List<Key> keys = user.getKeys();
-        if (keys != null) {
-            for (Key key : keys) {
-                if (key.getLabel().equals(label)) {
-                    log.info("Key {} already exists", key);
-                    return null;
-                }
+        for (Key key : keys) {
+            if (key.getLabel().equals(label)) {
+                log.info("Key {} already exists", key);
+                return null;
             }
         }
         Key key = new Key();
@@ -42,5 +41,16 @@ public class UsersService {
         user.addKey(key);
         usersRepository.save();
         return key.getId();
+    }
+
+    public boolean isExist(@NotEmpty(message = "Sender address cannot be empty") String sender) {
+        for (User user : usersRepository.getUsers()) {
+            for (Key key : user.getKeys()) {
+                if (sender.equals(key.getAddress())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
