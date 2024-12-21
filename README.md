@@ -1,5 +1,3 @@
-# bitcoin-node
-
 ## Roadmap
 - ### Java 9
   - Records
