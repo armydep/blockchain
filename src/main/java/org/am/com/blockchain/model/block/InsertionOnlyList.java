@@ -21,6 +21,16 @@ public class InsertionOnlyList<E> extends ArrayList<E> {
     }
 
     @Override
+    public E removeFirst() {
+        throw new UnsupportedOperationException("Remove operation is not supported");
+    }
+
+    @Override
+    public E removeLast() {
+        throw new UnsupportedOperationException("Remove operation is not supported");
+    }
+
+    @Override
     public boolean retainAll(Collection<?> c) {
         throw new UnsupportedOperationException("Retain operation is not supported");
     }

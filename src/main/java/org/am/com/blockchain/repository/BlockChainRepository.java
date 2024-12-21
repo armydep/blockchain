@@ -18,13 +18,14 @@ import java.util.List;
 @Slf4j
 @Repository
 public class BlockChainRepository {
+
     @Getter
-    private List<Block> blocks;
+    private List<Block> blocks = new InsertionOnlyList<>();
     private final ObjectMapper objectMapper;
     private final String genesisFileName;
     private final String storageFileName;
 
-    public BlockChainRepository( ObjectMapper objectMapper,
+    public BlockChainRepository(ObjectMapper objectMapper,
                                 @Value("${genesis.data}") String genesisFileName,
                                 @Value("${storage.blocks.data}") String storageFileName) {
         this.objectMapper = objectMapper;
@@ -33,35 +34,46 @@ public class BlockChainRepository {
     }
 
     @PostConstruct
-    public void init() throws IOException {
-        List<Block> oblocks = loadBlocks();
-        blocks = new InsertionOnlyList<>();
-        blocks.addAll(oblocks);
+    public void init() {
+        try {
+            List<Block> oblocks = loadBlocks();
+            blocks.addAll(oblocks);
+            if (blocks.isEmpty()) {
+                throw new RuntimeException("No blocks found");
+            }
+        } catch (IOException e) {
+            log.error("Error initializing BlockChainRepository: {}", e.getMessage());
+        }
     }
 
     private List<Block> loadBlocks() throws IOException {
-        ClassPathResource resource = new ClassPathResource(genesisFileName);
-        List<Block> data = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {
-        });
-        log.info("Loaded JSON Data: " + data);
-        return data;
+        try (var inputStream = new ClassPathResource(genesisFileName).getInputStream()) {
+            List<Block> data = objectMapper.readValue(inputStream,
+                    new TypeReference<>() {
+                    });
+            log.info("Loaded JSON Data: {}", data);
+            return data;
+        } catch (IOException e) {
+            log.error("Error loading blocks from file: {}", e.getMessage());
+            throw e;
+        }
     }
 
     public void addBlock(Block block) {
         blocks.add(block);
-        saveBlockToFile();
+        saveBlocksToFile();
     }
 
-    private void saveBlockToFile() {
+    private void saveBlocksToFile() {
         try {
             objectMapper.writeValue(new File(storageFileName), blocks);
-            log.info("Block saved as JSON in file: " + storageFileName);
+            log.info("Blocks saved as JSON in file: {}", storageFileName);
         } catch (IOException e) {
-            log.error("Error while saving the block to file: " + e.getMessage());
+            log.error("Error while saving blocks to file: {}", e.getMessage());
         }
     }
 
     public Block getLastBlock() {
-        return blocks.getLast();
+        return blocks.isEmpty() ? null : blocks.getLast();
     }
 }
