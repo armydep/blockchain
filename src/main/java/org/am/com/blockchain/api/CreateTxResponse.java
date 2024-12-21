@@ -10,7 +10,7 @@ import lombok.Data;
 public class CreateTxResponse {
     String txid;
     String message;
-    boolean submitted;
-    double totalToSend;
-    double remaining;
+    Boolean submitted;
+    Double totalToSend;
+    Double remaining;
 }

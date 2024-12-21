@@ -1,5 +1,6 @@
 package org.am.com.blockchain.model.block;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Value;
 
@@ -10,15 +11,20 @@ import java.util.List;
 public class Block {
     String hash;
     String previousHash;
-    Long timeStamp;
+    String merkleRoot;
     Integer nonce;
+    Integer size;
+    Long timeStamp;
     Integer index;
     List<TX> tx;
 
+    @JsonCreator
     public Block(String hash,
                  String previousHash,
-                 Long timeStamp,
+                 String merkleRoot,
                  Integer nonce,
+                 Integer size,
+                 Long timeStamp,
                  Integer index,
                  List<TX> tx) {
         this.hash = hash;
@@ -26,7 +32,20 @@ public class Block {
         this.timeStamp = timeStamp;
         this.nonce = nonce;
         this.index = index;
+        this.merkleRoot = merkleRoot;
+        this.size = size;
         this.tx = Collections.unmodifiableList(tx);
+    }
+
+    public Block(Header header, List<TX> txs) {
+        this.hash = header.getHash();
+        this.previousHash = header.getPreviousHash();
+        this.merkleRoot = header.getMerkleRoot();
+        this.nonce = header.getNonce();
+        this.size = header.getSize();
+        this.timeStamp = header.getTimestamp();
+        this.index = header.getIndex();
+        this.tx = Collections.unmodifiableList(txs);
     }
 
     @JsonIgnore
@@ -49,22 +68,4 @@ public class Block {
         }
         return null;
     }
-
-//    @JsonIgnore
-//    public List<TxInEntry> getTxInEntries() {
-//        List<TxInEntry> txInEntries = new ArrayList<>();
-//        for (TX tx : tx) {
-//            tx.getVin().forEach(txInEntry -> txInEntries.add(txInEntry));
-//        }
-//        return txInEntries;
-//    }
-
-//    @JsonIgnore
-//    public List<TxOutEntry> getTxOutEntries() {
-//        List<TxOutEntry> txOutEntries = new ArrayList<>();
-//        for (TX tx : tx) {
-//            tx.getVout().forEach(txOutEntry -> txOutEntries.add(txOutEntry));
-//        }
-//        return txOutEntries;
-//    }
 }

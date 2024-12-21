@@ -2,8 +2,10 @@
   {
     "hash": "genesis#",
     "previousHash": "",
-    "timeStamp": 0,
+    "merkleRoot": "mr0",
     "nonce": 0,
+    "size": 1,
+    "timeStamp": 0,
     "index": 0,
     "tx": [
       {
@@ -16,7 +18,7 @@
         "vout": [
           {
             "value": 50,
-            "address": "satoshiaddr100",
+            "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
             "n": 0
           }
         ]
@@ -32,12 +34,12 @@
         "vout": [
           {
             "value": 5,
-            "address": "amaddr100",
+            "address": "1CQJ8AiLCqKWX3ESF32ouSfnaMh8RVp6bN",
             "n": 0
           },
           {
             "value": 45,
-            "address": "satoshiaddr100",
+            "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
             "n": 1
           }
         ]

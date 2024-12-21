@@ -1,0 +1,44 @@
+[
+  {
+    "id": 0,
+    "name": "satosha",
+    "password": "pwd",
+    "keys": [
+      {
+        "id": 1,
+        "label": "sommm",
+        "publicKey": "MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEp8v7DUU5W3tJjOSdWmjCVuf4pBuiGJdUIMWAmh9YNIrjY+3KXXn8qhtvxkLYywT/BHSKY+LEUTndAijyqc+gqw==",
+        "privateKey": "MIGNAgEAMBAGByqGSM49AgEGBSuBBAAKBHYwdAIBAQQg9MH2rX6OmFWS90WFyeZCwfgFvtw0Zw53wa/PfdAm/OmgBwYFK4EEAAqhRANCAASny/sNRTlbe0mM5J1aaMJW5/ikG6IYl1QgxYCaH1g0iuNj7cpdefyqG2/GQtjLBP8EdIpj4sRROd0CKPKpz6Cr",
+        "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "amx",
+    "password": "pwdstring",
+    "keys": [
+      {
+        "id": 11,
+        "label": "mykey",
+        "publicKey": "MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEipST6EZTf3BNOfN2+K0+n+ERM8SDzpBMWnSphwF5B9Puj9bI8rIHCpxVvcIb7jkbJ42DACJ1IIEc92z6/xGGTw==",
+        "privateKey": "MIGNAgEAMBAGByqGSM49AgEGBSuBBAAKBHYwdAIBAQQglazbLLTp4GUKth6TYjWfE+xDZz+6AOoBcO6SKtIiDYegBwYFK4EEAAqhRANCAASKlJPoRlN/cE0583b4rT6f4REzxIPOkExadKmHAXkH0+6P1sjysgcKnFW9whvuORsnjYMAInUggRz3bPr/EYZP",
+        "address": "1CQJ8AiLCqKWX3ESF32ouSfnaMh8RVp6bN"
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "name": "auser",
+    "password": "psd",
+    "keys": [
+      {
+        "id": 1,
+        "label": "k1",
+        "publicKey": "MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEB7+FrmaREJUI5XGvFxjphbK5t9xERng8dlrLDhl/9RRmgc1fp1423LfX9z/HnCHWckuvbyELXLZHXW8qhC78pg==",
+        "privateKey": "MIGNAgEAMBAGByqGSM49AgEGBSuBBAAKBHYwdAIBAQQg5VtXCWpIJ2PXNNzTNjeHZLMk8ViUDyEYs8dsQLu7CUqgBwYFK4EEAAqhRANCAAQHv4WuZpEQlQjlca8XGOmFsrm33ERGeDx2WssOGX/1FGaBzV+nXjbct9f3P8ecIdZyS69vIQtctkddbyqELvym",
+        "address": "1EtdEWTkduTt9vojtX1ZB2zMinY37qSgMH"
+      }
+    ]
+  }
+]
