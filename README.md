@@ -45,6 +45,8 @@
   - Difficulty
   - Miner scheduling rate
   - Enable components: miner, wallet
+  - Fee 
+  - Coinbase reward
 - ### Documentation
   - Code documentation
   - Diagrams
