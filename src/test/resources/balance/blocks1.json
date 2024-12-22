@@ -1,49 +1,71 @@
-[
-  {
-    "hash": "genesis#",
-    "previousHash": "",
-    "merkleRoot": "mr0",
-    "nonce": 0,
-    "size": 1,
-    "timeStamp": 0,
-    "index": 0,
-    "tx": [
-      {
-        "txid": "genesis-tx-001",
-        "vin": [
-          {
-            "coinbase": "true"
-          }
-        ],
-        "vout": [
-          {
-            "value": 50,
-            "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
-            "n": 0
-          }
-        ]
-      },
-      {
-        "txid": "genesis-tx-002",
-        "vin": [
-          {
-            "txid": "genesis-tx-001",
-            "vout": 0
-          }
-        ],
-        "vout": [
-          {
-            "value": 5,
-            "address": "1CQJ8AiLCqKWX3ESF32ouSfnaMh8RVp6bN",
-            "n": 0
-          },
-          {
-            "value": 45,
-            "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
-            "n": 1
-          }
-        ]
-      }
-    ]
-  }
-]
+[ {
+  "hash" : "genesis#",
+  "previousHash" : "",
+  "merkleRoot" : "mr0",
+  "nonce" : 0,
+  "size" : 1,
+  "timeStamp" : 0,
+  "index" : 0,
+  "tx" : [ {
+    "txid" : "genesis-tx-001",
+    "vin" : [ {
+      "coinbase" : "true"
+    } ],
+    "vout" : [ {
+      "value" : 50.0,
+      "address" : "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
+      "n" : 0
+    } ]
+  }, {
+    "txid" : "genesis-tx-002",
+    "vin" : [ {
+      "txid" : "genesis-tx-001",
+      "vout" : 0
+    } ],
+    "vout" : [ {
+      "value" : 5.0,
+      "address" : "1CQJ8AiLCqKWX3ESF32ouSfnaMh8RVp6bN",
+      "n" : 0
+    }, {
+      "value" : 45.0,
+      "address" : "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
+      "n" : 1
+    } ]
+  } ]
+}, {
+  "hash" : "000000c497e042794202edbd8e2e3b3d95fdaa12c08fa6665ef4990330ca43e9",
+  "previousHash" : "genesis#",
+  "merkleRoot" : null,
+  "nonce" : 5766684,
+  "size" : 0,
+  "timeStamp" : 1734902813,
+  "index" : 1,
+  "tx" : [ {
+    "txid" : "txid_cb_2",
+    "vin" : [ {
+      "txid" : "",
+      "vout" : 0,
+      "coinbase" : "true"
+    } ],
+    "vout" : [ {
+      "value" : 3.0,
+      "address" : "1MSt353yTmKFzZbjetUvTFDhQ7kJZKzPLo",
+      "n" : 0
+    } ]
+  }, {
+    "txid" : "txid_2",
+    "vin" : [ {
+      "txid" : "genesis-tx-002",
+      "vout" : 1
+    } ],
+    "vout" : [ {
+      "value" : 1.05455009,
+      "address" : "1EtdEWTkduTt9vojtX1ZB2zMinY37qSgMH",
+      "n" : 0
+    }, {
+      "value" : 43.94544991,
+      "address" : "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
+      "n" : 1
+    } ]
+  } ]
+} ]

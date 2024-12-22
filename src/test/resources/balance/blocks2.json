@@ -1,0 +1,147 @@
+[
+  {
+    "hash": "genesis#",
+    "previousHash": "",
+    "merkleRoot": "mr0",
+    "nonce": 0,
+    "size": 1,
+    "timeStamp": 0,
+    "index": 0,
+    "tx": [
+      {
+        "txid": "genesis-tx-001",
+        "vin": [
+          {
+            "coinbase": "true"
+          }
+        ],
+        "vout": [
+          {
+            "value": 50.0,
+            "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
+            "n": 0
+          }
+        ]
+      },
+      {
+        "txid": "genesis-tx-002",
+        "vin": [
+          {
+            "txid": "genesis-tx-001",
+            "vout": 0
+          }
+        ],
+        "vout": [
+          {
+            "value": 5.0,
+            "address": "1CQJ8AiLCqKWX3ESF32ouSfnaMh8RVp6bN",
+            "n": 0
+          },
+          {
+            "value": 45.0,
+            "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
+            "n": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "hash": "0000001d2e0a89021b061f7aa7d69fcc285e25cf90a3dab8fadac2fb5efc673f",
+    "previousHash": "genesis#",
+    "merkleRoot": null,
+    "nonce": 2327107,
+    "size": 0,
+    "timeStamp": 1734903382,
+    "index": 1,
+    "tx": [
+      {
+        "txid": "txid_cb_2",
+        "vin": [
+          {
+            "txid": "",
+            "vout": 0,
+            "coinbase": "true"
+          }
+        ],
+        "vout": [
+          {
+            "value": 3.0,
+            "address": "1MSt353yTmKFzZbjetUvTFDhQ7kJZKzPLo",
+            "n": 0
+          }
+        ]
+      },
+      {
+        "txid": "txid_2",
+        "vin": [
+          {
+            "txid": "genesis-tx-002",
+            "vout": 1
+          }
+        ],
+        "vout": [
+          {
+            "value": 1.05455009,
+            "address": "1EtdEWTkduTt9vojtX1ZB2zMinY37qSgMH",
+            "n": 0
+          },
+          {
+            "value": 43.94544991,
+            "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
+            "n": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "hash": "00000080e4561294b3f4314971aa57ceea60a394551e07ade1dd7b3fb0cc7f19",
+    "previousHash": "0000001d2e0a89021b061f7aa7d69fcc285e25cf90a3dab8fadac2fb5efc673f",
+    "merkleRoot": null,
+    "nonce": 80543,
+    "size": 0,
+    "timeStamp": 1734903491,
+    "index": 2,
+    "tx": [
+      {
+        "txid": "txid_cb_7",
+        "vin": [
+          {
+            "txid": "",
+            "vout": 0,
+            "coinbase": "true"
+          }
+        ],
+        "vout": [
+          {
+            "value": 3.0,
+            "address": "1MSt353yTmKFzZbjetUvTFDhQ7kJZKzPLo",
+            "n": 0
+          }
+        ]
+      },
+      {
+        "txid": "txid_7",
+        "vin": [
+          {
+            "txid": "txid_2",
+            "vout": 1
+          }
+        ],
+        "vout": [
+          {
+            "value": 2.09550091,
+            "address": "1EtdEWTkduTt9vojtX1ZB2zMinY37qSgMH",
+            "n": 0
+          },
+          {
+            "value": 41.849949000100004,
+            "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
+            "n": 1
+          }
+        ]
+      }
+    ]
+  }
+]

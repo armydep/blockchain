@@ -1,5 +1,11 @@
 [
   {
+    "tx": "genesis-tx-002",
+    "value": 5,
+    "address": "1CQJ8AiLCqKWX3ESF32ouSfnaMh8RVp6bN",
+    "vout": 0
+  },
+  {
     "tx": "txid_cb_2",
     "value": 3,
     "address": "1MSt353yTmKFzZbjetUvTFDhQ7kJZKzPLo",
@@ -7,73 +13,25 @@
   },
   {
     "tx": "txid_2",
-    "value": 1.05000156,
-    "address": "1CQJ8AiLCqKWX3ESF32ouSfnaMh8RVp6bN",
+    "value": 1.05455009,
+    "address": "1EtdEWTkduTt9vojtX1ZB2zMinY37qSgMH",
     "vout": 0
   },
   {
-    "tx": "txid_cb_3",
+    "tx": "txid_cb_7",
     "value": 3,
     "address": "1MSt353yTmKFzZbjetUvTFDhQ7kJZKzPLo",
     "vout": 0
   },
   {
-    "tx": "txid_3",
-    "value": 2.05016009,
-    "address": "1CQJ8AiLCqKWX3ESF32ouSfnaMh8RVp6bN",
+    "tx": "txid_7",
+    "value": 2.09550091,
+    "address": "1EtdEWTkduTt9vojtX1ZB2zMinY37qSgMH",
     "vout": 0
   },
   {
-    "tx": "txid_3",
-    "value": 42.94983991,
-    "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
-    "vout": 1
-  },
-  {
-    "tx": "txid_cb_4",
-    "value": 3,
-    "address": "1MSt353yTmKFzZbjetUvTFDhQ7kJZKzPLo",
-    "vout": 0
-  },
-  {
-    "tx": "txid_4",
-    "value": 1.05160039,
-    "address": "1MSt353yTmKFzZbjetUvTFDhQ7kJZKzPLo",
-    "vout": 0
-  },
-  {
-    "tx": "txid_4",
-    "value": 3.94839961,
-    "address": "1CQJ8AiLCqKWX3ESF32ouSfnaMh8RVp6bN",
-    "vout": 1
-  },
-  {
-    "tx": "txid_4",
-    "value": 3.06600395,
-    "address": "1MSt353yTmKFzZbjetUvTFDhQ7kJZKzPLo",
-    "vout": 0
-  },
-  {
-    "tx": "txid_4",
-    "value": 40.8839944901,
-    "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
-    "vout": 1
-  },
-  {
-    "tx": "txid_cb_5",
-    "value": 3,
-    "address": "1MSt353yTmKFzZbjetUvTFDhQ7kJZKzPLo",
-    "vout": 0
-  },
-  {
-    "tx": "txid_5",
-    "value": 4.08456677,
-    "address": "1CQJ8AiLCqKWX3ESF32ouSfnaMh8RVp6bN",
-    "vout": 0
-  },
-  {
-    "tx": "txid_5",
-    "value": 39.8654316701,
+    "tx": "txid_7",
+    "value": 41.849949000100004,
     "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
     "vout": 1
   }

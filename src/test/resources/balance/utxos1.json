@@ -6,8 +6,20 @@
     "vout": 0
   },
   {
-    "tx": "genesis-tx-002",
-    "value": 45,
+    "tx": "txid_cb_2",
+    "value": 3,
+    "address": "1MSt353yTmKFzZbjetUvTFDhQ7kJZKzPLo",
+    "vout": 0
+  },
+  {
+    "tx": "txid_2",
+    "value": 1.05455009,
+    "address": "1EtdEWTkduTt9vojtX1ZB2zMinY37qSgMH",
+    "vout": 0
+  },
+  {
+    "tx": "txid_2",
+    "value": 43.94544991,
     "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
     "vout": 1
   }

@@ -2,6 +2,7 @@ package org.am.com.blockchain.model.wallet;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.am.com.blockchain.model.block.UTXO;
 import org.am.com.blockchain.util.BtcOperation;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@EqualsAndHashCode
 public class Balance {
     @Getter
     private final String address;

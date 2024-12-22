@@ -1,1 +1,62 @@
-[]
+[
+  {
+    "address": "1EtdEWTkduTt9vojtX1ZB2zMinY37qSgMH",
+    "utxos": [
+      {
+        "tx": "txid_2",
+        "value": 1.05455009,
+        "address": "1EtdEWTkduTt9vojtX1ZB2zMinY37qSgMH",
+        "vout": 0
+      },
+      {
+        "tx": "txid_7",
+        "value": 2.09550091,
+        "address": "1EtdEWTkduTt9vojtX1ZB2zMinY37qSgMH",
+        "vout": 0
+      }
+    ],
+    "amount": 3.1500510001
+  },
+  {
+    "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
+    "utxos": [
+      {
+        "tx": "txid_7",
+        "value": 41.849949000100004,
+        "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
+        "vout": 1
+      }
+    ],
+    "amount": 41.8499490002
+  },
+  {
+    "address": "1CQJ8AiLCqKWX3ESF32ouSfnaMh8RVp6bN",
+    "utxos": [
+      {
+        "tx": "genesis-tx-002",
+        "value": 5,
+        "address": "1CQJ8AiLCqKWX3ESF32ouSfnaMh8RVp6bN",
+        "vout": 0
+      }
+    ],
+    "amount": 5
+  },
+  {
+    "address": "1MSt353yTmKFzZbjetUvTFDhQ7kJZKzPLo",
+    "utxos": [
+      {
+        "tx": "txid_cb_2",
+        "value": 3,
+        "address": "1MSt353yTmKFzZbjetUvTFDhQ7kJZKzPLo",
+        "vout": 0
+      },
+      {
+        "tx": "txid_cb_7",
+        "value": 3,
+        "address": "1MSt353yTmKFzZbjetUvTFDhQ7kJZKzPLo",
+        "vout": 0
+      }
+    ],
+    "amount": 6
+  }
+]

@@ -117,15 +117,17 @@ class BlockChainServiceTest {
                         "balance/blocks0.json",
                         "balance/utxos0.json",
                         "balance/balance0.json"
+                ),
+                Arguments.of(
+                        "balance/blocks1.json",
+                        "balance/utxos1.json",
+                        "balance/balance1.json"
+                ),
+                Arguments.of(
+                        "balance/blocks2.json",
+                        "balance/utxos2.json",
+                        "balance/balance2.json"
                 )
-//                ,
-//                Arguments.of(
-//                        "balance/blocks1.json",
-//                        "balance/utxos1.json",
-//                        "balance/balance1.json"
-//                )
-//                ,
-//                Arguments.of("balance/balance2.json", "balance/utxos2.json")
         );
     }
 
