@@ -11,26 +11,30 @@ public class BtcOperation {
         BigDecimal totalSat = baseBTCSat
                 .add(BigDecimal.valueOf(baseSatoshi))
                 .add(BigDecimal.valueOf(addSatoshi));
-        return satoshiToDouble(totalSat);
+        return satoshiToBTCDouble(totalSat);
     }
 
     public static double sumDoubles(double left, double right) {
-        BigDecimal leftSatoshi = floatToSatoshi(left);
-        BigDecimal rightSatoshi = floatToSatoshi(right);
-        return satoshiToDouble(leftSatoshi.add(rightSatoshi));
+        BigDecimal leftSatoshi = doubleToSatoshi(left);
+        BigDecimal rightSatoshi = doubleToSatoshi(right);
+        return satoshiToBTCDouble(leftSatoshi.add(rightSatoshi));
     }
 
-    public static BigDecimal floatToSatoshi(double btc) {
+    public static BigDecimal doubleToSatoshi(double btc) {
         if (btc < 0) {
             throw new IllegalArgumentException("BTC value cannot be negative.");
         }
         return new BigDecimal(btc).multiply(SATOSHI_PER_BTC);
     }
 
-    public static double satoshiToDouble(BigDecimal satoshi) {
+    public static double satoshiToBTCDouble(BigDecimal satoshi) {
         if (satoshi.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("Satoshi value cannot be negative.");
         }
         return satoshi.divide(SATOSHI_PER_BTC, 10, RoundingMode.UP).doubleValue();
+    }
+
+    public static Double roundDoubleToBTC(Double btc) {
+        return satoshiToBTCDouble(doubleToSatoshi(btc));
     }
 }

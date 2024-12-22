@@ -8,8 +8,8 @@ import java.util.List;
 
 @Value
 public class MempoolTransaction implements Cloneable {
-    String from;
-    String to;
+    String sender;
+    String recipient;
     Double amount;
     Long timestamp;
     List<UTXO> txCoversSum;
@@ -17,7 +17,7 @@ public class MempoolTransaction implements Cloneable {
 
     @Override
     public MempoolTransaction clone() {
-        return new MempoolTransaction(from, to, amount, timestamp,
+        return new MempoolTransaction(sender, recipient, amount, timestamp,
                 new ArrayList<>(txCoversSum), change);
     }
 }

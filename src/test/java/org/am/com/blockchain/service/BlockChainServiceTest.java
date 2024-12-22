@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.am.com.blockchain.model.block.Block;
 import org.am.com.blockchain.model.block.UTXO;
+import org.am.com.blockchain.model.wallet.Balance;
 import org.am.com.blockchain.repository.BlockChainRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -17,6 +19,7 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -61,6 +64,35 @@ class BlockChainServiceTest {
         assertEquals(expectedUTXOs, utxos);
     }
 
+    @ParameterizedTest
+    @MethodSource("provideBalanceFileNames")
+    public void testGetBalances(String blocksFile,
+                                String utxoFile,
+                                String balanceFile) throws IOException {
+        List<Balance> expectedBalances = loadBalances(balanceFile);
+        List<Block> blocks = loadBlocks(blocksFile);
+        List<UTXO> utxos = loadUTXOs(utxoFile);
+        when(service.getUTXO()).thenReturn(utxos);
+        when(service.getBlocks()).thenReturn(blocks);
+        List<Balance> balances = service.getBalances();
+        assertEquals(expectedBalances, balances);
+    }
+
+    @Test
+    public void testFindBalanceByAddress() throws IOException {
+        String address = "test";
+        Optional<Balance> obalance = service.findBalanceByAddress(address);
+    }
+
+    private List<Balance> loadBalances(String balanceFile) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Balance> balances = objectMapper
+                .readValue(new ClassPathResource(balanceFile).getInputStream(),
+                        new TypeReference<List<Balance>>() {
+                        });
+        return balances;
+    }
+
     private List<Block> loadBlocks(String blocksFile) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         List<Block> blocks = objectMapper
@@ -77,6 +109,24 @@ class BlockChainServiceTest {
                         new TypeReference<List<UTXO>>() {
                         });
         return utxos;
+    }
+
+    static Stream<Arguments> provideBalanceFileNames() {
+        return Stream.of(
+                Arguments.of(
+                        "balance/blocks0.json",
+                        "balance/utxos0.json",
+                        "balance/balance0.json"
+                )
+//                ,
+//                Arguments.of(
+//                        "balance/blocks1.json",
+//                        "balance/utxos1.json",
+//                        "balance/balance1.json"
+//                )
+//                ,
+//                Arguments.of("balance/balance2.json", "balance/utxos2.json")
+        );
     }
 
     static Stream<Arguments> provideFileNames() {

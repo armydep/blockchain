@@ -116,10 +116,10 @@ public class Miner {
     private TX generateTX(MempoolTransaction mpTx, String txid) {
         List<TxInEntry> txInEntries = createTxInFromUTXOs(mpTx.getTxCoversSum());
         List<TxOutEntry> txOutEntries = new ArrayList<>();
-        TxOutEntry txOutEntry = new TxOutEntry(mpTx.getAmount(), mpTx.getTo(), 0);
+        TxOutEntry txOutEntry = new TxOutEntry(mpTx.getAmount(), mpTx.getRecipient(), 0);
         txOutEntries.add(txOutEntry);
         if (mpTx.getChange() > 0) {
-            TxOutEntry txOutEntryChange = new TxOutEntry(mpTx.getChange(), mpTx.getFrom(), 1);
+            TxOutEntry txOutEntryChange = new TxOutEntry(mpTx.getChange(), mpTx.getSender(), 1);
             txOutEntries.add(txOutEntryChange);
         }
         return new TX(txid, txInEntries, txOutEntries);

@@ -44,29 +44,29 @@ class BtcOperationTest {
     @Test
     void floatToSatoshi() {
         // Positive case
-        BigDecimal result = BtcOperation.floatToSatoshi(1.5);
+        BigDecimal result = BtcOperation.doubleToSatoshi(1.5);
         assertEquals(new BigDecimal("150000000.0"), result);
 
         // Zero case
-        result = BtcOperation.floatToSatoshi(0.0);
+        result = BtcOperation.doubleToSatoshi(0.0);
         assertEquals(BigDecimal.ZERO, result);
 
         // Negative case (should throw exception)
-        assertThrows(IllegalArgumentException.class, () -> BtcOperation.floatToSatoshi(-1.0));
+        assertThrows(IllegalArgumentException.class, () -> BtcOperation.doubleToSatoshi(-1.0));
     }
 
     @Test
     void satoshiToFloat() {
         // Positive case
-        double result = BtcOperation.satoshiToDouble(new BigDecimal("150000000"));
+        double result = BtcOperation.satoshiToBTCDouble(new BigDecimal("150000000"));
         assertEquals(1.5, result, 0.0001);
 
         // Zero case
-        result = BtcOperation.satoshiToDouble(BigDecimal.ZERO);
+        result = BtcOperation.satoshiToBTCDouble(BigDecimal.ZERO);
         assertEquals(0.0, result, 0.0001);
 
         // Negative case (should throw exception)
         assertThrows(IllegalArgumentException.class, () ->
-                BtcOperation.satoshiToDouble(new BigDecimal("-100000000")));
+                BtcOperation.satoshiToBTCDouble(new BigDecimal("-100000000")));
     }
 }

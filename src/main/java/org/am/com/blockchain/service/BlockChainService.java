@@ -1,5 +1,6 @@
 package org.am.com.blockchain.service;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.am.com.blockchain.api.CreateTxResponse;
@@ -52,95 +53,6 @@ public class BlockChainService {
         return utxoData;
     }
 
-    private void generateAndInsertUTXOByTxOut(TxOutEntry txOutEntry, List<UTXO> utxoData,
-                                              String txid) {
-        UTXO utxo = new UTXO(txid, txOutEntry.getValue(), txOutEntry.getAddress(),
-                txOutEntry.getN());
-        utxoData.add(utxo);
-    }
-
-    private void discardUTXOByTxIn(TxInEntry txInEntry, List<UTXO> utxoData) {
-        boolean removed = false;
-        for (UTXO utxo : utxoData) {
-            if (utxo.getTx().equals(txInEntry.getTxid()) && utxo.getVout() == txInEntry.getVout()) {
-                utxoData.remove(utxo);
-                removed = true;
-                break;
-            }
-        }
-        if (!removed) {
-            log.warn("Not found UTXO for discard: " + txInEntry.getTxid());
-        }
-    }
-
-    private UTXO generateCoinBaseUTXO(CoinBaseEntry coinBaseEntry) {
-        return new UTXO(coinBaseEntry.getTxid(), coinBaseEntry.getValue(),
-                coinBaseEntry.getAddress(), coinBaseEntry.getN());
-    }
-
-    public List<Balance> getBalances() {
-        Map<String, Balance> balancesMap = new HashMap<>();
-        List<Balance> list = new ArrayList<>(List.of());
-        List<UTXO> utxos = getUTXO();
-        for (UTXO utxo : utxos) {
-            String address = utxo.getAddress();
-            Balance balance;
-            if (balancesMap.containsKey(address)) {
-                balance = balancesMap.get(address);
-                balance.addUTXO(utxo);
-            } else {
-                balance = new Balance(utxo);
-                balancesMap.put(address, balance);
-            }
-        }
-        list.addAll(balancesMap.values());
-        return list;
-    }
-
-    public Optional<Balance> findBalanceByAddress(String address) {
-        List<Balance> balances = getBalances();
-        return balances.stream()
-                .filter(balance -> balance.getAddress().equals(address))
-                .findFirst();
-    }
-
-    public void addTransaction(MempoolTransaction transactionRequest) {
-        mempool.add(transactionRequest);
-    }
-
-    public List<MempoolTransaction> getMempool() {
-        List<MempoolTransaction> copy = new ArrayList<>(mempool.size());
-        for (MempoolTransaction item : mempool) {
-            copy.add(item.clone());
-        }
-        return copy;
-    }
-
-    public List<MempoolTransaction> getBatch(int batchSize) {
-        if (batchSize <= 0 || mempool.isEmpty()) {
-            return List.of();
-        }
-        return mempool.subList(0, Math.min(batchSize, mempool.size()));
-    }
-
-    public void submitBlock(Block block) {
-        blockChainRepository.addBlock(block);
-    }
-
-    public void clearMempoolTX(List<MempoolTransaction> validMempoolTransactions) {
-        for (MempoolTransaction mempoolTransaction : validMempoolTransactions) {
-            mempool.remove(mempoolTransaction);
-        }
-    }
-
-    public void updateUTXO(List<MempoolTransaction> validMempoolTransactions) {
-        log.warn("Not implemented");
-    }
-
-    public Block getLatestBlock() {
-        return blockChainRepository.getLastBlock();
-    }
-
     public CreateTxResponse submitTransaction(SendRequest sendRequest) {
         Optional<Balance> balanceOptional = findBalanceByAddress(sendRequest.getSender());
         if (balanceOptional.isEmpty()) {
@@ -174,7 +86,6 @@ public class BlockChainService {
                     .message("Not enough balance. Fee: 0." + FEE_SATOSHI + " btc")
                     .build();
         }
-
     }
 
     //todo: replace naive method by specific algorithm
@@ -184,7 +95,7 @@ public class BlockChainService {
             return Pair.of(List.of(), 0d);
         }
         Balance balance = optionalBalance.get();
-        List<UTXO> utxos = balance.getUtxos();
+        List<UTXO> utxos = balance.getUTXOs();
         List<UTXO> result = new ArrayList<>();
         double currentSum = 0;
         for (UTXO utxo : utxos) {
@@ -197,7 +108,97 @@ public class BlockChainService {
         return Pair.of(result, currentSum - sum);
     }
 
+    public List<Balance> getBalances() {
+        Map<String, Balance> balancesMap = new HashMap<>();
+        List<Balance> list = new ArrayList<>(List.of());
+        List<UTXO> utxos = getUTXO();
+        for (UTXO utxo : utxos) {
+            String address = utxo.getAddress();
+            Balance balance;
+            if (balancesMap.containsKey(address)) {
+                balance = balancesMap.get(address);
+                balance.addUTXO(utxo);
+            } else {
+                balance = new Balance(utxo);
+                balancesMap.put(address, balance);
+            }
+        }
+        list.addAll(balancesMap.values());
+        return list;
+    }
+
+    public Optional<Balance> findBalanceByAddress(@NotEmpty String address) {
+        List<Balance> balances = getBalances();
+        return balances.stream()
+                .filter(balance -> balance.getAddress().equals(address))
+                .findFirst();
+    }
+
+    public List<MempoolTransaction> getMempool() {
+        List<MempoolTransaction> copy = new ArrayList<>(mempool.size());
+        for (MempoolTransaction item : mempool) {
+            copy.add(item.clone());
+        }
+        return copy;
+    }
+
+    private void generateAndInsertUTXOByTxOut(TxOutEntry txOutEntry, List<UTXO> utxoData,
+                                              String txid) {
+        UTXO utxo = new UTXO(txid, txOutEntry.getValue(), txOutEntry.getAddress(),
+                txOutEntry.getN());
+        utxoData.add(utxo);
+    }
+
+    private UTXO generateCoinBaseUTXO(CoinBaseEntry coinBaseEntry) {
+        return new UTXO(coinBaseEntry.getTxid(), coinBaseEntry.getValue(),
+                coinBaseEntry.getAddress(), coinBaseEntry.getN());
+    }
+
+    public void addTransaction(MempoolTransaction transactionRequest) {
+        mempool.add(transactionRequest);
+    }
+
+    public List<MempoolTransaction> getBatch(int batchSize) {
+        if (batchSize <= 0 || mempool.isEmpty()) {
+            return List.of();
+        }
+        return mempool.subList(0, Math.min(batchSize, mempool.size()));
+    }
+
+    public void submitBlock(Block block) {
+        blockChainRepository.addBlock(block);
+    }
+
+    public void clearMempoolTX(List<MempoolTransaction> validMempoolTransactions) {
+        for (MempoolTransaction mempoolTransaction : validMempoolTransactions) {
+            mempool.remove(mempoolTransaction);
+        }
+    }
+
+    public void updateUTXO(List<MempoolTransaction> validMempoolTransactions) {
+        log.warn("Not implemented");
+    }
+
+    public Block getLatestBlock() {
+        return blockChainRepository.getLastBlock();
+    }
+
     public List<Block> getBlocks() {
         return blockChainRepository.getBlocks();
     }
+
+    private void discardUTXOByTxIn(TxInEntry txInEntry, List<UTXO> utxoData) {
+        boolean removed = false;
+        for (UTXO utxo : utxoData) {
+            if (utxo.getTx().equals(txInEntry.getTxid()) && utxo.getVout() == txInEntry.getVout()) {
+                utxoData.remove(utxo);
+                removed = true;
+                break;
+            }
+        }
+        if (!removed) {
+            log.warn("Not found UTXO for discard: " + txInEntry.getTxid());
+        }
+    }
+
 }
