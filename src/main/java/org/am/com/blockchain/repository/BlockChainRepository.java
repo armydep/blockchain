@@ -13,6 +13,8 @@ import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Slf4j
@@ -66,6 +68,7 @@ public class BlockChainRepository {
 
     private void saveBlocksToFile() {
         try {
+            Files.createDirectories(Paths.get(storageFileName).getParent());
             objectMapper.writeValue(new File(storageFileName), blocks);
             log.info("Blocks saved as JSON in file: {}", storageFileName);
         } catch (IOException e) {

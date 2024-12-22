@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Slf4j
@@ -66,6 +68,7 @@ public class UserRepository {
 
     public void save() {
         try {
+            Files.createDirectories(Paths.get(usersStorageFileName).getParent());
             objectMapper.writeValue(new File(usersStorageFileName), users);
             log.info("Users saved as JSON in file: " + usersStorageFileName);
         } catch (IOException e) {
