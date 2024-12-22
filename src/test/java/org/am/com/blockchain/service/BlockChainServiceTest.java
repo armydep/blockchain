@@ -80,8 +80,11 @@ class BlockChainServiceTest {
     }
 
     static Stream<Arguments> provideFileNames() {
-        return Stream.of(Arguments.of("utxo/blocks0.json", "utxo/utxos0.json"),
-                Arguments.of("utxo/blocks1.json", "utxo/utxos1.json"));
+        return Stream.of(
+                Arguments.of("utxo/blocks0.json", "utxo/utxos0.json"),
+                Arguments.of("utxo/blocks1.json", "utxo/utxos1.json"),
+                Arguments.of("utxo/blocks2.json", "utxo/utxos2.json")
+        );
     }
 
     static Stream<Arguments> provideBlocks() throws IOException {
