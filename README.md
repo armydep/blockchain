@@ -62,3 +62,6 @@
   - Git
     - Branches: main, dev, release
     - Rebase
+<details>
+my text
+</details>
