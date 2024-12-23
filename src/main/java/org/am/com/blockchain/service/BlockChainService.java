@@ -1,6 +1,7 @@
 package org.am.com.blockchain.service;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.am.com.blockchain.api.CreateTxResponse;
@@ -170,10 +171,10 @@ public class BlockChainService {
         return blockChainRepository.getBlocks();
     }
 
-    private void discardUTXOByTxIn(TxInEntry txInEntry, List<UTXO> utxoData) {
+    private void discardUTXOByTxIn(@NotNull TxInEntry txInEntry, List<UTXO> utxoData) {
         boolean removed = false;
         for (UTXO utxo : utxoData) {
-            if (utxo.getTx().equals(txInEntry.getTxid()) && utxo.getVout() == txInEntry.getVout()) {
+            if (utxo.getTx().equals(txInEntry.getTxid()) && txInEntry.getVout().equals(utxo.getVout())) {
                 utxoData.remove(utxo);
                 removed = true;
                 break;
