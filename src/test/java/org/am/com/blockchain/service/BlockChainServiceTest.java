@@ -139,8 +139,8 @@ class BlockChainServiceTest {
     public void testSubmitTransactionWithChange() {
         BlockChainService serviceSpy = Mockito.spy(service);
         String address = "addr";
-        int spend = 1;
-        double totalOnBalance = BtcOperation.sumInts(spend, FEE_SATOSHI + 1, 0);
+        int spend = 3;
+        double totalOnBalance = BtcOperation.sumInts(spend + 1, FEE_SATOSHI, 0);
         UTXO utxo = new UTXO("tx", totalOnBalance, address, 1);
         Balance balance = new Balance(address, List.of(utxo));
         Optional<Balance> balanceOptional = Optional.of(balance);
@@ -152,7 +152,7 @@ class BlockChainServiceTest {
         CreateTxResponse response = serviceSpy.submitTransaction(sendRequest);
         assertTrue(response.getSubmitted());
         assertEquals(BtcOperation.sumInts(spend, FEE_SATOSHI, 0), response.getTotalToSend());
-        //assertEquals(0, response.getRemaining());
+        assertEquals(1.0, response.getRemaining());
     }
 
     @ParameterizedTest
