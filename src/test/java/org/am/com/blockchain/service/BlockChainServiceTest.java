@@ -14,6 +14,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.io.ClassPathResource;
 
@@ -23,7 +24,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class BlockChainServiceTest {
 
@@ -48,7 +49,7 @@ class BlockChainServiceTest {
 
     @ParameterizedTest
     @MethodSource("provideBlocks")
-    public void testGetUTXO(List<Block> blocks, List<UTXO> expectedUTXOs) {
+    public void testGetEmptyUTXO(List<Block> blocks, List<UTXO> expectedUTXOs) {
         when(repository.getBlocks()).thenReturn(blocks);
         List<UTXO> utxos = service.getUTXO();
         assertEquals(expectedUTXOs, utxos);
@@ -56,7 +57,7 @@ class BlockChainServiceTest {
 
     @ParameterizedTest
     @MethodSource("provideFileNames")
-    public void testGetUTXO2(String blocksFile, String utxoFile) throws IOException {
+    public void testGetUTXO(String blocksFile, String utxoFile) throws IOException {
         List<Block> blocks = loadBlocks(blocksFile);
         List<UTXO> expectedUTXOs = loadUTXOs(utxoFile);
         when(repository.getBlocks()).thenReturn(blocks);
@@ -79,9 +80,25 @@ class BlockChainServiceTest {
     }
 
     @Test
-    public void testFindBalanceByAddress() throws IOException {
-        String address = "test";
-        Optional<Balance> obalance = service.findBalanceByAddress(address);
+    void testFindBalanceByAddress_NotFound() throws IOException {
+        BlockChainService serviceSpy = Mockito.spy(service);
+        List<Balance> balances = loadBalances("balance/balance0.json");
+        doReturn(balances).when(serviceSpy).getBalances();
+        String addressToSearch = "abc";
+        Optional<Balance> result = serviceSpy.findBalanceByAddress(addressToSearch);
+        assertEquals(Optional.empty(), result);
+        verify(serviceSpy).getBalances();
+    }
+
+    @Test
+    void testFindBalanceByAddress() throws IOException {
+        BlockChainService serviceSpy = Mockito.spy(service);
+        List<Balance> balances = loadBalances("balance/balance1.json");
+        doReturn(balances).when(serviceSpy).getBalances();
+        String addressToSearch = "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf";
+        Optional<Balance> result = serviceSpy.findBalanceByAddress(addressToSearch);
+        assertEquals(Optional.of(balances.get(1)), result);
+        verify(serviceSpy).getBalances();
     }
 
     private List<Balance> loadBalances(String balanceFile) throws IOException {
