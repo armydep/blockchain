@@ -22,8 +22,7 @@ import java.util.*;
 public class BlockChainService {
 
     private final BlockChainRepository blockChainRepository;
-    private final List<MempoolTransaction> mempool =
-            Collections.synchronizedList(new ArrayList<>());
+    private final List<MempoolTransaction> mempool = Collections.synchronizedList(new ArrayList<>());
     private final int FEE_SATOSHI = 5_000_000;
 
 
@@ -57,11 +56,12 @@ public class BlockChainService {
     public CreateTxResponse submitTransaction(SendRequest sendRequest) {
         Optional<Balance> balanceOptional = findBalanceByAddress(sendRequest.getSender());
         if (balanceOptional.isEmpty()) {
-            return CreateTxResponse.builder().submitted(false).message("No balance for sending tx").build();
+            return CreateTxResponse.builder()
+                    .submitted(false).message("Address does not contain any spendable inputs").build();
         }
         Balance balance = balanceOptional.get();
         double sum = BtcOperation.sumInts(sendRequest.getBtc(), sendRequest.getSat(), FEE_SATOSHI);
-        double remaining = balance.getAmount() - sum;
+        double remaining = BtcOperation.roundDoubleToBTC(balance.getAmount() - sum);
         if (balance.getAmount() >= sum) {
             long ts = System.currentTimeMillis() / 1000;
             Pair<List<UTXO>, Double> balancePair = getBalanceCoversSumForAddress(sendRequest.getSender(), sum);

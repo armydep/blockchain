@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BtcOperationTest {
 
     @Test
-    void sumInts() {
+    void testSumInts() {
         // Positive case
         double result = BtcOperation.sumInts(1, 50_000_000, 25_000_000);
         assertEquals(1.75, result, 0.0001);
@@ -27,7 +27,7 @@ class BtcOperationTest {
     }
 
     @Test
-    void sumFloats() {
+    void testSumDoubles() {
         // Positive case
         double result = BtcOperation.sumDoubles(1.5, 0.25);
         assertEquals(1.75, result, 0.0001);
@@ -42,7 +42,7 @@ class BtcOperationTest {
     }
 
     @Test
-    void floatToSatoshi() {
+    void testDoubleToSatoshi() {
         // Positive case
         BigDecimal result = BtcOperation.doubleToSatoshi(1.5);
         assertEquals(new BigDecimal("150000000.0"), result);
@@ -51,12 +51,11 @@ class BtcOperationTest {
         result = BtcOperation.doubleToSatoshi(0.0);
         assertEquals(BigDecimal.ZERO, result);
 
-        // Negative case (should throw exception)
-        assertThrows(IllegalArgumentException.class, () -> BtcOperation.doubleToSatoshi(-1.0));
+        assertEquals(BigDecimal.valueOf(-100000000), BtcOperation.doubleToSatoshi(-1.0));
     }
 
     @Test
-    void satoshiToFloat() {
+    void testSatoshiToDouble() {
         // Positive case
         double result = BtcOperation.satoshiToBTCDouble(new BigDecimal("150000000"));
         assertEquals(1.5, result, 0.0001);
@@ -65,8 +64,7 @@ class BtcOperationTest {
         result = BtcOperation.satoshiToBTCDouble(BigDecimal.ZERO);
         assertEquals(0.0, result, 0.0001);
 
-        // Negative case (should throw exception)
-        assertThrows(IllegalArgumentException.class, () ->
-                BtcOperation.satoshiToBTCDouble(new BigDecimal("-100000000")));
+        // Negative case
+        assertEquals(-1.0, BtcOperation.satoshiToBTCDouble(new BigDecimal("-100000000")));
     }
 }

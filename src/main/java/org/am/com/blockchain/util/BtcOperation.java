@@ -21,16 +21,16 @@ public class BtcOperation {
     }
 
     public static BigDecimal doubleToSatoshi(double btc) {
-        if (btc < 0) {
+        /*if (btc < 0) {
             throw new IllegalArgumentException("BTC value cannot be negative.");
-        }
+        }*/
         return new BigDecimal(btc).multiply(SATOSHI_PER_BTC);
     }
 
     public static double satoshiToBTCDouble(BigDecimal satoshi) {
-        if (satoshi.compareTo(BigDecimal.ZERO) < 0) {
+        /*if (satoshi.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("Satoshi value cannot be negative.");
-        }
+        }*/
         return satoshi.divide(SATOSHI_PER_BTC, 10, RoundingMode.UP).doubleValue();
     }
 

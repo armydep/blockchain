@@ -14,8 +14,8 @@ public class SendRequest {
     @NotEmpty(message = "Receiver address cannot be empty")
     private String recipient;
     @Min(value = 0, message = "BTC amount must be at least 0")
-    private int btc;
+    private Integer btc;
     @Min(value = 0, message = "Sat amount must be at least 0")
     @Max(value = 99999999, message = "Sat amount must be at less than 100M")
-    private int sat;
+    private Integer sat;
 }

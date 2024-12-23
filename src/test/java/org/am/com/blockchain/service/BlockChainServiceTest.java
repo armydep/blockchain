@@ -2,9 +2,11 @@ package org.am.com.blockchain.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.am.com.blockchain.api.CreateTxResponse;
 import org.am.com.blockchain.model.block.Block;
 import org.am.com.blockchain.model.block.UTXO;
 import org.am.com.blockchain.model.wallet.Balance;
+import org.am.com.blockchain.model.wallet.api.SendRequest;
 import org.am.com.blockchain.repository.BlockChainRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class BlockChainServiceTest {
@@ -47,6 +49,50 @@ class BlockChainServiceTest {
         closeable.close();
     }
 
+
+    /*
+    post condition:
+        response.submitted
+        response.remaining
+        response.totalToSend
+        response.txid
+        response.message is null
+
+        Mempool
+
+        cases:
+            1.1 no such address among
+            1.2 address exists but not enough balances on address
+            2. enough addresses: mpTx added to mempool
+     */
+    @Test
+    public void testSubmitEmptyTransaction() {
+        BlockChainService serviceSpy = Mockito.spy(service);
+        SendRequest sendRequest = new SendRequest();
+        Optional<Balance> balanceOptional = Optional.empty();
+        doReturn(balanceOptional).when(serviceSpy).findBalanceByAddress(anyString());
+        CreateTxResponse response = serviceSpy.submitTransaction(sendRequest);
+        assertNotNull(response);
+        assertFalse(response.getSubmitted());
+    }
+
+    @Test
+    public void testSubmitTransactionNoEnoughBalance() {
+        BlockChainService serviceSpy = Mockito.spy(service);
+        String address = "addr";
+        UTXO utxo = new UTXO("tx", 1.0, address, 1);
+        Balance balance = new Balance(address, List.of(utxo));
+        Optional<Balance> balanceOptional = Optional.of(balance);
+        doReturn(balanceOptional).when(serviceSpy).findBalanceByAddress(anyString());
+        SendRequest sendRequest = new SendRequest();
+        sendRequest.setSender(address);
+        sendRequest.setBtc(5);
+        sendRequest.setSat(0);
+        CreateTxResponse response = serviceSpy.submitTransaction(sendRequest);
+        assertNotNull(response);
+        assertFalse(response.getSubmitted());
+    }
+
     @ParameterizedTest
     @MethodSource("provideBlocks")
     public void testGetEmptyUTXO(List<Block> blocks, List<UTXO> expectedUTXOs) {
@@ -67,15 +113,24 @@ class BlockChainServiceTest {
 
     @ParameterizedTest
     @MethodSource("provideBalanceFileNames")
-    public void testGetBalances(String blocksFile,
-                                String utxoFile,
-                                String balanceFile) throws IOException {
+    public void testGetBalances(String blocksFile, String utxoFile, String balanceFile) throws IOException {
         List<Balance> expectedBalances = loadBalances(balanceFile);
         List<Block> blocks = loadBlocks(blocksFile);
         List<UTXO> utxos = loadUTXOs(utxoFile);
         when(service.getUTXO()).thenReturn(utxos);
         when(service.getBlocks()).thenReturn(blocks);
         List<Balance> balances = service.getBalances();
+        assertEquals(expectedBalances, balances);
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideBalanceFileNames")
+    public void testGetBalancesSpy(String blocksFile, String utxoFile, String balanceFile) throws IOException {
+        List<Balance> expectedBalances = loadBalances(balanceFile);
+        List<UTXO> mockUTXOs = loadUTXOs(utxoFile);
+        BlockChainService serviceSpy = Mockito.spy(service);
+        doReturn(mockUTXOs).when(serviceSpy).getUTXO();
+        List<Balance> balances = serviceSpy.getBalances();
         assertEquals(expectedBalances, balances);
     }
 
@@ -131,12 +186,14 @@ class BlockChainServiceTest {
                         "balance/blocks0.json",
                         "balance/utxos0.json",
                         "balance/balance0.json"
-                ),
+                )
+                ,
                 Arguments.of(
                         "balance/blocks1.json",
                         "balance/utxos1.json",
                         "balance/balance1.json"
-                ),
+                )
+                ,
                 Arguments.of(
                         "balance/blocks2.json",
                         "balance/utxos2.json",
