@@ -56,35 +56,22 @@ public class BlockChainService {
     public CreateTxResponse submitTransaction(SendRequest sendRequest) {
         Optional<Balance> balanceOptional = findBalanceByAddress(sendRequest.getSender());
         if (balanceOptional.isEmpty()) {
-            return CreateTxResponse.builder()
-                    .submitted(false)
-                    .message("No balance for sending tx")
-                    .build();
+            return CreateTxResponse.builder().submitted(false).message("No balance for sending tx").build();
         }
         Balance balance = balanceOptional.get();
         double sum = BtcOperation.sumInts(sendRequest.getBtc(), sendRequest.getSat(), FEE_SATOSHI);
         double remaining = balance.getAmount() - sum;
         if (balance.getAmount() >= sum) {
             long ts = System.currentTimeMillis() / 1000;
-            Pair<List<UTXO>, Double> balancePair =
-                    getBalanceCoversSumForAddress(sendRequest.getSender(), sum);
+            Pair<List<UTXO>, Double> balancePair = getBalanceCoversSumForAddress(sendRequest.getSender(), sum);
             MempoolTransaction mpTx = new MempoolTransaction(sendRequest.getSender(),
-                    sendRequest.getRecipient(), sum, ts, balancePair.getLeft(),
-                    balancePair.getRight());
+                    sendRequest.getRecipient(), sum, ts, balancePair.getLeft(), balancePair.getRight());
             addTransaction(mpTx);
             String txid = "w_mp_tx_" + sendRequest.getSender() + "_" + ts;
-            return CreateTxResponse.builder()
-                    .txid(txid)
-                    .submitted(true)
-                    .totalToSend(sum)
-                    .remaining(remaining)
-                    .build();
+            return CreateTxResponse.builder().txid(txid).submitted(true).totalToSend(sum).remaining(remaining).build();
         } else {
-            return CreateTxResponse
-                    .builder()
-                    .submitted(false)
-                    .message("Not enough balance. Fee: 0." + FEE_SATOSHI + " btc")
-                    .build();
+            return CreateTxResponse.builder()
+                    .submitted(false).message("Not enough balance. Fee: 0." + FEE_SATOSHI + " btc").build();
         }
     }
 
@@ -129,9 +116,7 @@ public class BlockChainService {
 
     public Optional<Balance> findBalanceByAddress(@NotEmpty String address) {
         List<Balance> balances = getBalances();
-        return balances.stream()
-                .filter(balance -> balance.getAddress().equals(address))
-                .findFirst();
+        return balances.stream().filter(balance -> balance.getAddress().equals(address)).findFirst();
     }
 
     public List<MempoolTransaction> getMempool() {
@@ -142,16 +127,14 @@ public class BlockChainService {
         return copy;
     }
 
-    private void generateAndInsertUTXOByTxOut(TxOutEntry txOutEntry, List<UTXO> utxoData,
-                                              String txid) {
-        UTXO utxo = new UTXO(txid, txOutEntry.getValue(), txOutEntry.getAddress(),
-                txOutEntry.getN());
+    private void generateAndInsertUTXOByTxOut(TxOutEntry txOutEntry, List<UTXO> utxoData, String txid) {
+        UTXO utxo = new UTXO(txid, txOutEntry.getValue(), txOutEntry.getAddress(), txOutEntry.getN());
         utxoData.add(utxo);
     }
 
     private UTXO generateCoinBaseUTXO(CoinBaseEntry coinBaseEntry) {
-        return new UTXO(coinBaseEntry.getTxid(), coinBaseEntry.getValue(),
-                coinBaseEntry.getAddress(), coinBaseEntry.getN());
+        return new UTXO(coinBaseEntry.getTxid(),
+                coinBaseEntry.getValue(), coinBaseEntry.getAddress(), coinBaseEntry.getN());
     }
 
     public void addTransaction(MempoolTransaction transactionRequest) {

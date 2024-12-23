@@ -167,13 +167,6 @@ public class Miner {
     }
 
     private Header buildHeader(MinerData data, int nonce) {
-        return new Header(
-                null,
-                data.previousHash,
-                data.merkleRoot,
-                nonce,
-                data.timestamp,
-                data.index,
-                null);
+        return new Header(null, data.previousHash, data.merkleRoot, nonce, data.timestamp, data.index, null);
     }
 }

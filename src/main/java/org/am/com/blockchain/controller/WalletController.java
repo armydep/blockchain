@@ -31,9 +31,7 @@ public class WalletController {
     @GetMapping("/balance/{address}")
     public ResponseEntity<?> getBalance(@PathVariable String address) {
         return blockChainService
-                .findBalanceByAddress(address)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .findBalanceByAddress(address).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/balance")
@@ -45,9 +43,7 @@ public class WalletController {
     public ResponseEntity<CreateTxResponse> send(@Valid @RequestBody SendRequest sendRequest) {
         if (!isValid(sendRequest)) {
             String msg = "One of addresses is not valid";
-            return ResponseEntity
-                    .badRequest()
-                    .body(CreateTxResponse.builder().submitted(false).message(msg).build());
+            return ResponseEntity.badRequest().body(CreateTxResponse.builder().submitted(false).message(msg).build());
         }
         CreateTxResponse response = blockChainService.submitTransaction(sendRequest);
         if (response.getSubmitted()) {
