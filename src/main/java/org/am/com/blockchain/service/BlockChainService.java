@@ -23,7 +23,7 @@ public class BlockChainService {
 
     private final BlockChainRepository blockChainRepository;
     private final List<MempoolTransaction> mempool = Collections.synchronizedList(new ArrayList<>());
-    private final int FEE_SATOSHI = 5_000_000;
+    public static final int FEE_SATOSHI = 5_000_000;
 
 
     public List<UTXO> getUTXO() {

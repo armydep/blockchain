@@ -8,6 +8,7 @@ import org.am.com.blockchain.model.block.UTXO;
 import org.am.com.blockchain.model.wallet.Balance;
 import org.am.com.blockchain.model.wallet.api.SendRequest;
 import org.am.com.blockchain.repository.BlockChainRepository;
+import org.am.com.blockchain.util.BtcOperation;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static org.am.com.blockchain.service.BlockChainService.FEE_SATOSHI;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -91,6 +93,66 @@ class BlockChainServiceTest {
         CreateTxResponse response = serviceSpy.submitTransaction(sendRequest);
         assertNotNull(response);
         assertFalse(response.getSubmitted());
+    }
+
+    //fees > 0
+    @Test
+    public void testSubmitTransactionNotEnoughForFee() {
+        BlockChainService serviceSpy = Mockito.spy(service);
+        String address = "addr";
+        UTXO utxo = new UTXO("tx", 1.0, address, 1);
+        Balance balance = new Balance(address, List.of(utxo));
+        Optional<Balance> balanceOptional = Optional.of(balance);
+        doReturn(balanceOptional).when(serviceSpy).findBalanceByAddress(anyString());
+        SendRequest sendRequest = new SendRequest();
+        sendRequest.setSender(address);
+        sendRequest.setBtc(1);
+        sendRequest.setSat(0);
+        CreateTxResponse response = serviceSpy.submitTransaction(sendRequest);
+        assertNotNull(response);
+        assertFalse(response.getSubmitted());
+    }
+
+    //no change
+    @Test
+    public void testSubmitTransactionNoChange() {
+        BlockChainService serviceSpy = Mockito.spy(service);
+        String address = "addr";
+        int spend = 1;
+        double totalToSend = BtcOperation.sumInts(spend, FEE_SATOSHI, 0);
+        UTXO utxo = new UTXO("tx", totalToSend, address, 1);
+        Balance balance = new Balance(address, List.of(utxo));
+        Optional<Balance> balanceOptional = Optional.of(balance);
+        doReturn(balanceOptional).when(serviceSpy).findBalanceByAddress(anyString());
+        SendRequest sendRequest = new SendRequest();
+        sendRequest.setSender(address);
+        sendRequest.setBtc(spend);
+        sendRequest.setSat(0);
+        CreateTxResponse response = serviceSpy.submitTransaction(sendRequest);
+        assertTrue(response.getSubmitted());
+        assertEquals(totalToSend, response.getTotalToSend());
+        //assertEquals(0, response.getRemaining());
+    }
+
+    //change > 0
+    @Test
+    public void testSubmitTransactionWithChange() {
+        BlockChainService serviceSpy = Mockito.spy(service);
+        String address = "addr";
+        int spend = 1;
+        double totalOnBalance = BtcOperation.sumInts(spend, FEE_SATOSHI + 1, 0);
+        UTXO utxo = new UTXO("tx", totalOnBalance, address, 1);
+        Balance balance = new Balance(address, List.of(utxo));
+        Optional<Balance> balanceOptional = Optional.of(balance);
+        doReturn(balanceOptional).when(serviceSpy).findBalanceByAddress(anyString());
+        SendRequest sendRequest = new SendRequest();
+        sendRequest.setSender(address);
+        sendRequest.setBtc(spend);
+        sendRequest.setSat(0);
+        CreateTxResponse response = serviceSpy.submitTransaction(sendRequest);
+        assertTrue(response.getSubmitted());
+        assertEquals(BtcOperation.sumInts(spend, FEE_SATOSHI, 0), response.getTotalToSend());
+        //assertEquals(0, response.getRemaining());
     }
 
     @ParameterizedTest
