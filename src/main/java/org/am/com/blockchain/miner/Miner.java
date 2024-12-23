@@ -2,11 +2,13 @@ package org.am.com.blockchain.miner;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.am.com.blockchain.model.MempoolTransaction;
 import org.am.com.blockchain.model.block.*;
 import org.am.com.blockchain.model.user.Key;
 import org.am.com.blockchain.service.BlockChainService;
+import org.am.com.blockchain.util.BlockSizeCalculator;
 import org.am.com.blockchain.util.crypto.CryptoUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -98,19 +100,40 @@ public class Miner {
         int index = previousBlock.getIndex() + 1;
         String previousHash = previousBlock.getHash();
         long timestamp = System.currentTimeMillis() / 1000;
-        String merkleRoot = createMerkleRoot(txs);
+        String merkleRoot = createMerkleRoot(txs.stream().map(TX::toString).toList());
         MinerData mdata = new MinerData(previousHash, merkleRoot, timestamp, index);
         Header minedHeader = mine(mdata, DIFFICULTY);
-        int size = calculateBlockSize(minedHeader, txs);
+        int size = BlockSizeCalculator.calculateBlockSize(minedHeader, txs);
         return new Header(minedHeader, size);
     }
 
-    private int calculateBlockSize(Header minedHeader, List<TX> txs) {
-        return 0;
+    /*
+        this is a copy of txs
+     */
+    private String createMerkleRoot(@NotNull final List<String> txs) {
+        if (txs.isEmpty()) {
+            throw new IllegalArgumentException("Transaction list cannot be empty");
+        }
+        shrinkToEven(txs);
+        List<String> hashes = new ArrayList<>();
+        for (int i = 0; i < txs.size(); i += 2) {
+            String left = txs.get(i);
+            String right = txs.get(i + 1);
+            String hashL = CryptoUtil.generateSHA256(left);
+            String hashR = CryptoUtil.generateSHA256(right);
+            hashes.add(CryptoUtil.generateSHA256(hashL + hashR));
+        }
+        if (hashes.size() == 1) {
+            return hashes.getFirst();
+        } else {
+            return createMerkleRoot(hashes);
+        }
     }
 
-    private String createMerkleRoot(List<TX> txs) {
-        return null;
+    private void shrinkToEven(final List<String> txs) {
+        if (txs.size() % 2 != 0) {
+            txs.addLast(txs.getLast());
+        }
     }
 
     private TX generateTX(MempoolTransaction mpTx, String txid) {

@@ -21,4 +21,8 @@ public class TX {
         this.vin = Collections.unmodifiableList(vin);
         this.vout = Collections.unmodifiableList(vout);
     }
+
+    public TX copy() {
+        return new TX(txid, vin, vout);
+    }
 }
