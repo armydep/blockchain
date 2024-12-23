@@ -103,29 +103,26 @@ class BlockChainServiceTest {
 
     private List<Balance> loadBalances(String balanceFile) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        List<Balance> balances = objectMapper
+        return objectMapper
                 .readValue(new ClassPathResource(balanceFile).getInputStream(),
                         new TypeReference<List<Balance>>() {
                         });
-        return balances;
     }
 
     private List<Block> loadBlocks(String blocksFile) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        List<Block> blocks = objectMapper
+        return objectMapper
                 .readValue(new ClassPathResource(blocksFile).getInputStream(),
                         new TypeReference<List<Block>>() {
                         });
-        return blocks;
     }
 
     private List<UTXO> loadUTXOs(String utxoFile) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        List<UTXO> utxos = objectMapper
+        return objectMapper
                 .readValue(new ClassPathResource(utxoFile).getInputStream(),
                         new TypeReference<List<UTXO>>() {
                         });
-        return utxos;
     }
 
     static Stream<Arguments> provideBalanceFileNames() {

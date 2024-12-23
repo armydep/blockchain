@@ -55,7 +55,7 @@
   - Readme
 - ### CI/CD
   - Dockerization
-  - Github actions
+  - GitHub actions
   - Deployment on cloud
   - Tests
   - Pull requests

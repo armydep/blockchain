@@ -60,11 +60,7 @@ public class Block {
         if (vin != null && vin.size() == 1 && vout != null && vout.size() == 1) {
             if (vin.getFirst().getCoinbase() != null && !vin.getFirst().getCoinbase().isEmpty()) {
                 TxOutEntry txout = firstTx.getVout().getFirst();
-                CoinBaseEntry coinBaseEntry = new CoinBaseEntry(txout.getValue(),
-                        txout.getAddress(),
-                        txout.getN(),
-                        firstTx.getTxid());
-                return coinBaseEntry;
+                return new CoinBaseEntry(txout.getValue(), txout.getAddress(), txout.getN(), firstTx.getTxid());
             }
         }
         return null;
