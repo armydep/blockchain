@@ -110,7 +110,7 @@ class BlockChainRepositoryTest {
     @ParameterizedTest
     @MethodSource("provideBlocks")
     void initShouldLoadBlocksSuccessfully(Block block) throws IOException {
-        List<Block> mockBlocks = Arrays.asList(block);
+        List<Block> mockBlocks = Collections.singletonList(block);
         when(objectMapper.readValue(any(InputStream.class), any(TypeReference.class)))
                 .thenReturn(mockBlocks);
         repository.init();
