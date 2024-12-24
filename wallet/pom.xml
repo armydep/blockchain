@@ -7,10 +7,10 @@
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>node</artifactId>
+    <artifactId>wallet</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>node</name>
-    <description>Node, miner and wallet</description>
+    <name>wallet</name>
+    <description>standalone wallet</description>
     <properties>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
