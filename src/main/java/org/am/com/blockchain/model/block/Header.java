@@ -36,15 +36,3 @@ public class Header {
         this.size = null;
     }
 }
-
-/*
-    public Header(MinerData data, int nonce) {
-        this.hash = null;
-        this.size = null;
-        this.previousHash = data.previousHash();
-        this.merkleRoot = data.merkleRoot();
-        this.index = data.index();
-        this.timestamp = data.timestamp();
-        this.nonce = nonce;
-    }
-*/

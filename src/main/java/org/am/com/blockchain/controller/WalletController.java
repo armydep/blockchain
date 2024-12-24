@@ -3,9 +3,11 @@ package org.am.com.blockchain.controller;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.am.com.blockchain.api.CreateTxResponse;
+import org.am.com.blockchain.model.block.TX;
 import org.am.com.blockchain.model.wallet.Balance;
 import org.am.com.blockchain.model.wallet.api.SendRequest;
 import org.am.com.blockchain.service.BlockChainService;
+import org.am.com.blockchain.service.BlockChainServiceV2;
 import org.am.com.blockchain.service.UsersService;
 import org.am.com.blockchain.util.crypto.BitcoinAddressValidator;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +23,14 @@ import java.util.List;
 @RequestMapping("/api")
 public class WalletController {
     private final BlockChainService blockChainService;
+    private final BlockChainServiceV2 blockChainServiceV2;
     private final UsersService usersService;
 
-    public WalletController(BlockChainService blockChainService, UsersService usersService) {
+    public WalletController(BlockChainService blockChainService,
+                            BlockChainServiceV2 blockChainServiceV2,
+                            UsersService usersService) {
         this.blockChainService = blockChainService;
+        this.blockChainServiceV2 = blockChainServiceV2;
         this.usersService = usersService;
     }
 
@@ -37,6 +43,16 @@ public class WalletController {
     @GetMapping("/balance")
     public ResponseEntity<List<Balance>> getAllBalances() {
         return ResponseEntity.ok(blockChainService.getBalances());
+    }
+
+    @PostMapping("/v2/send")
+    public ResponseEntity<CreateTxResponse> sendV2(/*@Valid*/ @RequestBody TX sendRequest) {
+        CreateTxResponse response = blockChainServiceV2.submitToMempoolV2(sendRequest);
+        if (response.getSubmitted()) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 
     @PostMapping("/send")
