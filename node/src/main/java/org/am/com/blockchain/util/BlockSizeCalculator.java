@@ -2,9 +2,9 @@ package org.am.com.blockchain.util;
 
 import lombok.experimental.UtilityClass;
 import org.am.com.blockchain.model.block.Header;
-import org.am.com.blockchain.model.block.TX;
-import org.am.com.blockchain.model.block.TxInEntry;
-import org.am.com.blockchain.model.block.TxOutEntry;
+import org.am.com.tx.TX;
+import org.am.com.tx.TxInEntry;
+import org.am.com.tx.TxOutEntry;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
+import org.am.com.tx.TX;
+import org.am.com.tx.TxInEntry;
+import org.am.com.tx.TxOutEntry;
 
 import java.util.Collections;
 import java.util.List;

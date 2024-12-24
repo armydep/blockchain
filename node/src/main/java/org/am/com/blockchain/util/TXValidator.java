@@ -2,7 +2,7 @@ package org.am.com.blockchain.util;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.experimental.UtilityClass;
-import org.am.com.blockchain.model.block.TX;
+import org.am.com.tx.TX;
 
 @UtilityClass
 public class TXValidator {

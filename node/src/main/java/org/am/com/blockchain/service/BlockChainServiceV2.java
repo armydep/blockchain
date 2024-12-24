@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.am.com.blockchain.api.CreateTxResponse;
 import org.am.com.blockchain.model.block.Block;
-import org.am.com.blockchain.model.block.TX;
 import org.am.com.blockchain.repository.BlockChainRepository;
 import org.am.com.blockchain.util.BlockValidator;
 import org.am.com.blockchain.util.TXValidator;
+import org.am.com.tx.TX;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

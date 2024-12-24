@@ -2,7 +2,6 @@ package org.am.com.blockchain.miner;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.am.com.blockchain.model.MempoolTransaction;
 import org.am.com.blockchain.model.block.*;
@@ -11,6 +10,9 @@ import org.am.com.blockchain.service.BlockChainService;
 import org.am.com.blockchain.util.BlockSizeCalculator;
 import org.am.com.blockchain.util.MerkleRootUtil;
 import org.am.com.blockchain.util.crypto.CryptoUtil;
+import org.am.com.tx.TX;
+import org.am.com.tx.TxInEntry;
+import org.am.com.tx.TxOutEntry;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Scheduled;

@@ -9,6 +9,7 @@ import org.am.com.blockchain.service.BlockChainServiceV2;
 import org.am.com.blockchain.util.BlockSizeCalculator;
 import org.am.com.blockchain.util.MerkleRootUtil;
 import org.am.com.blockchain.util.crypto.CryptoUtil;
+import org.am.com.tx.TX;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Scheduled;

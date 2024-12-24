@@ -11,6 +11,9 @@ import org.am.com.blockchain.model.wallet.Balance;
 import org.am.com.blockchain.model.wallet.api.SendRequest;
 import org.am.com.blockchain.repository.BlockChainRepository;
 import org.am.com.blockchain.util.BtcOperation;
+import org.am.com.tx.TX;
+import org.am.com.tx.TxInEntry;
+import org.am.com.tx.TxOutEntry;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 
