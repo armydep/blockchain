@@ -1,4 +1,4 @@
-package org.am.com.blockchain.model.block;
+package org.am.com.block;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;

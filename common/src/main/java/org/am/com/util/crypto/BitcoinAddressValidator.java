@@ -1,4 +1,4 @@
-package org.am.com.blockchain.util.crypto;
+package org.am.com.util.crypto;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

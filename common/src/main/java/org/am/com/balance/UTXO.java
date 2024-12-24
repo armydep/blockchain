@@ -1,4 +1,4 @@
-package org.am.com.blockchain.model.block;
+package org.am.com.balance;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

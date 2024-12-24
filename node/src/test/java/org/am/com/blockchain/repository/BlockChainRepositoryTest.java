@@ -2,7 +2,7 @@ package org.am.com.blockchain.repository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.am.com.blockchain.model.block.Block;
+import org.am.com.block.Block;
 import org.am.com.blockchain.model.block.InsertionOnlyList;
 import org.am.com.tx.TX;
 import org.junit.jupiter.api.AfterEach;

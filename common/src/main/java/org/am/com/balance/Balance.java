@@ -1,11 +1,10 @@
-package org.am.com.blockchain.model.wallet;
+package org.am.com.balance;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.am.com.blockchain.model.block.UTXO;
-import org.am.com.blockchain.util.BtcOperation;
+import org.am.com.util.BtcOperation;
 
 import java.util.ArrayList;
 import java.util.Collections;

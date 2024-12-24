@@ -1,7 +1,7 @@
 package org.am.com.blockchain.model;
 
 import lombok.Value;
-import org.am.com.blockchain.model.block.UTXO;
+import org.am.com.balance.UTXO;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,7 @@
 package org.am.com.blockchainnode.controller;
 
 import org.am.com.blockchain.controller.NodeController;
-import org.am.com.blockchain.model.block.Block;
+import org.am.com.block.Block;
 import org.am.com.blockchain.service.BlockChainService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +13,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.io.InputStream;

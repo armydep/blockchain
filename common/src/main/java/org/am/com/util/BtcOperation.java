@@ -1,4 +1,4 @@
-package org.am.com.blockchain.util;
+package org.am.com.util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

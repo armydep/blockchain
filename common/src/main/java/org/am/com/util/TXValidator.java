@@ -1,6 +1,5 @@
-package org.am.com.blockchain.util;
+package org.am.com.util;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.experimental.UtilityClass;
 import org.am.com.tx.TX;
 
@@ -15,7 +14,7 @@ public class TXValidator {
      */
 
     //1
-    public static void validate(@NotNull TX tx) {
+    public static void validate(/*@NotNull*/ TX tx) {
 
     }
 

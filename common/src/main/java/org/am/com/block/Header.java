@@ -1,4 +1,4 @@
-package org.am.com.blockchain.model.block;
+package org.am.com.block;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

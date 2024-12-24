@@ -2,8 +2,8 @@ package org.am.com.blockchain.controller;
 
 import lombok.AllArgsConstructor;
 import org.am.com.blockchain.model.MempoolTransaction;
-import org.am.com.blockchain.model.block.Block;
-import org.am.com.blockchain.model.block.UTXO;
+import org.am.com.block.Block;
+import org.am.com.balance.UTXO;
 import org.am.com.blockchain.service.BlockChainService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

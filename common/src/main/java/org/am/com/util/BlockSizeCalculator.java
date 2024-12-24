@@ -1,7 +1,7 @@
-package org.am.com.blockchain.util;
+package org.am.com.util;
 
 import lombok.experimental.UtilityClass;
-import org.am.com.blockchain.model.block.Header;
+import org.am.com.block.Header;
 import org.am.com.tx.TX;
 import org.am.com.tx.TxInEntry;
 import org.am.com.tx.TxOutEntry;

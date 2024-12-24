@@ -1,6 +1,7 @@
-package org.am.com.blockchain.util;
+package org.am.com.util;
 
-import org.am.com.blockchain.model.block.Block;
+
+import org.am.com.block.Block;
 
 public class BlockValidator {
     public static void validate(Block block) {

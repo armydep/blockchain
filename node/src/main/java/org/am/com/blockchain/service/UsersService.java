@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.am.com.blockchain.model.user.Key;
 import org.am.com.blockchain.model.user.User;
 import org.am.com.blockchain.repository.UserRepository;
-import org.am.com.blockchain.util.crypto.CryptoUtil;
+import org.am.com.blockchain.util.CryptoUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
