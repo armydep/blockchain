@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,7 +33,7 @@ public class SecurityConfiguration {
     private AuthEntryPointJwt unauthorizedHandler;
 
     private static final String[] WHITE_LIST_URL = {
-           // "/wallet/**",
+            // "/wallet/**",
             "/swagger-ui/**",
             "/v3/api-docs/**", // Allow Swagger/OpenAPI endpoint
             "/error",
@@ -69,13 +70,20 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
                                                    HandlerMappingIntrospector introspector)
             throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
+        http.headers(headers ->
+                        headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+//                .csrf(csrf -> csrf
+//                        .ignoringRequestMatchers(toH2Console())
+//                        .disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers(WHITE_LIST_URL)
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated())
+                                req.requestMatchers(WHITE_LIST_URL)
+                                        .permitAll()
+                                        .anyRequest()
+                                        .authenticated()
+                        //                .requestMatchers(toH2Console()).permitAll()
+                )
                 .exceptionHandling(ex ->
                         ex.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session ->
