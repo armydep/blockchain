@@ -2,13 +2,11 @@ package org.am.com.blockchain.wallet.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.am.com.balance.Balance;
 import org.am.com.blockchain.wallet.config.jwt.JwtUtils;
 import org.am.com.blockchain.wallet.model.User;
 import org.am.com.blockchain.wallet.model.login.JwtResponse;
 import org.am.com.blockchain.wallet.model.login.LoginRequest;
 import org.am.com.blockchain.wallet.repository.UserRepository;
-import org.am.com.blockchain.wallet.rest.RestClient;
 import org.am.com.blockchain.wallet.service.user.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +19,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 @Slf4j
 @Validated
 @RestController
-//@RequestMapping("/wallet/home")
 public class LoginController {
 
     @Autowired
