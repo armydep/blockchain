@@ -15,7 +15,7 @@ public class DatabaseInitializer {
     CommandLineRunner initDatabase(UserRepository userRepository) {
         return args -> {
             // Create and save initial users
-            userRepository.save(new User("user1", "password1"));
+            userRepository.save(new User("user1", "$2a$12$wBFC8U9dAuNdptU0Lku5UeQrE1U8TUAwxPmceTAl5yCJx9G3Je9Uu"));
             userRepository.save(new User("user2", "password2"));
 
             log.info("Initialized database with sample users.");

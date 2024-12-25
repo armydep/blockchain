@@ -32,11 +32,10 @@ public class SecurityConfiguration {
     private AuthEntryPointJwt unauthorizedHandler;
 
     private static final String[] WHITE_LIST_URL = {
-            "/wallet/**",
+           // "/wallet/**",
             "/swagger-ui/**",
             "/v3/api-docs/**", // Allow Swagger/OpenAPI endpoint
             "/error",
-            "/h2-console/**",
             "/h2-ui/**",
             "/signin", "/signup", "/user-dashboard"};
 
