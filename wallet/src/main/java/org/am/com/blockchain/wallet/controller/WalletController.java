@@ -1,4 +1,4 @@
-package org.am.com.blockchain.wallet;
+package org.am.com.blockchain.wallet.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.am.com.balance.Balance;
@@ -32,10 +32,6 @@ public class WalletController {
         this.restClient = restClient;
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<?> login() {
-        return ResponseEntity.ok("Okk tx");
-    }
 
 
     /*
