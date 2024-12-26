@@ -14,13 +14,22 @@ public class User {
     private Long id;
     private String username;
     private String password;
+    private String publicKey;
+    private String privateKey;
     private String address;
 
     public User() {
     }
 
-    public User(String user1, String password1) {
-        this.username = user1;
-        this.password = password1;
+    public User(String user,
+                String pass,
+                String address,
+                String publicKey,
+                String privateKey) {
+        this.username = user;
+        this.password = pass;
+        this.address = address;
+        this.publicKey = publicKey;
+        this.privateKey = privateKey;
     }
 }

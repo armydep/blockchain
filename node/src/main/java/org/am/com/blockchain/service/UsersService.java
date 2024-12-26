@@ -3,10 +3,10 @@ package org.am.com.blockchain.service;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.am.com.blockchain.model.user.Key;
+import org.am.com.user.Key;
 import org.am.com.blockchain.model.user.User;
 import org.am.com.blockchain.repository.UserRepository;
-import org.am.com.blockchain.util.CryptoUtil;
+import org.am.com.util.crypto.CryptoUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package org.am.com.blockchain.miner;
 
 import org.am.com.blockchain.util.MerkleRootUtil;
-import org.am.com.blockchain.util.CryptoUtil;
+import org.am.com.util.crypto.CryptoUtil;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 

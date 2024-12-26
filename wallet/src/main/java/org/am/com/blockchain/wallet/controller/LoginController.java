@@ -8,6 +8,9 @@ import org.am.com.blockchain.wallet.model.login.JwtResponse;
 import org.am.com.blockchain.wallet.model.login.LoginRequest;
 import org.am.com.blockchain.wallet.repository.UserRepository;
 import org.am.com.blockchain.wallet.service.user.UserDetailsImpl;
+import org.am.com.tx.TX;
+
+import org.am.com.util.crypto.CryptoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.am.com.user.Key;
 
 import java.io.UnsupportedEncodingException;
 
@@ -40,8 +44,7 @@ public class LoginController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody User signUpRequest,
-                                          HttpServletRequest request)
-            throws UnsupportedEncodingException {
+                                          HttpServletRequest request) throws Exception {
 
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity.badRequest()
@@ -50,10 +53,18 @@ public class LoginController {
         User user = new User();
         user.setUsername(signUpRequest.getUsername());
         user.setPassword(encoder.encode(signUpRequest.getPassword()));
-
+        generateAddress(user);
         userRepository.save(user);
 
         return ResponseEntity.ok(user);
+    }
+
+    private void generateAddress(User user) throws Exception {
+        Key key = new Key();
+        CryptoUtil.generateKeys(key);
+        user.setAddress(key.getAddress());
+        user.setPublicKey(key.getPublicKey());
+        user.setPrivateKey(key.getPrivateKey());
     }
 
     @PostMapping("/signin")

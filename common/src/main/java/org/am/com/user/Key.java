@@ -1,4 +1,4 @@
-package org.am.com.blockchain.model.user;
+package org.am.com.user;
 
 import lombok.Data;
 

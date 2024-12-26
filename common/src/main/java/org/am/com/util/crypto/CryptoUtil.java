@@ -1,8 +1,8 @@
-package org.am.com.blockchain.util;
+package org.am.com.util.crypto;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.am.com.blockchain.model.user.Key;
+import org.am.com.user.Key;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.Arrays;
 
