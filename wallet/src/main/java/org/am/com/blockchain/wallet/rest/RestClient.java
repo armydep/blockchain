@@ -2,6 +2,7 @@ package org.am.com.blockchain.wallet.rest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.am.com.blockchain.wallet.controller.exceptions.NodeException;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -18,22 +19,20 @@ public class RestClient {
     // HTTP Client Instance
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
-    public <T> T sendGetRequest(String url, String address,
-                                Class<T> responseType) throws IOException {
+    public <T> T sendGetRequest(String url, Class<T> responseType) {
         try {
-            String fullUrl = String.format("%s/%s", url, address);
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(fullUrl))
+                    .uri(URI.create(url))
                     .GET()
                     .build();
             HttpResponse<String> response = httpClient.send(request,
                     HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() != 200) {
-                throw new RuntimeException("Backend error: " + response.statusCode());
+                throw new NodeException("Node response status: " + response.statusCode());
             }
             return objectMapper.readValue(response.body(), responseType);
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException("Failed to send Get request", e);
+            throw new NodeException("Failed to send Get request", e);
         }
     }
 
