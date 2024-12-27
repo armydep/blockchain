@@ -32,7 +32,7 @@ public class TxService {
         if (!belongToUser(username, address)) {
             throw new NoSuchElementException("Address does not belongs to user");
         }
-        String fullUrl = String.format("%s/%s", nodeUrl, address);
+        String fullUrl = String.format("%s/%s/%s%s", nodeUrl, "api", "balance/", address);
         return restClient.sendGetRequest(fullUrl, Balance.class);
     }
 
