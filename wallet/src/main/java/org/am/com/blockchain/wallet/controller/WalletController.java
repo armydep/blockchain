@@ -3,6 +3,7 @@ package org.am.com.blockchain.wallet.controller;
 //import io.jsonwebtoken.Jwt;
 
 import lombok.extern.slf4j.Slf4j;
+import org.am.com.api.CreateTxResponse;
 import org.am.com.balance.Balance;
 import org.am.com.blockchain.wallet.controller.api.SendResponse;
 import org.am.com.blockchain.wallet.controller.api.WalletSend;
@@ -41,7 +42,7 @@ public class WalletController {
         log.info("Usr: " + usr);
         //send.setUsername(usr.getUsername());
         try {
-            SendResponse response = txService.send(send, usr.getUsername());
+            CreateTxResponse response = txService.send(send, usr.getUsername());
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

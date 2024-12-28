@@ -1,5 +1,6 @@
 package org.am.com.blockchain.wallet.controller.exceptions;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+@Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -29,6 +31,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NodeException.class)
     public ResponseEntity<String> handleNodeException(NodeException ex) {
+        log.error("Node exception", ex);
         return new ResponseEntity<>("Node connection failure - " + ex.getMessage(), HttpStatus.FAILED_DEPENDENCY);
     }
 }

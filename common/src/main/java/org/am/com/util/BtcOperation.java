@@ -1,7 +1,11 @@
 package org.am.com.util;
 
+import org.am.com.balance.UTXO;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BtcOperation {
     private static final BigDecimal SATOSHI_PER_BTC = new BigDecimal("100000000");
@@ -37,4 +41,23 @@ public class BtcOperation {
     public static Double roundDoubleToBTC(Double btc) {
         return satoshiToBTCDouble(doubleToSatoshi(btc));
     }
+
+    //todo: replace naive method by specific algorithm
+    public static CoveringUTXO getCoveringUTXO(String sender,
+                                               String recipient,
+                                               List<UTXO> utxoList,
+                                               Double sendWithFee) {
+        List<UTXO> result = new ArrayList<>();
+        double currentSum = 0;
+        for (UTXO utxo : utxoList) {
+            currentSum = BtcOperation.sumDoubles(utxo.getValue(), currentSum);
+            result.add(utxo);
+            if (currentSum >= sendWithFee) {
+                break;
+            }
+        }
+        double change = roundDoubleToBTC(currentSum - sendWithFee);
+        return new CoveringUTXO(sender, recipient, result, sendWithFee, change);
+    }
+
 }

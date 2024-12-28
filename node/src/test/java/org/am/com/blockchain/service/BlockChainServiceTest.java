@@ -2,7 +2,7 @@ package org.am.com.blockchain.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.am.com.blockchain.api.CreateTxResponse;
+import org.am.com.api.CreateTxResponse;
 import org.am.com.block.Block;
 import org.am.com.balance.UTXO;
 import org.am.com.balance.Balance;

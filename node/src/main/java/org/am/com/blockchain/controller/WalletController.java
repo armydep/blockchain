@@ -2,7 +2,7 @@ package org.am.com.blockchain.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.am.com.blockchain.api.CreateTxResponse;
+import org.am.com.api.CreateTxResponse;
 import org.am.com.balance.Balance;
 import org.am.com.blockchain.model.wallet.api.SendRequest;
 import org.am.com.blockchain.service.BlockChainService;

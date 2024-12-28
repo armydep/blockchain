@@ -25,8 +25,8 @@ public class JwtUtils {
     @Value("${wallet.app.jwtSecret}")
     private String jwtSecret;
 
-    @Value("${wallet.app.jwtExpirationMs}")
-    private int jwtExpirationMs;
+    //@Value("${wallet.app.jwtExpirationMs}")
+    private Long jwtExpirationMs = 24 * 60 * 60 * 1000L;
 
     public String generateJwtToken(Authentication authentication) {
 

@@ -56,9 +56,12 @@ public class MinerV2 {
         log.info("Mining finished., count: {}", currentCount);
     }
 
-    private Block assemblyBlock(List<TX> txs) {
-        Header header = mineAndCreateHeader(new ArrayList<>(txs));
-        return new Block(header, txs);
+    private Block assemblyBlock(List<TX> txso) {
+        String cbtxid = "miner_v2_set_cb_txid_" + count.get();
+        TX coinbase = TX.generateCoinBaseTX(cbtxid, key.getAddress(), COINBASE);
+        txso.addFirst(coinbase);
+        Header header = mineAndCreateHeader(new ArrayList<>(txso));
+        return new Block(header, txso);
     }
 
     public record MinerData(String previousHash, String merkleRoot, long timestamp, int index) {
@@ -69,7 +72,8 @@ public class MinerV2 {
         int index = previousBlock.getIndex() + 1;
         String previousHash = previousBlock.getHash();
         long timestamp = System.currentTimeMillis() / 1000;
-        String merkleRoot = MerkleRootUtil.createMerkleRoot(txs.stream().map(TX::toString).toList());
+        List<String> modifiableTxsList = new ArrayList<>(txs.stream().map(TX::toString).toList());
+        String merkleRoot = MerkleRootUtil.createMerkleRoot(modifiableTxsList);
         MinerData mdata = new MinerData(previousHash, merkleRoot, timestamp, index);
         Header minedHeader = mine(mdata, DIFFICULTY);
         int size = BlockSizeCalculator.calculateBlockSize(minedHeader, txs);

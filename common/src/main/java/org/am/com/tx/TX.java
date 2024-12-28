@@ -21,4 +21,10 @@ public class TX {
         this.vin = Collections.unmodifiableList(vin);
         this.vout = Collections.unmodifiableList(vout);
     }
+
+    public static TX generateCoinBaseTX(String txid, String minerAddress, Double reward) {
+        TxInEntry txInEntry = new TxInEntry("", 0, "true");
+        TxOutEntry txOutEntry = new TxOutEntry(reward, minerAddress, 0);
+        return new TX(txid, List.of(txInEntry), List.of(txOutEntry));
+    }
 }

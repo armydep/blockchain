@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.am.com.balance.UTXO;
 import org.am.com.block.Block;
 import org.am.com.block.CoinBaseEntry;
-import org.am.com.blockchain.api.CreateTxResponse;
+import org.am.com.api.CreateTxResponse;
 import org.am.com.blockchain.model.MempoolTransaction;
 import org.am.com.balance.Balance;
 import org.am.com.blockchain.model.wallet.api.SendRequest;
@@ -16,7 +16,7 @@ import org.am.com.util.BtcOperation;
 import org.am.com.tx.TX;
 import org.am.com.tx.TxInEntry;
 import org.am.com.tx.TxOutEntry;
-import org.apache.commons.lang3.tuple.Pair;
+import org.am.com.util.CoveringUTXO;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -69,9 +69,10 @@ public class BlockChainService {
         double remaining = BtcOperation.roundDoubleToBTC(balance.getAmount() - sum);
         if (balance.getAmount() >= sum) {
             long ts = System.currentTimeMillis() / 1000;
-            Pair<List<UTXO>, Double> balancePair = getBalanceCoversSumForAddress(sendRequest.getSender(), sum);
+            CoveringUTXO balancePair = getBalanceCoversSumForAddress(sendRequest.getSender(),
+                    sendRequest.getRecipient(), sum);
             MempoolTransaction mpTx = new MempoolTransaction(sendRequest.getSender(),
-                    sendRequest.getRecipient(), sum, ts, balancePair.getLeft(), balancePair.getRight());
+                    sendRequest.getRecipient(), sum, ts, balancePair.utxos(), balancePair.change());
             addTransaction(mpTx);
             String txid = "w_mp_tx_" + sendRequest.getSender() + "_" + ts;
             return CreateTxResponse.builder().txid(txid).submitted(true).totalToSend(sum).remaining(remaining).build();
@@ -81,24 +82,12 @@ public class BlockChainService {
         }
     }
 
-    //todo: replace naive method by specific algorithm
-    public Pair<List<UTXO>, Double> getBalanceCoversSumForAddress(String from, double sum) {
-        Optional<Balance> optionalBalance = findBalanceByAddress(from);
+    public CoveringUTXO getBalanceCoversSumForAddress(String sender, String recipient, double sum) {
+        Optional<Balance> optionalBalance = findBalanceByAddress(sender);
         if (optionalBalance.isEmpty()) {
-            return Pair.of(List.of(), 0d);
+            return new CoveringUTXO(null, null, List.of(), null, 0d);
         }
-        Balance balance = optionalBalance.get();
-        List<UTXO> utxos = balance.getUTXOs();
-        List<UTXO> result = new ArrayList<>();
-        double currentSum = 0;
-        for (UTXO utxo : utxos) {
-            currentSum = BtcOperation.sumDoubles(utxo.getValue(), currentSum);
-            result.add(utxo);
-            if (currentSum >= sum) {
-                break;
-            }
-        }
-        return Pair.of(result, currentSum - sum);
+        return BtcOperation.getCoveringUTXO(sender, recipient, optionalBalance.get().getUTXOs(), sum);
     }
 
     public List<Balance> getBalances() {

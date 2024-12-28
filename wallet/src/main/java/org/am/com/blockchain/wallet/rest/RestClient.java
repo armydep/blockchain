@@ -1,6 +1,5 @@
 package org.am.com.blockchain.wallet.rest;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.am.com.blockchain.wallet.controller.exceptions.NodeException;
 import org.springframework.stereotype.Component;
@@ -14,28 +13,40 @@ import java.net.http.HttpResponse;
 @Component
 public class RestClient {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-
-    // HTTP Client Instance
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
     public <T> T sendGetRequest(String url, Class<T> responseType) {
         try {
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .GET()
-                    .build();
-            HttpResponse<String> response = httpClient.send(request,
-                    HttpResponse.BodyHandlers.ofString());
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() != 200) {
                 throw new NodeException("Node response status: " + response.statusCode());
             }
             return objectMapper.readValue(response.body(), responseType);
         } catch (IOException | InterruptedException e) {
-            throw new NodeException("Failed to send Get request", e);
+            throw new NodeException("Failed to send GET request", e);
         }
     }
 
+    public <T> T sendPostRequest(String url, Object payload, Class<T> responseType) {
+        try {
+            String jsonPayload = objectMapper.writeValueAsString(payload);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
+                    .build();
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != 200) {
+                throw new NodeException("Node response status: " + response.statusCode());
+            }
+            return objectMapper.readValue(response.body(), responseType);
+        } catch (IOException | InterruptedException e) {
+            throw new NodeException("Failed to send POST request", e);
+        }
+    }
+}
     /*
     // Forward a POST request and handle List<AA> response
     @PostMapping("/forward")
@@ -46,24 +57,3 @@ public class RestClient {
                 new TypeReference<List<AA>>() {}
         );
      */
-    public <T> T sendPostRequest(String url, Object payload, TypeReference<T> responseType) {
-        try {
-            // Convert payload to JSON
-            String jsonPayload = objectMapper.writeValueAsString(payload);
-
-            // Build HTTP request
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
-                    .build();
-
-            // Send request and parse JSON response
-            HttpResponse<String> response = httpClient.send(request,
-                    HttpResponse.BodyHandlers.ofString());
-            return objectMapper.readValue(response.body(), responseType);
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException("Failed to send POST request", e);
-        }
-    }
-}
