@@ -7,7 +7,7 @@
         <version>3.4.1</version>
         <relativePath/>
     </parent>
-    <groupId>org.am.com</groupId>
+    <groupId>am.com</groupId>
     <artifactId>blockchain-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
