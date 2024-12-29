@@ -52,6 +52,7 @@ public class SignatureUtil {
             log.info("Verified: " + verified);
             return verified;
         } catch (Exception e) {
+            log.warn("TX signature verification failure", e);
             throw new SignatureException(e);
         }
     }

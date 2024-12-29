@@ -8,8 +8,10 @@ import org.am.com.blockchain.model.wallet.api.SendRequest;
 import org.am.com.blockchain.service.BlockChainService;
 import org.am.com.blockchain.service.BlockChainServiceV2;
 import org.am.com.blockchain.service.UsersService;
+import org.am.com.exceptions.SignatureException;
 import org.am.com.util.crypto.BitcoinAddressValidator;
 import org.am.com.tx.TX;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -46,12 +48,16 @@ public class WalletController {
     }
 
     @PostMapping("/v2/send")
-    public ResponseEntity<CreateTxResponse> sendV2(/*@Valid*/ @RequestBody TX sendRequest) {
-        CreateTxResponse response = blockChainServiceV2.submitToMempoolV2(sendRequest);
-        if (response.getSubmitted()) {
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.badRequest().body(response);
+    public ResponseEntity<?> sendV2(/*@Valid*/ @RequestBody TX sendRequest) {
+        try {
+            CreateTxResponse response = blockChainServiceV2.submitToMempoolV2(sendRequest);
+            if (response.getSubmitted()) {
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.badRequest().body(response);
+            }
+        } catch (SignatureException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("TX verification not passed");
         }
     }
 

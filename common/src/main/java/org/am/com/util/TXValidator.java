@@ -1,8 +1,13 @@
 package org.am.com.util;
 
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
+import org.am.com.exceptions.SignatureException;
+import org.am.com.tx.StrippedTX;
 import org.am.com.tx.TX;
+import org.am.com.tx.TXBuilder;
 
+@Slf4j
 @UtilityClass
 public class TXValidator {
 
@@ -14,8 +19,10 @@ public class TXValidator {
      */
 
     //1
-    public static void validate(/*@NotNull*/ TX tx) {
-
+    public static void validate(/*@NotNull*/ TX tx) throws SignatureException {
+        StrippedTX strippedTX = TXBuilder.stripTX(tx);
+        SignatureUtil.verifyDigitalSignature(strippedTX.tx().toString(),
+                strippedTX.scriptSig().signature(), strippedTX.scriptSig().publicKey());
     }
 
     //2

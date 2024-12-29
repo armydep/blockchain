@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.am.com.api.CreateTxResponse;
 import org.am.com.block.Block;
 import org.am.com.blockchain.repository.BlockChainRepository;
+import org.am.com.exceptions.SignatureException;
 import org.am.com.util.BlockValidator;
 import org.am.com.util.TXValidator;
 import org.am.com.tx.TX;
@@ -23,7 +24,7 @@ public class BlockChainServiceV2 {
     private final List<TX> mempool = Collections.synchronizedList(new ArrayList<>());
     public static final int FEE_SATOSHI = 5_000_000;
 
-    public CreateTxResponse submitToMempoolV2(TX tx) {
+    public CreateTxResponse submitToMempoolV2(TX tx) throws SignatureException {
         TXValidator.validate(tx);
         mempool.add(tx);
         return CreateTxResponse.builder().txid("txid").submitted(true).build();

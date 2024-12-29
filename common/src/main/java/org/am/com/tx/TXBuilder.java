@@ -54,4 +54,22 @@ public class TXBuilder {
         List<TxOutEntry> txOutEntries = new ArrayList<>(tx.getVout());
         return new TX(tx.getTxid(), txInEntries, txOutEntries);
     }
+
+    //remove sigScript and coinbase entry
+    //only before the coinbase added to txOut entries
+    //only for tx with singe TxInEntry
+    public static StrippedTX stripTX(TX tx) {
+        List<TxInEntry> txInEntries = new ArrayList<>();
+        ScriptSig scriptSig = null;
+        for (int i = 0; i < tx.getVin().size(); i++) {
+            TxInEntry oentry = tx.getVin().get(i);
+            if (!oentry.isCoinbase()) {
+                TxInEntry txInEntry;
+                txInEntry = new TxInEntry(oentry.getTxid(), oentry.getVout(), null, null);
+                txInEntries.add(txInEntry);
+                scriptSig = oentry.getScriptSig();
+            }
+        }
+        return new StrippedTX(new TX(tx.getTxid(), txInEntries, new ArrayList<>(tx.getVout())), scriptSig);
+    }
 }
