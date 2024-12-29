@@ -21,7 +21,7 @@ public class RestClient {
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() != 200) {
-                throw new NodeException("Node response status: " + response.statusCode());
+                throw new NodeException("Node response status for GET: " + response.statusCode());
             }
             return objectMapper.readValue(response.body(), responseType);
         } catch (IOException | InterruptedException e) {
@@ -39,7 +39,8 @@ public class RestClient {
                     .build();
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() != 200) {
-                throw new NodeException("Node response status: " + response.statusCode());
+                throw new NodeException("Node response status for POST: " +
+                        response.statusCode() + ". " + response.body());
             }
             return objectMapper.readValue(response.body(), responseType);
         } catch (IOException | InterruptedException e) {

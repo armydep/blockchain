@@ -57,7 +57,7 @@ public class WalletController {
                 return ResponseEntity.badRequest().body(response);
             }
         } catch (SignatureException e) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("TX verification not passed");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
     }
 

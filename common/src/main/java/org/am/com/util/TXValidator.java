@@ -20,9 +20,15 @@ public class TXValidator {
 
     //1
     public static void validate(/*@NotNull*/ TX tx) throws SignatureException {
-        StrippedTX strippedTX = TXBuilder.stripTX(tx);
-        SignatureUtil.verifyDigitalSignature(strippedTX.tx().toString(),
-                strippedTX.scriptSig().signature(), strippedTX.scriptSig().publicKey());
+        try {
+            StrippedTX strippedTX = TXBuilder.stripTX(tx);
+            if (!SignatureUtil.verifyDigitalSignature(strippedTX.tx().toString(),
+                    strippedTX.scriptSig().signature(), strippedTX.scriptSig().publicKey())) {
+                throw new SignatureException("Didn't pass TX validation");
+            }
+        } catch (Exception e) {
+            throw new SignatureException(e);
+        }
     }
 
     //2
