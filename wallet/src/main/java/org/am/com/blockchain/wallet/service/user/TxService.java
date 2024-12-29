@@ -3,15 +3,18 @@ package org.am.com.blockchain.wallet.service.user;
 import org.am.com.api.CreateTxResponse;
 import org.am.com.balance.Balance;
 import org.am.com.balance.UTXO;
-import org.am.com.blockchain.wallet.controller.api.SendResponse;
 import org.am.com.blockchain.wallet.controller.api.WalletSend;
 import org.am.com.blockchain.wallet.model.User;
 import org.am.com.blockchain.wallet.repository.UserRepository;
 import org.am.com.blockchain.wallet.rest.RestClient;
+import org.am.com.exceptions.SignatureException;
+import org.am.com.tx.ScriptSig;
 import org.am.com.tx.TX;
 import org.am.com.tx.TXBuilder;
+import org.am.com.user.Key;
 import org.am.com.util.BtcOperation;
 import org.am.com.util.CoveringUTXO;
+import org.am.com.util.SignatureUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +48,7 @@ public class TxService {
         return restClient.sendGetRequest(fullUrl, Balance.class);
     }
 
-    public CreateTxResponse send(WalletSend request, String username) {
+    public CreateTxResponse send(WalletSend request, String username) throws SignatureException {
         if (!belongToUser(username, request.getSender())) {
             throw new NoSuchElementException("Address not belongs to user");
         }
@@ -57,11 +60,10 @@ public class TxService {
             List<UTXO> utxoList = balance.getUTXOs();
             CoveringUTXO coveringUTXO = BtcOperation
                     .getCoveringUTXO(request.getSender(), request.getRecipient(), utxoList, sendWithFee);
-            TX tx = buildSignedTX(coveringUTXO);
+            Key keys = getUserPrivateKey(username);
+            TX tx = buildSignedTX(coveringUTXO, keys);
             String fullUrl = String.format("%s/%s/%s/%s", nodeUrl, "api", "v2", "send");
             return restClient.sendPostRequest(fullUrl, tx, CreateTxResponse.class);
-            //return restClient.sendGetRequest(fullUrl, Balance.class);
-//            return new SendResponse(true, null);
         } else {
             return new
                     CreateTxResponse(null,
@@ -72,42 +74,27 @@ public class TxService {
         }
     }
 
-    private TX buildSignedTX(CoveringUTXO coveringUTXO) {
+    private Key getUserPrivateKey(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        Key key = new Key();
+        key.setPrivateKey(user.get().getPrivateKey());
+        key.setPublicKey(user.get().getPublicKey());
+        return key;
+    }
+
+    private TX buildSignedTX(CoveringUTXO coveringUTXO, Key keys) throws SignatureException {
         String txid = "wallet_sa_txid-" + count.incrementAndGet();
-        return TXBuilder.generateTX(coveringUTXO.sender(),
+        TX tx = TXBuilder.buildUnsignedTX(coveringUTXO.sender(),
                 coveringUTXO.recipient(),
                 coveringUTXO.utxos(),
                 coveringUTXO.amount(),
                 coveringUTXO.change(),
                 txid);
+        String txStr = tx.toString();
+        String txSignature = SignatureUtil.sign(txStr, keys.getPrivateKey());
+        ScriptSig scriptSig = new ScriptSig(txSignature, keys.getPublicKey());
+        return TXBuilder.buildSignedTX(tx, scriptSig);
     }
-
-    private boolean isEnoughBalanceToSend(Double amount, Integer btc, Integer sat, int feeSatoshi) {
-        return false;
-    }
-    /*
-            Balance balance = balanceOptional.get();
-            double sum = BtcOperation.sumInts(sendRequest.getBtc(), sendRequest.getSat(), FEE_SATOSHI);
-        double remaining = BtcOperation.roundDoubleToBTC(balance.getAmount() - sum);
-        if (balance.getAmount() >= sum) {
-            long ts = System.currentTimeMillis() / 1000;
-            Pair<List<UTXO>, Double> balancePair = getBalanceCoversSumForAddress(sendRequest.getSender(), sum);
-            MempoolTransaction mpTx = new MempoolTransaction(sendRequest.getSender(),
-                    sendRequest.getRecipient(), sum, ts, balancePair.getLeft(), balancePair.getRight());
-            addTransaction(mpTx);
-            String txid = "w_mp_tx_" + sendRequest.getSender() + "_" + ts;
-            return CreateTxResponse.builder().txid(txid).submitted(true).totalToSend(sum).remaining(remaining).build();
-        } else {
-            return CreateTxResponse.builder()
-                    .submitted(false).message("Not enough balance. Fee: 0." + FEE_SATOSHI + " btc").build();
-        }
-     */
-
-/*
-    private List<UTXO> obtainUTXO(String sender) {
-        return null;
-    }
-*/
 
     private boolean belongToUser(String username, String address) {
         Optional<User> user = userRepository.findByUsername(username);

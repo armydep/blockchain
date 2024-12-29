@@ -96,7 +96,7 @@ public class Miner {
             List<UTXO> utxos = mpt.getTxCoversSum();
             String txid = "miner_set_txid_" + count.get();
             TX tx = TXBuilder
-                    .generateTX(mpt.getSender(), mpt.getRecipient(), utxos, mpt.getAmount(), mpt.getChange(), txid);
+                    .buildUnsignedTX(mpt.getSender(), mpt.getRecipient(), utxos, mpt.getAmount(), mpt.getChange(), txid);
             txs.add(tx);
         }
         return txs;

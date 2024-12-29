@@ -7,12 +7,12 @@ import java.util.List;
 
 public class TXBuilder {
 
-    public static TX generateTX(String sender,
-                                String recipient,
-                                List<UTXO> utxos,
-                                Double amount,
-                                Double change,
-                                String txid) {
+    public static TX buildUnsignedTX(String sender,
+                                     String recipient,
+                                     List<UTXO> utxos,
+                                     Double amount,
+                                     Double change,
+                                     String txid) {
         List<TxInEntry> txInEntries = createTxInFromUTXOs(utxos);
         List<TxOutEntry> txOutEntries = new ArrayList<>();
         TxOutEntry txOutEntry = new TxOutEntry(amount, recipient, 0);
@@ -28,10 +28,30 @@ public class TXBuilder {
         List<TxInEntry> txInEntries = new ArrayList<>();
         for (int i = 0; i < txCoversSum.size(); i++) {
             UTXO utxo = txCoversSum.get(i);
-            TxInEntry txInEntry = new TxInEntry(utxo.getTx(), utxo.getVout(), null);
+            TxInEntry txInEntry = new TxInEntry(utxo.getTx(), utxo.getVout(), null, null);
             txInEntries.add(txInEntry);
         }
         return txInEntries;
     }
 
+    private static List<TxInEntry> createSignedTxIns(List<TxInEntry> otxInEntries, ScriptSig scriptSig) {
+        List<TxInEntry> txInEntries = new ArrayList<>();
+        for (int i = 0; i < otxInEntries.size(); i++) {
+            TxInEntry oentry = otxInEntries.get(i);
+            TxInEntry txInEntry;
+            if (oentry.isCoinbase()) {
+                txInEntry = new TxInEntry(oentry.getTxid(), oentry.getVout(), null, null);
+            } else {
+                txInEntry = new TxInEntry(oentry.getTxid(), oentry.getVout(), null, scriptSig);
+            }
+            txInEntries.add(txInEntry);
+        }
+        return txInEntries;
+    }
+
+    public static TX buildSignedTX(TX tx, ScriptSig scriptSig) {
+        List<TxInEntry> txInEntries = createSignedTxIns(tx.getVin(), scriptSig);
+        List<TxOutEntry> txOutEntries = new ArrayList<>(tx.getVout());
+        return new TX(tx.getTxid(), txInEntries, txOutEntries);
+    }
 }

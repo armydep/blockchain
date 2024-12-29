@@ -23,7 +23,7 @@ public class TX {
     }
 
     public static TX generateCoinBaseTX(String txid, String minerAddress, Double reward) {
-        TxInEntry txInEntry = new TxInEntry("", 0, "true");
+        TxInEntry txInEntry = new TxInEntry("", 0, "true", null);
         TxOutEntry txOutEntry = new TxOutEntry(reward, minerAddress, 0);
         return new TX(txid, List.of(txInEntry), List.of(txOutEntry));
     }

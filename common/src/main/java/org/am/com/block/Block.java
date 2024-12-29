@@ -61,7 +61,7 @@ public class Block {
         List<TxInEntry> vin = firstTx.getVin();
         List<TxOutEntry> vout = firstTx.getVout();
         if (vin != null && vin.size() == 1 && vout != null && vout.size() == 1) {
-            if (vin.getFirst().getCoinbase() != null && !vin.getFirst().getCoinbase().isEmpty()) {
+            if (vin.getFirst().isCoinbase()) {
                 TxOutEntry txout = firstTx.getVout().getFirst();
                 return new CoinBaseEntry(txout.getValue(), txout.getAddress(), txout.getN(), firstTx.getTxid());
             }
