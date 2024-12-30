@@ -1,5 +1,6 @@
 package am.com.blockchain.node.service;
 
+import am.com.blockchain.common.balance.UTXO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import am.com.blockchain.common.api.CreateTxResponse;
@@ -37,6 +38,9 @@ public class BlockChainServiceV2 {
         return mempool.subList(0, Math.min(batchSize, mempool.size()));
     }
 
+    public List<UTXO> getUTXO() {
+        return blockChainRepository.getUTXO();
+    }
 
     public void submitBlock(Block block) {
         BlockValidator.validate(block);
@@ -50,5 +54,16 @@ public class BlockChainServiceV2 {
 
     public Block getLatestBlock() {
         return blockChainRepository.getLastBlock();
+    }
+
+    public void clearTX(String txid) {
+        TX tx = null;
+        for (TX t : mempool) {
+            if (t.getTxid().equals(txid)) {
+                tx = t;
+                break;
+            }
+        }
+        mempool.remove(tx);
     }
 }

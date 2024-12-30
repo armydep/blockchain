@@ -18,6 +18,7 @@ import am.com.blockchain.common.util.SignatureUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -55,11 +56,17 @@ public class TxService {
         //1. amount + fee > balance ?
         Balance balance = getBalance(request.getSender(), username);
         Double sendWithFee = BtcOperation.sumInts(request.getBtc(), request.getSat(), FEE_SATOSHI);
+        Double sendOrig = BtcOperation.sumInts(request.getBtc(), request.getSat(), 0);
         if (sendWithFee <= balance.getAmount()) {
             //2.
             List<UTXO> utxoList = balance.getUTXOs();
-            CoveringUTXO coveringUTXO = BtcOperation
-                    .getCoveringUTXO(request.getSender(), request.getRecipient(), utxoList, sendWithFee);
+            CoveringUTXO coveringUTXO = BtcOperation.getCoveringUTXO(
+                    request.getSender(),
+                    request.getRecipient(),
+                    utxoList,
+                    sendOrig,
+                    sendWithFee,
+                    FEE_SATOSHI);
             Key keys = getUserPrivateKey(username);
             TX tx = buildSignedTX(coveringUTXO, keys);
             String fullUrl = String.format("%s/%s/%s/%s", nodeUrl, "api", "v2", "send");
@@ -83,7 +90,7 @@ public class TxService {
     }
 
     private TX buildSignedTX(CoveringUTXO coveringUTXO, Key keys) throws SignatureException {
-        String txid = "wallet_sa_txid-" + count.incrementAndGet();
+        String txid = "wallet_sa_txid-" + count.incrementAndGet() + "_" + new Date();
         TX tx = TXBuilder.buildUnsignedTX(coveringUTXO.sender(),
                 coveringUTXO.recipient(),
                 coveringUTXO.utxos(),

@@ -35,7 +35,7 @@ public class BtcOperation {
         /*if (satoshi.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("Satoshi value cannot be negative.");
         }*/
-        return satoshi.divide(SATOSHI_PER_BTC, 10, RoundingMode.UP).doubleValue();
+        return satoshi.divide(SATOSHI_PER_BTC, 8, RoundingMode.DOWN).doubleValue();
     }
 
     public static Double roundDoubleToBTC(Double btc) {
@@ -46,18 +46,20 @@ public class BtcOperation {
     public static CoveringUTXO getCoveringUTXO(String sender,
                                                String recipient,
                                                List<UTXO> utxoList,
-                                               Double sendWithFee) {
+                                               Double amount,
+                                               Double amountWithFee,
+                                               int feeSatoshi) {
         List<UTXO> result = new ArrayList<>();
         double currentSum = 0;
         for (UTXO utxo : utxoList) {
             currentSum = BtcOperation.sumDoubles(utxo.getValue(), currentSum);
             result.add(utxo);
-            if (currentSum >= sendWithFee) {
+            if (currentSum >= amountWithFee) {
                 break;
             }
         }
-        double change = roundDoubleToBTC(currentSum - sendWithFee);
-        return new CoveringUTXO(sender, recipient, result, sendWithFee, change);
+        double change = roundDoubleToBTC(currentSum - amountWithFee);
+        return new CoveringUTXO(sender, recipient, result, amount, feeSatoshi, change);
     }
 
 }

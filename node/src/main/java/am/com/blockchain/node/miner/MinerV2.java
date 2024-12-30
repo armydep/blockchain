@@ -1,5 +1,10 @@
 package am.com.blockchain.node.miner;
 
+import am.com.blockchain.common.balance.UTXO;
+import am.com.blockchain.common.exceptions.MissingFeeException;
+import am.com.blockchain.common.tx.TxInEntry;
+import am.com.blockchain.common.tx.TxOutEntry;
+import am.com.blockchain.common.util.BtcOperation;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -48,20 +53,62 @@ public class MinerV2 {
         log.info("Mining started. count: {}", currentCount);
         List<TX> mempoolTXs = blockChainService.getMempoolBatch(BATCH_SIZE);
         if (!mempoolTXs.isEmpty()) {
-            Block block = assemblyBlock(mempoolTXs);
-            blockChainService.submitBlock(block);
+            try {
+                Block block = assemblyBlock(mempoolTXs);
+                blockChainService.submitBlock(block);
+            } catch (MissingFeeException e) {
+                log.warn("Invalid TX. Missing fee - " + e.getMessage());
+                blockChainService.clearTX(e.getTxid());
+            }
         } else {
             log.info("No valid mempool transactions");
         }
         log.info("Mining finished., count: {}", currentCount);
     }
 
-    private Block assemblyBlock(List<TX> txso) {
+    private Block assemblyBlock(List<TX> txso) throws MissingFeeException {
         String cbtxid = "miner_v2_set_cb_txid_" + count.get();
-        TX coinbase = TX.generateCoinBaseTX(cbtxid, key.getAddress(), COINBASE);
+        double fee = calculateFees(txso);
+        double reward = BtcOperation.sumDoubles(COINBASE, fee);
+        TX coinbase = TX.generateCoinBaseTX(cbtxid, key.getAddress(), reward);
         txso.addFirst(coinbase);
         Header header = mineAndCreateHeader(new ArrayList<>(txso));
         return new Block(header, txso);
+    }
+
+    private double calculateFees(List<TX> txso) throws MissingFeeException {
+        double fee = 0;
+        for (TX tx : txso) {
+            fee = fee + calculateFee(tx);
+        }
+        return fee;
+    }
+
+    private double calculateFee(TX tx) throws MissingFeeException {
+        double in = 0;
+        double out = 0;
+        for (TxInEntry ine : tx.getVin()) {
+            UTXO utxo = findUtxoByTxid(ine.getTxid(), ine.getVout());
+            in = in + utxo.getValue();
+        }
+        for (TxOutEntry oute : tx.getVout()) {
+            out = out + oute.getValue();
+        }
+        double fee = in - out;
+        if (fee <= 0) {
+            throw new MissingFeeException(tx.getTxid(), fee);
+        }
+        return fee;
+    }
+
+    private UTXO findUtxoByTxid(String txid, Integer vout) {
+        List<UTXO> utxos = blockChainService.getUTXO();
+        for (UTXO u : utxos) {
+            if (u.getTx().equals(txid) && u.getVout().equals(vout)) {
+                return u;
+            }
+        }
+        return null;
     }
 
     public record MinerData(String previousHash, String merkleRoot, long timestamp, int index) {
