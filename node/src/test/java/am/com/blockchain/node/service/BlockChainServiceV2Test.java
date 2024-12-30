@@ -21,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -69,10 +70,9 @@ class BlockChainServiceV2Test {
         assertEquals(expected, utxos);
     }
 
-    @SneakyThrows
     @ParameterizedTest
     @MethodSource("provideBlockUtxoFileNames")
-    public void testGetUTXO(String blocksFile, String utxosFile) {
+    public void testGetUTXO(String blocksFile, String utxosFile) throws IOException {
         List<Block> blocks = TestUtils.loadBlocks(blocksFile);
         when(repository.getBlocks()).thenReturn(blocks);
         List<UTXO> expected = TestUtils.loadUTXOs(utxosFile);
@@ -80,10 +80,9 @@ class BlockChainServiceV2Test {
         assertEquals(expected, utxos);
     }
 
-    @SneakyThrows
     @ParameterizedTest
     @MethodSource("provideUtxoBalancesFileNames")
-    void getBalances(String utxosFile, String balancesFile) {
+    void getBalances(String utxosFile, String balancesFile) throws IOException {
         BlockChainServiceV2 serviceSpy = Mockito.spy(service);
         List<UTXO> utxos = TestUtils.loadUTXOs(utxosFile);
         doReturn(utxos).when(serviceSpy).getUTXO();
