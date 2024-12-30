@@ -1,16 +1,14 @@
 package am.com.blockchain.node.controller;
 
-import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import am.com.blockchain.common.api.CreateTxResponse;
 import am.com.blockchain.common.balance.Balance;
+import am.com.blockchain.common.exceptions.SignatureException;
+import am.com.blockchain.common.tx.TX;
+import am.com.blockchain.common.util.crypto.BitcoinAddressValidator;
 import am.com.blockchain.node.model.wallet.api.SendRequest;
-import am.com.blockchain.node.service.BlockChainService;
 import am.com.blockchain.node.service.BlockChainServiceV2;
 import am.com.blockchain.node.service.UsersService;
-import am.com.blockchain.common.exceptions.SignatureException;
-import am.com.blockchain.common.util.crypto.BitcoinAddressValidator;
-import am.com.blockchain.common.tx.TX;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -24,27 +22,24 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class WalletController {
-    private final BlockChainService blockChainService;
     private final BlockChainServiceV2 blockChainServiceV2;
     private final UsersService usersService;
 
-    public WalletController(BlockChainService blockChainService,
-                            BlockChainServiceV2 blockChainServiceV2,
+    public WalletController(BlockChainServiceV2 blockChainServiceV2,
                             UsersService usersService) {
-        this.blockChainService = blockChainService;
         this.blockChainServiceV2 = blockChainServiceV2;
         this.usersService = usersService;
     }
 
     @GetMapping("/balance/{address}")
     public ResponseEntity<?> getBalance(@PathVariable String address) {
-        return blockChainService
+        return blockChainServiceV2
                 .findBalanceByAddress(address).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/balance")
     public ResponseEntity<List<Balance>> getAllBalances() {
-        return ResponseEntity.ok(blockChainService.getBalances());
+        return ResponseEntity.ok(blockChainServiceV2.getBalances());
     }
 
     @PostMapping("/v2/send")
@@ -58,20 +53,6 @@ public class WalletController {
             }
         } catch (SignatureException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
-        }
-    }
-
-    @PostMapping("/send")
-    public ResponseEntity<CreateTxResponse> send(@Valid @RequestBody SendRequest sendRequest) {
-        if (!isValid(sendRequest)) {
-            String msg = "One of addresses is not valid";
-            return ResponseEntity.badRequest().body(CreateTxResponse.builder().submitted(false).message(msg).build());
-        }
-        CreateTxResponse response = blockChainService.submitTransaction(sendRequest);
-        if (response.getSubmitted()) {
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.badRequest().body(response);
         }
     }
 
@@ -91,3 +72,19 @@ public class WalletController {
         return true;
     }
 }
+
+/*
+    @PostMapping("/send")
+    public ResponseEntity<CreateTxResponse> send(@Valid @RequestBody SendRequest sendRequest) {
+        if (!isValid(sendRequest)) {
+            String msg = "One of addresses is not valid";
+            return ResponseEntity.badRequest().body(CreateTxResponse.builder().submitted(false).message(msg).build());
+        }
+        CreateTxResponse response = blockChainService.submitTransaction(sendRequest);
+        if (response.getSubmitted()) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+*/

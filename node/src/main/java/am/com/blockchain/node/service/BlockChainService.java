@@ -25,6 +25,7 @@ public class BlockChainService {
     private final List<MempoolTransaction> mempool = Collections.synchronizedList(new ArrayList<>());
     public static final int FEE_SATOSHI = 5_000_000;
 
+/*
     public CreateTxResponse submitTransaction(SendRequest sendRequest) {
         Optional<Balance> balanceOptional = findBalanceByAddress(sendRequest.getSender());
         if (balanceOptional.isEmpty()) {
@@ -49,7 +50,9 @@ public class BlockChainService {
                     .submitted(false).message("Not enough balance. Fee: 0." + FEE_SATOSHI + " btc").build();
         }
     }
+*/
 
+/*
     public CoveringUTXO getBalanceCoversSumForAddress(String sender,
                                                       String recipient,
                                                       double amount,
@@ -63,30 +66,7 @@ public class BlockChainService {
         return BtcOperation.getCoveringUTXO(sender,
                 recipient, optionalBalance.get().getUTXOs(), amount, sum, fee);
     }
-
-    public List<Balance> getBalances() {
-        Map<String, Balance> balancesMap = new HashMap<>();
-        List<Balance> list = new ArrayList<>(List.of());
-        List<UTXO> utxos = blockChainRepository.getUTXO();
-        for (UTXO utxo : utxos) {
-            String address = utxo.getAddress();
-            Balance balance;
-            if (balancesMap.containsKey(address)) {
-                balance = balancesMap.get(address);
-                balance.addUTXO(utxo);
-            } else {
-                balance = new Balance(utxo);
-                balancesMap.put(address, balance);
-            }
-        }
-        list.addAll(balancesMap.values());
-        return list;
-    }
-
-    public Optional<Balance> findBalanceByAddress(@NotEmpty String address) {
-        List<Balance> balances = getBalances();
-        return balances.stream().filter(balance -> balance.getAddress().equals(address)).findFirst();
-    }
+*/
 
     public List<MempoolTransaction> getMempool() {
         List<MempoolTransaction> copy = new ArrayList<>(mempool.size());
