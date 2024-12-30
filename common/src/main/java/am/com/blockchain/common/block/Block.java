@@ -55,6 +55,26 @@ public class Block {
         this.tx = Collections.unmodifiableList(copiedList);
     }
 
+    /*
+        coinbase = true
+        1. tx.size = 1 and tx.out.size = 0
+            then utxo =  empty
+        2. tx.size = 1 and tx.out.size = 1
+            then utxo =  tx.out
+        2. tx.size = 1 and tx.out.size = 2
+            then utxo =  tx.out[]
+
+        coinbase = false
+            then utxo = empty
+     */
+    /*
+        is coinbase TX[tx1, tx2, ...]:
+                tx = TX[0]
+                tx.in.size = 1 &&
+                tx.out.size = 1 &&
+                tx.in[0].coinbase = true
+        then create UTXO utxo = tx.out[0]
+     */
     @JsonIgnore
     public CoinBaseEntry getCoinBaseEntry() {
         if (tx == null) {

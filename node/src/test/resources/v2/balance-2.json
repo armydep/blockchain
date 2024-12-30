@@ -1,0 +1,68 @@
+[
+  {
+    "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
+    "utxos": [
+      {
+        "tx": "wallet_sa_txid-3_Mon Dec 30 22:57:02 IST 2024",
+        "value": 35.55,
+        "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
+        "vout": 1
+      }
+    ],
+    "amount": 35.54999999
+  },
+  {
+    "address": "1CQJ8AiLCqKWX3ESF32ouSfnaMh8RVp6bN",
+    "utxos": [
+      {
+        "tx": "genesis-tx-002",
+        "value": 5,
+        "address": "1CQJ8AiLCqKWX3ESF32ouSfnaMh8RVp6bN",
+        "vout": 0
+      },
+      {
+        "tx": "wallet_sa_txid-1_Mon Dec 30 22:55:47 IST 2024",
+        "value": 3,
+        "address": "1CQJ8AiLCqKWX3ESF32ouSfnaMh8RVp6bN",
+        "vout": 0
+      },
+      {
+        "tx": "wallet_sa_txid-2_Mon Dec 30 22:56:37 IST 2024",
+        "value": 2,
+        "address": "1CQJ8AiLCqKWX3ESF32ouSfnaMh8RVp6bN",
+        "vout": 0
+      },
+      {
+        "tx": "wallet_sa_txid-3_Mon Dec 30 22:57:02 IST 2024",
+        "value": 4,
+        "address": "1CQJ8AiLCqKWX3ESF32ouSfnaMh8RVp6bN",
+        "vout": 0
+      }
+    ],
+    "amount": 14
+  },
+  {
+    "address": "1MSt353yTmKFzZbjetUvTFDhQ7kJZKzPLo",
+    "utxos": [
+      {
+        "tx": "miner_v2_set_cb_txid_30",
+        "value": 3.14999999,
+        "address": "1MSt353yTmKFzZbjetUvTFDhQ7kJZKzPLo",
+        "vout": 0
+      },
+      {
+        "tx": "miner_v2_set_cb_txid_32",
+        "value": 3.14999999,
+        "address": "1MSt353yTmKFzZbjetUvTFDhQ7kJZKzPLo",
+        "vout": 0
+      },
+      {
+        "tx": "miner_v2_set_cb_txid_34",
+        "value": 3.15,
+        "address": "1MSt353yTmKFzZbjetUvTFDhQ7kJZKzPLo",
+        "vout": 0
+      }
+    ],
+    "amount": 9.44999997
+  }
+]

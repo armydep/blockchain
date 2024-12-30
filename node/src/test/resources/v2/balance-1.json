@@ -1,0 +1,26 @@
+[
+  {
+    "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
+    "utxos": [
+      {
+        "tx": "genesis-tx-002",
+        "value": 45.0,
+        "address": "15ZbsZw8zhSBToqBkAvdQzBjWeAg43htBf",
+        "vout": 1
+      }
+    ],
+    "amount": 45.0
+  },
+  {
+    "address": "1CQJ8AiLCqKWX3ESF32ouSfnaMh8RVp6bN",
+    "utxos": [
+      {
+        "tx": "genesis-tx-002",
+        "value": 5.0,
+        "address": "1CQJ8AiLCqKWX3ESF32ouSfnaMh8RVp6bN",
+        "vout": 0
+      }
+    ],
+    "amount": 5.0
+  }
+]
