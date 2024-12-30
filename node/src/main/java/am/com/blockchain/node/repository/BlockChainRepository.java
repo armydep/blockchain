@@ -61,9 +61,7 @@ public class BlockChainRepository {
             CoinBaseEntry coinBaseEntry = block.getCoinBaseEntry();
             if (coinBaseEntry != null) {
                 UTXO utxo = generateCoinBaseUTXO(coinBaseEntry);
-                if (utxo != null) {
-                    utxoData.add(utxo);
-                }
+                utxoData.add(utxo);
             }
             int i = coinBaseEntry == null ? 0 : 1;
             for (; i < block.getTx().size(); i++) {
