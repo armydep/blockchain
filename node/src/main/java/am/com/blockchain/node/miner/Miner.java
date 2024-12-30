@@ -53,7 +53,7 @@ public class Miner {
         return data;
     }
 
-    @Scheduled(fixedDelay = 20000, initialDelay = 10000)
+    @Scheduled(fixedDelay = 20000000, initialDelay = 10000000)
     private void invokeMiner() {
         int currentCount = count.incrementAndGet();
         log.info("Mining started. count: {}", currentCount);

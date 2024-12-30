@@ -8,6 +8,7 @@ import am.com.blockchain.common.tx.TX;
 import am.com.blockchain.common.tx.TxInEntry;
 import am.com.blockchain.common.tx.TxOutEntry;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,7 +39,8 @@ public class Block {
         this.size = size;
         this.timeStamp = timeStamp;
         this.index = index;
-        this.tx = Collections.unmodifiableList(tx);
+        List<TX> copiedList = new ArrayList<>(tx);
+        this.tx = Collections.unmodifiableList(copiedList);
     }
 
     public Block(Header header, List<TX> txs) {
@@ -49,12 +51,16 @@ public class Block {
         this.size = header.getSize();
         this.timeStamp = header.getTimestamp();
         this.index = header.getIndex();
-        this.tx = Collections.unmodifiableList(txs);
+        List<TX> copiedList = new ArrayList<>(txs);
+        this.tx = Collections.unmodifiableList(copiedList);
     }
 
     @JsonIgnore
     public CoinBaseEntry getCoinBaseEntry() {
-        if (tx == null || tx.isEmpty()) {
+        if (tx == null) {
+            return null;
+        }
+        if (tx.isEmpty()) {
             return null;
         }
         TX firstTx = tx.getFirst();
