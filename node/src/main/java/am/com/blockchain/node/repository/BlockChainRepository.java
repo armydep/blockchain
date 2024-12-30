@@ -55,54 +55,6 @@ public class BlockChainRepository {
         }
     }
 
-    public List<UTXO> getUTXO() {
-        List<UTXO> utxoData = new ArrayList<>();
-        for (Block block : blocks) {
-            CoinBaseEntry coinBaseEntry = block.getCoinBaseEntry();
-            if (coinBaseEntry != null) {
-                UTXO utxo = generateCoinBaseUTXO(coinBaseEntry);
-                utxoData.add(utxo);
-            }
-            int i = coinBaseEntry == null ? 0 : 1;
-            for (; i < block.getTx().size(); i++) {
-                TX tx = block.getTx().get(i);
-                List<TxInEntry> txInEntries = tx.getVin();
-                for (TxInEntry txInEntry : txInEntries) {
-                    discardUTXOByTxIn(txInEntry, utxoData);
-                }
-                List<TxOutEntry> txOutEntries = tx.getVout();
-                for (TxOutEntry txOutEntry : txOutEntries) {
-                    generateAndInsertUTXOByTxOut(txOutEntry, utxoData, tx.getTxid());
-                }
-            }
-        }
-        return utxoData;
-    }
-
-    private void discardUTXOByTxIn(@NotNull TxInEntry txInEntry, List<UTXO> utxoData) {
-        boolean removed = false;
-        for (UTXO utxo : utxoData) {
-            if (utxo.getTx().equals(txInEntry.getTxid()) && txInEntry.getVout().equals(utxo.getVout())) {
-                utxoData.remove(utxo);
-                removed = true;
-                break;
-            }
-        }
-        if (!removed) {
-            log.warn("Not found UTXO for discard: " + txInEntry.getTxid());
-        }
-    }
-
-    private void generateAndInsertUTXOByTxOut(TxOutEntry txOutEntry, List<UTXO> utxoData, String txid) {
-        UTXO utxo = new UTXO(txid, txOutEntry.getValue(), txOutEntry.getAddress(), txOutEntry.getN());
-        utxoData.add(utxo);
-    }
-
-    private UTXO generateCoinBaseUTXO(CoinBaseEntry coinBaseEntry) {
-        return new UTXO(coinBaseEntry.getTxid(),
-                coinBaseEntry.getValue(), coinBaseEntry.getAddress(), coinBaseEntry.getN());
-    }
-
     private List<Block> loadBlocks() throws IOException {
         try (var inputStream = new ClassPathResource(genesisFileName).getInputStream()) {
             List<Block> data = objectMapper.readValue(inputStream,

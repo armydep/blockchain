@@ -1,20 +1,15 @@
 package am.com.blockchain.node.service;
 
-import am.com.blockchain.common.api.CreateTxResponse;
-import am.com.blockchain.common.balance.Balance;
-import am.com.blockchain.common.balance.UTXO;
 import am.com.blockchain.common.block.Block;
-import am.com.blockchain.common.util.BtcOperation;
-import am.com.blockchain.common.util.CoveringUTXO;
 import am.com.blockchain.node.model.MempoolTransaction;
-import am.com.blockchain.node.model.wallet.api.SendRequest;
 import am.com.blockchain.node.repository.BlockChainRepository;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -68,14 +63,6 @@ public class BlockChainService {
     }
 */
 
-    public List<MempoolTransaction> getMempool() {
-        List<MempoolTransaction> copy = new ArrayList<>(mempool.size());
-        for (MempoolTransaction item : mempool) {
-            copy.add(item.clone());
-        }
-        return copy;
-    }
-
     public void addTransaction(MempoolTransaction transactionRequest) {
         mempool.add(transactionRequest);
     }
@@ -109,7 +96,7 @@ public class BlockChainService {
         return blockChainRepository.getBlocks();
     }
 
-    public List<UTXO> getUTXO() {
-        return blockChainRepository.getUTXO();
-    }
+//    public List<UTXO> getUTXO() {
+//        return blockChainRepository.getUTXO();
+//    }
 }

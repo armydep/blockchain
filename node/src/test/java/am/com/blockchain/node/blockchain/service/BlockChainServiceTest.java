@@ -160,7 +160,7 @@ class BlockChainServiceTest {
     @MethodSource("provideBlocks")
     public void testGetEmptyUTXO(List<Block> blocks, List<UTXO> expectedUTXOs) {
         when(repository.getBlocks()).thenReturn(blocks);
-        List<UTXO> utxos = repository.getUTXO();
+        //List<UTXO> utxos = repository.getUTXO();
         //assertEquals(expectedUTXOs, utxos);
     }
 
@@ -170,7 +170,7 @@ class BlockChainServiceTest {
         List<Block> blocks = loadBlocks(blocksFile);
         List<UTXO> expectedUTXOs = loadUTXOs(utxoFile);
         when(repository.getBlocks()).thenReturn(blocks);
-        List<UTXO> utxos = repository.getUTXO();
+        //List<UTXO> utxos = repository.getUTXO();
         //assertEquals(expectedUTXOs, utxos);
     }
 

@@ -1,10 +1,10 @@
 package am.com.blockchain.node.controller;
 
-import lombok.AllArgsConstructor;
-import am.com.blockchain.node.model.MempoolTransaction;
-import am.com.blockchain.common.block.Block;
 import am.com.blockchain.common.balance.UTXO;
-import am.com.blockchain.node.service.BlockChainService;
+import am.com.blockchain.common.block.Block;
+import am.com.blockchain.common.tx.TX;
+import am.com.blockchain.node.service.BlockChainServiceV2;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class NodeController {
-    private final BlockChainService blockChainService;
+    private final BlockChainServiceV2 blockChainService;
 
     @GetMapping("/blocks")
     public ResponseEntity<List<Block>> getBlocks() {
@@ -24,7 +24,7 @@ public class NodeController {
     }
 
     @GetMapping("/mempool")
-    public ResponseEntity<List<MempoolTransaction>> getMempool() {
+    public ResponseEntity<List<TX>> getMempool() {
         return ResponseEntity.ok(blockChainService.getMempool());
     }
 
