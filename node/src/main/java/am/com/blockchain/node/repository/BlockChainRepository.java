@@ -56,7 +56,6 @@ public class BlockChainRepository {
     }
 
     public List<UTXO> getUTXO() {
-        //List<Block> blocks = getBlocks();
         List<UTXO> utxoData = new ArrayList<>();
         for (Block block : blocks) {
             CoinBaseEntry coinBaseEntry = block.getCoinBaseEntry();
