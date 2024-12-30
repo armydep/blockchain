@@ -1,4 +1,4 @@
-package am.com.blockchain.node.blockchain.miner;
+package am.com.blockchain.node.miner;
 
 import am.com.blockchain.node.util.MerkleRootUtil;
 import am.com.blockchain.common.util.crypto.CryptoUtil;

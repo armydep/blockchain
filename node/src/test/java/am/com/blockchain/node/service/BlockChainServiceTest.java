@@ -1,9 +1,7 @@
-package am.com.blockchain.node.blockchain.service;
+package am.com.blockchain.node.service;
 
-import am.com.blockchain.node.service.BlockChainService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import am.com.blockchain.common.api.CreateTxResponse;
 import am.com.blockchain.common.block.Block;
 import am.com.blockchain.common.balance.UTXO;
 import am.com.blockchain.common.balance.Balance;
@@ -28,7 +26,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static am.com.blockchain.node.service.BlockChainService.FEE_SATOSHI;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class BlockChainServiceTest {

@@ -1,6 +1,5 @@
-package am.com.blockchain.node.blockchain.repository;
+package am.com.blockchain.node.repository;
 
-import am.com.blockchain.node.repository.BlockChainRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import am.com.blockchain.common.block.Block;

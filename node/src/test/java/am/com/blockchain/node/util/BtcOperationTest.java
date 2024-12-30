@@ -1,4 +1,4 @@
-package am.com.blockchain.node.blockchain.util;
+package am.com.blockchain.node.util;
 
 import am.com.blockchain.common.util.BtcOperation;
 import org.junit.jupiter.api.Test;
