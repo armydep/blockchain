@@ -1,26 +1,26 @@
 package am.com.blockchain.wallet.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
+import am.com.blockchain.common.user.Key;
+import am.com.blockchain.common.util.crypto.CryptoUtil;
 import am.com.blockchain.wallet.config.jwt.JwtUtils;
 import am.com.blockchain.wallet.model.User;
 import am.com.blockchain.wallet.model.login.JwtResponse;
 import am.com.blockchain.wallet.model.login.LoginRequest;
 import am.com.blockchain.wallet.repository.UserRepository;
 import am.com.blockchain.wallet.service.user.UserDetailsImpl;
-
-import am.com.blockchain.common.util.crypto.CryptoUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import am.com.blockchain.common.user.Key;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @Validated
@@ -81,28 +81,28 @@ public class LoginController {
 
     }
 
-    @RequestMapping("/user-dashboard")
-    @PreAuthorize("isAuthenticated()")
-    public String dashboard() {
-        return "My Dashboard";
-    }
+    //@RequestMapping("/user-dashboard")
+    //@PreAuthorize("isAuthenticated()")
+    //public String dashboard() {
+//        return "My Dashboard";
+//    }
 
 
-    @GetMapping("/login")
-    public ResponseEntity<?> login() {
-        return ResponseEntity.ok("Okk tx");
-    }
-
-    @GetMapping("/register")
-    public ResponseEntity<?> register() {
-        return ResponseEntity.ok("Okk tx");
-    }
-
-
-    @GetMapping("/test")
-    public ResponseEntity<?> testAuth() {
-        return ResponseEntity.ok("authed");
-    }
+//    @GetMapping("/login")
+//    public ResponseEntity<?> login() {
+//        return ResponseEntity.ok("Okk tx");
+//    }
+//
+//    @GetMapping("/register")
+//    public ResponseEntity<?> register() {
+//        return ResponseEntity.ok("Okk tx");
+//    }
+//
+//
+//    @GetMapping("/test")
+//    public ResponseEntity<?> testAuth() {
+//        return ResponseEntity.ok("authed");
+//    }
 
 
 }

@@ -27,8 +27,8 @@ public class WalletController {
 
     @GetMapping("/balance/{address}")
     public ResponseEntity<Balance> getBalance(@PathVariable String address) {
-        UserDetailsImpl usr = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Balance balance = txService.getBalance(address, usr.getUsername());
+        //UserDetailsImpl usr = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Balance balance = txService.getBalance(address/*, usr.getUsername()*/);
         return ResponseEntity.ok(balance);
     }
 

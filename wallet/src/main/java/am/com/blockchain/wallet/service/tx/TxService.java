@@ -41,10 +41,10 @@ public class TxService {
         this.nodeUrl = nodeUrl;
     }
 
-    public Balance getBalance(String address, String username) {
-        if (!belongToUser(username, address)) {
+    public Balance getBalance(String address/*, String username*/) {
+        /*if (!belongToUser(username, address)) {
             throw new NoSuchElementException("Address does not belongs to user");
-        }
+        }*/
         String fullUrl = String.format("%s/%s/%s/%s", nodeUrl, "api", "balance", address);
         return restClient.sendGetRequest(fullUrl, Balance.class);
     }
@@ -54,7 +54,7 @@ public class TxService {
             throw new NoSuchElementException("Address not belongs to user");
         }
         //1. amount + fee > balance ?
-        Balance balance = getBalance(request.getSender(), username);
+        Balance balance = getBalance(request.getSender()/*, username*/);
         Double sendWithFee = BtcOperation.sumInts(request.getBtc(), request.getSat(), FEE_SATOSHI);
         Double sendOrig = BtcOperation.sumInts(request.getBtc(), request.getSat(), 0);
         if (sendWithFee <= balance.getAmount()) {

@@ -32,6 +32,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NodeException.class)
     public ResponseEntity<String> handleNodeException(NodeException ex) {
         log.error("Node exception", ex);
-        return new ResponseEntity<>("Node connection failure - " + ex.getMessage(), HttpStatus.FAILED_DEPENDENCY);
+        return new ResponseEntity<>("Node endpoint - " + ex.getMessage(), HttpStatus.FAILED_DEPENDENCY);
     }
 }
