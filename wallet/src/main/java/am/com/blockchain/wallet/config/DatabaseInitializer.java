@@ -39,6 +39,19 @@ public class DatabaseInitializer {
                     "MIGNAgEAMBAGByqGSM49AgEGBSuBBAAKBHYwdAIBAQQgA4qRLgQ2eormSIW8QEo+Y02JPV0MM" +
                             "+EQXORndMXN6DOgBwYFK4EEAAqhRANCAARfni7AqYY4ylqxWSQxgghNr9MrMdXJkoOyNi/pQxC5BtEHXjWMpRA4Xu4FSj/nTm13ifn6hlnGGiDtG24K3Wp7"));
 
+            //password4
+            userRepository.save(new User("user4",
+                    "$2a$12$oFjWQ6eqBHroTMCrnRGd9.OAj6I9xrou0qQC7rRqf9v77WXE7MxtK",
+                    "17Spjz7rs8b66sgAiBMQof2A44mxenJAEo",
+                    "MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEMO8Ry6Ix6nI+jtDo99NYBEhRR/pW2NJyb6wHptQJAZBGljvqnxSLMDFl1vNZjaMG0NVr+ZA+lgOjCh82GEXwEQ==",
+                    "MIGNAgEAMBAGByqGSM49AgEGBSuBBAAKBHYwdAIBAQQgIoL/7ButsoZiMWhvSGFpeqJT+qzkMnn/svgzZ1qe4w6gBwYFK4EEAAqhRANCAAQw7xHLojHqcj6O0Oj301gESFFH+lbY0nJvrAem1AkBkEaWO+qfFIswMWXW81mNowbQ1Wv5kD6WA6MKHzYYRfAR"));
+            //password5
+            userRepository.save(new User("user5",
+                    "$2a$12$cLENuYWp2RLuXYripLLXB.2ceLXGzjjblAtDAp7lvJ4fakikeOPEO",
+                    "16LSyhKaF9sNMaVFLXCrweMFDWFk3Sw1vm",
+                    "MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEkMIO7H1vSAL6h95mJjpqaGq2ym8UYP0vStC9SWK/ICbs6rNgM9yJrfPvwODIVLPTIiJqa8DCJ7Z2QfVP+HIdyA==",
+                    "MIGNAgEAMBAGByqGSM49AgEGBSuBBAAKBHYwdAIBAQQg6r3/LM/J1pBms6bsslisyOzGzUSqK3evhCh8cvGswNigBwYFK4EEAAqhRANCAASQwg7sfW9IAvqH3mYmOmpoarbKbxRg/S9K0L1JYr8gJuzqs2Az3Imt8+/A4MhUs9MiImprwMIntnZB9U/4ch3I"));
+
             log.info("Initialized database with sample users.");
         };
     }
