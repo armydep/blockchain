@@ -29,7 +29,7 @@ public class TxService {
     private final UserRepository userRepository;
     private final RestClient restClient;
     private final String nodeUrl;
-    public static final int FEE_SATOSHI = 50_000_000;//15_000_000;
+    public static final int FEE_SATOSHI = 100_000_000;//15_000_000;
     private final AtomicInteger count = new AtomicInteger(0);
 
 

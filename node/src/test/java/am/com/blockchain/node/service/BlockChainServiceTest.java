@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static am.com.blockchain.node.service.BlockChainService.FEE_SATOSHI;
+//import static am.com.blockchain.node.service.BlockChainService.FEE_SATOSHI;
 import static org.mockito.Mockito.*;
 
 class BlockChainServiceTest {
@@ -117,10 +117,10 @@ class BlockChainServiceTest {
         BlockChainService serviceSpy = Mockito.spy(service);
         String address = "addr";
         int spend = 1;
-        double totalToSend = BtcOperation.sumInts(spend, FEE_SATOSHI, 0);
-        UTXO utxo = new UTXO("tx", totalToSend, address, 1);
-        Balance balance = new Balance(address, List.of(utxo));
-        Optional<Balance> balanceOptional = Optional.of(balance);
+      //  double totalToSend = BtcOperation.sumInts(spend, FEE_SATOSHI, 0);
+   //     UTXO utxo = new UTXO("tx", totalToSend, address, 1);
+     //   Balance balance = new Balance(address, List.of(utxo));
+       // Optional<Balance> balanceOptional = Optional.of(balance);
 //        doReturn(balanceOptional).when(serviceSpy).findBalanceByAddress(anyString());
 //        SendRequest sendRequest = new SendRequest();
 //        sendRequest.setSender(address);
@@ -138,7 +138,7 @@ class BlockChainServiceTest {
         BlockChainService serviceSpy = Mockito.spy(service);
         String address = "addr";
         int spend = 3;
-        double totalOnBalance = BtcOperation.sumInts(spend + 1, FEE_SATOSHI, 0);
+   //     double totalOnBalance = BtcOperation.sumInts(spend + 1, FEE_SATOSHI, 0);
 //        UTXO utxo = new UTXO("tx", totalOnBalance, address, 1);
 //        Balance balance = new Balance(address, List.of(utxo));
 //        Optional<Balance> balanceOptional = Optional.of(balance);
