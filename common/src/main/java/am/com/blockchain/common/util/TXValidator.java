@@ -1,5 +1,6 @@
 package am.com.blockchain.common.util;
 
+import am.com.blockchain.common.util.crypto.CryptoUtil;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import am.com.blockchain.common.exceptions.SignatureException;
@@ -19,12 +20,28 @@ public class TXValidator {
      */
 
     //1
-    public static void validate(/*@NotNull*/ TX tx) throws SignatureException {
+    public static void validate(TX tx) throws SignatureException {
+        validateTXScriptSig(tx);
+        validateTxId(tx);
+    }
+
+    private static void validateTxId(TX tx) throws SignatureException {
         try {
-            StrippedTX strippedTX = TXBuilder.stripTX(tx);
+            TX strippedTX = TXBuilder.stripTXfromTxId(tx);
+            if (!CryptoUtil.verifySha256(strippedTX.toString(), tx.getTxid())) {
+                throw new SignatureException("Didn't pass txid validation");
+            }
+        } catch (Exception e) {
+            throw new SignatureException(e);
+        }
+    }
+
+    private static void validateTXScriptSig(TX tx) throws SignatureException {
+        try {
+            StrippedTX strippedTX = TXBuilder.stripTXfromScriptSigAndTxId(tx);
             if (!SignatureUtil.verifyDigitalSignature(strippedTX.tx().toString(),
                     strippedTX.scriptSig().signature(), strippedTX.scriptSig().publicKey())) {
-                throw new SignatureException("Didn't pass TX validation");
+                throw new SignatureException("Didn't pass TX ScriptSig validation");
             }
         } catch (Exception e) {
             throw new SignatureException(e);

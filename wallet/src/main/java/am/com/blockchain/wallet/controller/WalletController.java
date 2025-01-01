@@ -4,6 +4,8 @@ package am.com.blockchain.wallet.controller;
 import am.com.blockchain.common.api.CreateTxResponse;
 import am.com.blockchain.common.balance.Balance;
 import am.com.blockchain.wallet.controller.api.WalletSend;
+import am.com.blockchain.wallet.model.User;
+import am.com.blockchain.wallet.repository.UserRepository;
 import am.com.blockchain.wallet.service.tx.TxService;
 import am.com.blockchain.wallet.service.user.UserDetailsImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -13,21 +15,24 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Slf4j
 @Validated
 @RestController
 @RequestMapping("/api")
 public class WalletController {
+    private final UserRepository userRepository;
     private final TxService txService;
 
-    public WalletController(TxService txService) {
+    public WalletController(UserRepository userRepository, TxService txService) {
+        this.userRepository = userRepository;
         this.txService = txService;
     }
 
     @GetMapping("/balance/{address}")
     public ResponseEntity<Balance> getBalance(@PathVariable String address) {
-        //UserDetailsImpl usr = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Balance balance = txService.getBalance(address/*, usr.getUsername()*/);
         return ResponseEntity.ok(balance);
     }
@@ -37,10 +42,18 @@ public class WalletController {
         UserDetailsImpl usr = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("Usr: " + usr);
         try {
+            if (!belongToUser(usr.getUsername(), send.getSender())) {
+                throw new NoSuchElementException("Address not owned by user");
+            }
             CreateTxResponse response = txService.send(send, usr.getUsername());
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    private boolean belongToUser(String username, String address) {
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.isPresent() && address.equals(user.get().getAddress());
     }
 }

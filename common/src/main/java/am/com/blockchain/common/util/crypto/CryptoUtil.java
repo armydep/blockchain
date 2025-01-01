@@ -130,4 +130,9 @@ public class CryptoUtil {
     public static String generateDoubleSHA256(String hashData) {
         return generateSHA256(generateSHA256(hashData));
     }
+
+    public static boolean verifySha256(String txStr, String txid) {
+        String hash = generateSHA256(txStr);
+        return hash.equals(txid);
+    }
 }
