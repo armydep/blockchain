@@ -30,6 +30,20 @@ public class TX {
     }
 
     public TX copy() {
-        return new TX(txid, new ArrayList<>(vin), new ArrayList<>(vout));
+        List<TxInEntry> tin = null;
+        List<TxOutEntry> tout = null;
+        if (vin != null) {
+            tin = new ArrayList<>();
+            for (TxInEntry i : vin) {
+                tin.add(i.copy());
+            }
+        }
+        if (vout != null) {
+            tout = new ArrayList<>();
+            for (TxOutEntry o : vout) {
+                tout.add(o.copy());
+            }
+        }
+        return new TX(txid, tin, tout);
     }
 }

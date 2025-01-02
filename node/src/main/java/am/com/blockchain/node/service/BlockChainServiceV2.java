@@ -112,7 +112,7 @@ public class BlockChainServiceV2 {
 
     public CreateTxResponse submitToMempoolV2(TX tx) throws SignatureException {
         TXValidator.validate(tx);
-        mempool.add(tx);
+        mempool.add(tx.copy());
         return CreateTxResponse.builder().txid("txid").submitted(true).build();
     }
 
@@ -120,7 +120,12 @@ public class BlockChainServiceV2 {
         if (batchSize <= 0 || mempool.isEmpty()) {
             return List.of();
         }
-        return mempool.subList(0, Math.min(batchSize, mempool.size()));
+        List<TX> tmp = mempool.subList(0, Math.min(batchSize, mempool.size()));
+        List<TX> batch = new ArrayList<>();
+        for (TX tx : tmp) {
+            batch.add(tx.copy());
+        }
+        return batch;
     }
 
     public void submitBlock(Block block) {

@@ -1,18 +1,12 @@
 package am.com.blockchain.node.repository;
 
-import am.com.blockchain.common.balance.UTXO;
-import am.com.blockchain.common.block.CoinBaseEntry;
-import am.com.blockchain.common.tx.TX;
-import am.com.blockchain.common.tx.TxInEntry;
-import am.com.blockchain.common.tx.TxOutEntry;
+import am.com.blockchain.common.block.Block;
+import am.com.blockchain.node.model.block.InsertionOnlyList;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import am.com.blockchain.common.block.Block;
-import am.com.blockchain.node.model.block.InsertionOnlyList;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Repository;
@@ -21,7 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j

@@ -18,4 +18,8 @@ public class TxOutEntry {
         this.address = address;
         this.n = n;
     }
+
+    public TxOutEntry copy() {
+        return new TxOutEntry(value, address, n);
+    }
 }

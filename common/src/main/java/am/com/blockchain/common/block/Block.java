@@ -51,7 +51,10 @@ public class Block {
         this.size = header.getSize();
         this.timeStamp = header.getTimestamp();
         this.index = header.getIndex();
-        List<TX> copiedList = new ArrayList<>(txs);
+        List<TX> copiedList = new ArrayList<>();
+        for (TX t : txs) {
+            copiedList.add(t.copy());
+        }
         this.tx = Collections.unmodifiableList(copiedList);
     }
 
@@ -77,10 +80,7 @@ public class Block {
      */
     @JsonIgnore
     public CoinBaseEntry getCoinBaseEntry() {
-        if (tx == null) {
-            return null;
-        }
-        if (tx.isEmpty()) {
+        if (tx == null || tx.isEmpty()) {
             return null;
         }
         TX firstTx = tx.getFirst();
