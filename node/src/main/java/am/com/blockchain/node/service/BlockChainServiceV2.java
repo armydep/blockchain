@@ -35,7 +35,12 @@ public class BlockChainServiceV2 {
         if (batchSize <= 0 || mempool.isEmpty()) {
             return List.of();
         }
-        return mempool.subList(0, Math.min(batchSize, mempool.size()));
+        List<TX> tmp = mempool.subList(0, Math.min(batchSize, mempool.size()));
+        List<TX> batch = new ArrayList<>();
+        for (TX tx : tmp) {
+            batch.add(tx.copy());
+        }
+        return batch;
     }
 
     public List<UTXO> getUTXO() {

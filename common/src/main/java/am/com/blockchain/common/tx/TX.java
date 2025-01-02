@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,5 +27,23 @@ public class TX {
         TxInEntry txInEntry = new TxInEntry("", 0, "true", null);
         TxOutEntry txOutEntry = new TxOutEntry(reward, minerAddress, 0);
         return new TX(txid, List.of(txInEntry), List.of(txOutEntry));
+    }
+
+    public TX copy() {
+        List<TxInEntry> tin = null;//new ArrayList<>();
+        List<TxOutEntry> tout = null;//new ArrayList<>();
+        if (vin != null) {
+            tin = new ArrayList<>();
+            for (TxInEntry i : vin) {
+                tin.add(i.copy());
+            }
+        }
+        if (vout != null) {
+            tout = new ArrayList<>();
+            for (TxOutEntry o : vout) {
+                tout.add(o.copy());
+            }
+        }
+        return new TX(txid, tin, tout);
     }
 }

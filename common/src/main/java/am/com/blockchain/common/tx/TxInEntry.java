@@ -27,4 +27,10 @@ public class TxInEntry {
     public boolean isCoinbase() {
         return coinbase != null && !coinbase.isEmpty();
     }
+
+    public TxInEntry copy() {
+        ScriptSig ssClone = scriptSig == null ? null :
+                new ScriptSig(scriptSig.signature(), scriptSig.publicKey());
+        return new TxInEntry(txid, vout, coinbase, ssClone);
+    }
 }
