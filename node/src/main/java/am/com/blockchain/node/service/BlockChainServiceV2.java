@@ -12,6 +12,7 @@ import am.com.blockchain.common.tx.TxOutEntry;
 import am.com.blockchain.common.util.BlockValidator;
 import am.com.blockchain.common.util.TXValidator;
 import am.com.blockchain.node.repository.BlockChainRepository;
+import am.com.blockchain.node.repository.MempoolRepository;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ import java.util.*;
 public class BlockChainServiceV2 {
 
     private final BlockChainRepository blockChainRepository;
-    private final List<TX> mempool = Collections.synchronizedList(new ArrayList<>());
+    private final MempoolRepository mempoolRepository;
     public static final int FEE_SATOSHI = 5_000_000;
 
     public List<UTXO> getUTXO() {
@@ -55,11 +56,7 @@ public class BlockChainServiceV2 {
     }
 
     public List<TX> getMempool() {
-        List<TX> copy = new ArrayList<>(mempool.size());
-        for (TX item : mempool) {
-            copy.add(item.copy());
-        }
-        return copy;
+        return mempoolRepository.getMempool();
     }
 
     private void discardUTXOByTxIn(@NotNull TxInEntry txInEntry, List<UTXO> utxoData) {
@@ -93,7 +90,6 @@ public class BlockChainServiceV2 {
 
     public List<Balance> getBalances() {
         Map<String, Balance> balancesMap = new HashMap<>();
-        List<Balance> list = new ArrayList<>(List.of());
         List<UTXO> utxos = getUTXO();
         for (UTXO utxo : utxos) {
             String address = utxo.getAddress();
@@ -106,36 +102,25 @@ public class BlockChainServiceV2 {
                 balancesMap.put(address, balance);
             }
         }
-        list.addAll(balancesMap.values());
-        return list;
+        return new ArrayList<>(balancesMap.values());
     }
 
     public CreateTxResponse submitToMempoolV2(TX tx) throws SignatureException {
         TXValidator.validate(tx);
-        mempool.add(tx.copy());
+        mempoolRepository.addTX(tx.copy());
         return CreateTxResponse.builder().txid("txid").submitted(true).build();
     }
 
     public List<TX> getMempoolBatch(int batchSize) {
-        if (batchSize <= 0 || mempool.isEmpty()) {
-            return List.of();
-        }
-        List<TX> tmp = mempool.subList(0, Math.min(batchSize, mempool.size()));
-        List<TX> batch = new ArrayList<>();
-        for (TX tx : tmp) {
-            batch.add(tx.copy());
-        }
-        return batch;
+        return mempoolRepository.getMempoolBatch(batchSize);
     }
 
     public void submitBlock(Block block) {
-        BlockValidator.validate(block);
         blockChainRepository.addBlock(block);
-        clearMempoolTX(block.getTx());
     }
 
-    private void clearMempoolTX(List<TX> validMempoolTXs) {
-        mempool.removeAll(validMempoolTXs);
+    public void clearMempoolTX(List<TX> validMempoolTXs) {
+        mempoolRepository.clearMempoolTX(validMempoolTXs);
     }
 
     public Block getLatestBlock() {
@@ -143,14 +128,7 @@ public class BlockChainServiceV2 {
     }
 
     public void clearTX(String txid) {
-        TX tx = null;
-        for (TX t : mempool) {
-            if (t.getTxid().equals(txid)) {
-                tx = t;
-                break;
-            }
-        }
-        mempool.remove(tx);
+        mempoolRepository.clearTX(txid);
     }
 
     public List<Block> getBlocks() {

@@ -4,6 +4,7 @@ import am.com.blockchain.common.balance.UTXO;
 import am.com.blockchain.common.exceptions.MissingFeeException;
 import am.com.blockchain.common.tx.TxInEntry;
 import am.com.blockchain.common.tx.TxOutEntry;
+import am.com.blockchain.common.util.BlockValidator;
 import am.com.blockchain.common.util.BtcOperation;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,8 +55,11 @@ public class MinerV2 {
         List<TX> mempoolTXs = blockChainService.getMempoolBatch(BATCH_SIZE);
         if (!mempoolTXs.isEmpty()) {
             try {
+                List<TX> orig = TX.copyList(mempoolTXs);
                 Block block = assemblyBlock(mempoolTXs);
+                BlockValidator.validate(block);
                 blockChainService.submitBlock(block);
+                blockChainService.clearMempoolTX(orig);
             } catch (MissingFeeException e) {
                 log.warn("Invalid TX. Missing fee - " + e.getMessage());
                 blockChainService.clearTX(e.getTxid());
@@ -72,7 +76,7 @@ public class MinerV2 {
         double reward = BtcOperation.sumDoubles(COINBASE, fee);
         TX coinbase = TX.generateCoinBaseTX(cbtxid, key.getAddress(), reward);
         txso.addFirst(coinbase);
-        Header header = mineAndCreateHeader(new ArrayList<>(txso));
+        Header header = mineAndCreateHeader(TX.copyList(txso));
         return new Block(header, txso);
     }
 

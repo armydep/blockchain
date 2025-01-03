@@ -49,7 +49,7 @@ public class Balance {
 
     public void addUTXO(UTXO utxo) {
         if (utxos == null) {
-            utxos = new ArrayList<>(List.of(utxo.clone()));
+            utxos = new ArrayList<>();
         }
         utxos.add(utxo);
         setAmount();

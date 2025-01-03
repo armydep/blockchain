@@ -72,19 +72,3 @@ public class WalletController {
         return true;
     }
 }
-
-/*
-    @PostMapping("/send")
-    public ResponseEntity<CreateTxResponse> send(@Valid @RequestBody SendRequest sendRequest) {
-        if (!isValid(sendRequest)) {
-            String msg = "One of addresses is not valid";
-            return ResponseEntity.badRequest().body(CreateTxResponse.builder().submitted(false).message(msg).build());
-        }
-        CreateTxResponse response = blockChainService.submitTransaction(sendRequest);
-        if (response.getSubmitted()) {
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.badRequest().body(response);
-        }
-    }
-*/

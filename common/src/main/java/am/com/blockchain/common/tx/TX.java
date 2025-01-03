@@ -29,6 +29,14 @@ public class TX {
         return new TX(txid, List.of(txInEntry), List.of(txOutEntry));
     }
 
+    public static List<TX> copyList(List<TX> txso) {
+        List<TX> copy = new ArrayList<>();
+        for (TX tx : txso) {
+            copy.add(tx.copy());
+        }
+        return copy;
+    }
+
     public TX copy() {
         List<TxInEntry> tin = null;
         List<TxOutEntry> tout = null;

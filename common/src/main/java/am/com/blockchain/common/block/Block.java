@@ -39,8 +39,7 @@ public class Block {
         this.size = size;
         this.timeStamp = timeStamp;
         this.index = index;
-        List<TX> copiedList = new ArrayList<>(tx);
-        this.tx = Collections.unmodifiableList(copiedList);
+        this.tx = Collections.unmodifiableList(TX.copyList(tx));
     }
 
     public Block(Header header, List<TX> txs) {
@@ -51,11 +50,7 @@ public class Block {
         this.size = header.getSize();
         this.timeStamp = header.getTimestamp();
         this.index = header.getIndex();
-        List<TX> copiedList = new ArrayList<>();
-        for (TX t : txs) {
-            copiedList.add(t.copy());
-        }
-        this.tx = Collections.unmodifiableList(copiedList);
+        this.tx = Collections.unmodifiableList(TX.copyList(txs));
     }
 
     /*

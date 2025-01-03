@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -22,7 +23,7 @@ import java.util.List;
 public class BlockChainRepository {
 
     @Getter
-    private final List<Block> blocks = new InsertionOnlyList<>();
+    private final List<Block> blocks = Collections.synchronizedList(new InsertionOnlyList<>());
     private final ObjectMapper objectMapper;
     private final String genesisFileName;
     private final String storageFileName;

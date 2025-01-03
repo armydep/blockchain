@@ -82,7 +82,7 @@ public class Miner {
         //1. Body - tx
         final List<TX> txs = buildTX(validMempoolTransactions);
         //2. Header
-        Header header = createHeader(new ArrayList<>(txs));
+        Header header = createHeader(TX.copyList(txs));
         return new Block(header, txs);
     }
 

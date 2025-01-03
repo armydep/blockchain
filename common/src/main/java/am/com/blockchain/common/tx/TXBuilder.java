@@ -51,8 +51,7 @@ public class TXBuilder {
 
     public static TX buildSignedTX(TX tx, ScriptSig scriptSig) {
         List<TxInEntry> txInEntries = createSignedTxIns(tx.getVin(), scriptSig);
-        List<TxOutEntry> txOutEntries = new ArrayList<>(tx.getVout());
-        return new TX(tx.getTxid(), txInEntries, txOutEntries);
+        return new TX(tx.getTxid(), txInEntries, TxOutEntry.copyList(tx.getVout()));
     }
 
     //remove sigScript and coinbase entry
@@ -70,21 +69,19 @@ public class TXBuilder {
                 scriptSig = oentry.getScriptSig();
             }
         }
-        return new StrippedTX(new TX(null, txInEntries, new ArrayList<>(tx.getVout())), scriptSig);
+        return new StrippedTX(new TX(null, txInEntries, TxOutEntry.copyList(tx.getVout())), scriptSig);
     }
 
     public static TX stripTXfromTxId(TX tx) {
         List<TxInEntry> txInEntries = new ArrayList<>();
-        ScriptSig scriptSig = null;
         for (int i = 0; i < tx.getVin().size(); i++) {
             TxInEntry oentry = tx.getVin().get(i);
             if (!oentry.isCoinbase()) {
                 TxInEntry txInEntry;
                 txInEntry = new TxInEntry(oentry.getTxid(), oentry.getVout(), null, oentry.getScriptSig());
                 txInEntries.add(txInEntry);
-                scriptSig = oentry.getScriptSig();
             }
         }
-        return new TX(null, txInEntries, new ArrayList<>(tx.getVout()));
+        return new TX(null, txInEntries, TxOutEntry.copyList(tx.getVout()));
     }
 }

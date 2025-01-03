@@ -66,10 +66,11 @@ class BlockChainRepositoryTest {
         repository.init();
         List<Block> blocks = repository.getBlocks();
         assertEquals(2, blocks.size());
-        assertEquals(InsertionOnlyList.class, blocks.getClass());
+        assertThrows(UnsupportedOperationException.class, () -> {
+            blocks.remove(0);
+        });
         verify(objectMapper, times(1))
-                .readValue(any(InputStream.class),
-                        ArgumentMatchers.<TypeReference<List<Block>>>any());
+                .readValue(any(InputStream.class), ArgumentMatchers.<TypeReference<List<Block>>>any());
     }
 
     @ParameterizedTest
