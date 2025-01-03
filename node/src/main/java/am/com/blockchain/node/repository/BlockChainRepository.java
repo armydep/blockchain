@@ -49,6 +49,15 @@ public class BlockChainRepository {
         }
     }
 
+    public synchronized void addBlock(Block block) {
+        blocks.add(block);
+        saveBlocksToFile();
+    }
+
+    public synchronized Block getLastBlock() {
+        return blocks.isEmpty() ? null : blocks.getLast();
+    }
+
     private List<Block> loadBlocks() throws IOException {
         try (var inputStream = new ClassPathResource(genesisFileName).getInputStream()) {
             List<Block> data = objectMapper.readValue(inputStream,
@@ -62,11 +71,6 @@ public class BlockChainRepository {
         }
     }
 
-    public void addBlock(Block block) {
-        blocks.add(block);
-        saveBlocksToFile();
-    }
-
     private void saveBlocksToFile() {
         try {
             Files.createDirectories(Paths.get(storageFileName).getParent());
@@ -77,7 +81,4 @@ public class BlockChainRepository {
         }
     }
 
-    public Block getLastBlock() {
-        return blocks.isEmpty() ? null : blocks.getLast();
-    }
 }
