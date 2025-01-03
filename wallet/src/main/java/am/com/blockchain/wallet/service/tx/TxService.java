@@ -28,7 +28,7 @@ public class TxService {
     private final UserRepository userRepository;
     private final RestClient restClient;
     private final String nodeUrl;
-    public static final int FEE_SATOSHI = 100_000_000;//15_000_000;
+    public static final int FEE_SATOSHI = 100_000_000;
     private final AtomicInteger count = new AtomicInteger(0);
 
 
@@ -65,12 +65,9 @@ public class TxService {
             String fullUrl = String.format("%s/%s/%s/%s", nodeUrl, "api", "v2", "send");
             return restClient.sendPostRequest(fullUrl, resultTX, CreateTxResponse.class);
         } else {
-            return new
-                    CreateTxResponse(null,
+            return new CreateTxResponse(
                     "Not enough balance: " + balance.getAmount() + ". fee: " + FEE_SATOSHI,
-                    false,
-                    null,
-                    null);
+                    false, null, null);
         }
     }
 

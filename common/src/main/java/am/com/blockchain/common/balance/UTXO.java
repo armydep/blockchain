@@ -2,11 +2,10 @@ package am.com.blockchain.common.balance;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.Value;
 
 @Value
 public class UTXO implements Cloneable {
-    //todo record
     String tx;
     Double value;
     String address;

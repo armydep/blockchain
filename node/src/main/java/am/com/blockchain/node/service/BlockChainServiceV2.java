@@ -9,7 +9,6 @@ import am.com.blockchain.common.exceptions.SignatureException;
 import am.com.blockchain.common.tx.TX;
 import am.com.blockchain.common.tx.TxInEntry;
 import am.com.blockchain.common.tx.TxOutEntry;
-import am.com.blockchain.common.util.BlockValidator;
 import am.com.blockchain.common.util.TXValidator;
 import am.com.blockchain.node.repository.BlockChainRepository;
 import am.com.blockchain.node.repository.MempoolRepository;
@@ -28,18 +27,17 @@ public class BlockChainServiceV2 {
 
     private final BlockChainRepository blockChainRepository;
     private final MempoolRepository mempoolRepository;
-    public static final int FEE_SATOSHI = 5_000_000;
 
     public List<UTXO> getUTXO() {
         List<Block> blocks = getBlocks();
         List<UTXO> utxoData = new ArrayList<>();
         for (Block block : blocks) {
-            CoinBaseEntry coinBaseEntry = block.getCoinBaseEntry();
-            if (coinBaseEntry != null) {
-                UTXO utxo = generateCoinBaseUTXO(coinBaseEntry);
+            CoinBaseEntry cbe = block.getCoinBaseEntry();
+            if (cbe != null) {
+                UTXO utxo = new UTXO(cbe.txid(), cbe.value(), cbe.address(), cbe.n());
                 utxoData.add(utxo);
             }
-            int i = coinBaseEntry == null ? 0 : 1;
+            int i = cbe == null ? 0 : 1;
             for (; i < block.getTx().size(); i++) {
                 TX tx = block.getTx().get(i);
                 List<TxInEntry> txInEntries = tx.getVin();
@@ -47,8 +45,9 @@ public class BlockChainServiceV2 {
                     discardUTXOByTxIn(txInEntry, utxoData);
                 }
                 List<TxOutEntry> txOutEntries = tx.getVout();
-                for (TxOutEntry txOutEntry : txOutEntries) {
-                    generateAndInsertUTXOByTxOut(txOutEntry, utxoData, tx.getTxid());
+                for (TxOutEntry txout : txOutEntries) {
+                    UTXO utxo = new UTXO(tx.getTxid(), txout.getValue(), txout.getAddress(), txout.getN());
+                    utxoData.add(utxo);
                 }
             }
         }
@@ -71,16 +70,6 @@ public class BlockChainServiceV2 {
         if (!removed) {
             log.warn("Not found UTXO for discard: " + txInEntry.getTxid());
         }
-    }
-
-    private void generateAndInsertUTXOByTxOut(TxOutEntry txOutEntry, List<UTXO> utxoData, String txid) {
-        UTXO utxo = new UTXO(txid, txOutEntry.getValue(), txOutEntry.getAddress(), txOutEntry.getN());
-        utxoData.add(utxo);
-    }
-
-    private UTXO generateCoinBaseUTXO(CoinBaseEntry coinBaseEntry) {
-        return new UTXO(coinBaseEntry.getTxid(),
-                coinBaseEntry.getValue(), coinBaseEntry.getAddress(), coinBaseEntry.getN());
     }
 
     public Optional<Balance> findBalanceByAddress(@NotEmpty String address) {
@@ -108,7 +97,7 @@ public class BlockChainServiceV2 {
     public CreateTxResponse submitToMempoolV2(TX tx) throws SignatureException {
         TXValidator.validate(tx);
         mempoolRepository.addTX(tx.copy());
-        return CreateTxResponse.builder().txid("txid").submitted(true).build();
+        return CreateTxResponse.builder().submitted(true).build();
     }
 
     public List<TX> getMempoolBatch(int batchSize) {
