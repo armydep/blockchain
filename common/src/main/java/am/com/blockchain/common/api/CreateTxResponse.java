@@ -10,6 +10,7 @@ import lombok.Data;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CreateTxResponse {
+    //todo remove txid. null always
     private String txid;
     private String message;
     private Boolean submitted;

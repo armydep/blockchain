@@ -1,9 +1,10 @@
-package am.com.blockchain.wallet.controller.api;
+package am.com.blockchain.wallet.api;
 
 import lombok.Data;
 
 @Data
 public class SendResponse {
+    //todo record
     String message;
     Boolean accepted;
 

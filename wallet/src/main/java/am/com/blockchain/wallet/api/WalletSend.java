@@ -1,4 +1,4 @@
-package am.com.blockchain.wallet.controller.api;
+package am.com.blockchain.wallet.api;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

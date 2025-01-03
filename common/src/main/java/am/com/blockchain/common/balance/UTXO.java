@@ -6,7 +6,7 @@ import lombok.*;
 
 @Value
 public class UTXO implements Cloneable {
-
+    //todo record
     String tx;
     Double value;
     String address;

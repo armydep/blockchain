@@ -31,7 +31,7 @@ public class Miner {
     private final AtomicInteger count = new AtomicInteger(0);
     private final int BATCH_SIZE = 2;
     private final double COINBASE = 3;
-    private final int DIFFICULTY = 6;
+    private final int DIFFICULTY = 7;
     private final Key key;
     private final ObjectMapper objectMapper;
     private final String minerFileName;

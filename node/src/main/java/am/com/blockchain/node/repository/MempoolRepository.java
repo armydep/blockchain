@@ -43,6 +43,8 @@ public class MempoolRepository {
         }
         if (tx != null) {
             mempool.remove(tx);
+        } else {
+            log.warn("TX not found for clear: " + txid);
         }
     }
 

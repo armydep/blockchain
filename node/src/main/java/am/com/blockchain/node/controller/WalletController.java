@@ -5,7 +5,7 @@ import am.com.blockchain.common.balance.Balance;
 import am.com.blockchain.common.exceptions.SignatureException;
 import am.com.blockchain.common.tx.TX;
 import am.com.blockchain.common.util.crypto.BitcoinAddressValidator;
-import am.com.blockchain.node.model.wallet.api.SendRequest;
+import am.com.blockchain.node.api.SendRequest;
 import am.com.blockchain.node.service.BlockChainServiceV2;
 import am.com.blockchain.node.service.UsersService;
 import lombok.extern.slf4j.Slf4j;

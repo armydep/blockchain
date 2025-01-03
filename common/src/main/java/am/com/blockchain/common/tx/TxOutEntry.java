@@ -9,6 +9,7 @@ import java.util.List;
 
 @Value
 public class TxOutEntry {
+    //todo record
     Double value;
     String address;
     Integer n;

@@ -3,7 +3,7 @@ package am.com.blockchain.wallet.controller;
 
 import am.com.blockchain.common.api.CreateTxResponse;
 import am.com.blockchain.common.balance.Balance;
-import am.com.blockchain.wallet.controller.api.WalletSend;
+import am.com.blockchain.wallet.api.WalletSend;
 import am.com.blockchain.wallet.model.User;
 import am.com.blockchain.wallet.repository.UserRepository;
 import am.com.blockchain.wallet.service.tx.TxService;

@@ -12,14 +12,13 @@ import am.com.blockchain.common.util.BtcOperation;
 import am.com.blockchain.common.util.CoveringUTXO;
 import am.com.blockchain.common.util.SignatureUtil;
 import am.com.blockchain.common.util.crypto.CryptoUtil;
-import am.com.blockchain.wallet.controller.api.WalletSend;
+import am.com.blockchain.wallet.api.WalletSend;
 import am.com.blockchain.wallet.model.User;
 import am.com.blockchain.wallet.repository.UserRepository;
 import am.com.blockchain.wallet.rest.RestClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;

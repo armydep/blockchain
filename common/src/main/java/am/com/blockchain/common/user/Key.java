@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class Key {
+    //todo record
     private Integer id;
     private String label;
     private String publicKey;

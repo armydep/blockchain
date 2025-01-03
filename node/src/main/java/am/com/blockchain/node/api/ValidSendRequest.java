@@ -1,4 +1,4 @@
-package am.com.blockchain.node.model.wallet.api.validator;
+package am.com.blockchain.node.api;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
