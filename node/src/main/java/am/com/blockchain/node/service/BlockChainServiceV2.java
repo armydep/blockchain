@@ -5,6 +5,7 @@ import am.com.blockchain.common.balance.Balance;
 import am.com.blockchain.common.balance.UTXO;
 import am.com.blockchain.common.block.Block;
 import am.com.blockchain.common.block.CoinBaseEntry;
+import am.com.blockchain.common.exceptions.BlockValidationException;
 import am.com.blockchain.common.exceptions.SignatureException;
 import am.com.blockchain.common.tx.TX;
 import am.com.blockchain.common.tx.TxInEntry;
@@ -34,8 +35,7 @@ public class BlockChainServiceV2 {
         for (Block block : blocks) {
             CoinBaseEntry cbe = block.getCoinBaseEntry();
             if (cbe != null) {
-                UTXO utxo = new UTXO(cbe.txid(), cbe.value(), cbe.address(), cbe.n());
-                utxoData.add(utxo);
+                utxoData.add(new UTXO(cbe.txid(), cbe.value(), cbe.address(), cbe.n()));
             }
             int i = cbe == null ? 0 : 1;
             for (; i < block.getTx().size(); i++) {
@@ -46,8 +46,7 @@ public class BlockChainServiceV2 {
                 }
                 List<TxOutEntry> txOutEntries = tx.getVout();
                 for (TxOutEntry txout : txOutEntries) {
-                    UTXO utxo = new UTXO(tx.getTxid(), txout.getValue(), txout.getAddress(), txout.getN());
-                    utxoData.add(utxo);
+                    utxoData.add(new UTXO(tx.getTxid(), txout.getValue(), txout.getAddress(), txout.getN()));
                 }
             }
         }
@@ -104,7 +103,7 @@ public class BlockChainServiceV2 {
         return mempoolRepository.getMempoolBatch(batchSize);
     }
 
-    public void submitBlock(Block block) {
+    public void submitBlock(Block block) throws BlockValidationException {
         blockChainRepository.addBlock(block);
     }
 
@@ -116,8 +115,8 @@ public class BlockChainServiceV2 {
         return blockChainRepository.getLastBlock();
     }
 
-    public void clearTX(String txid) {
-        mempoolRepository.clearTX(txid);
+    public void clearTX(TX tx) {
+        mempoolRepository.clearTX(tx);
     }
 
     public List<Block> getBlocks() {

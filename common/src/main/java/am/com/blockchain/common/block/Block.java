@@ -89,4 +89,8 @@ public class Block {
         }
         return null;
     }
+
+    public Block copy() {
+        return new Block(hash, previousHash, merkleRoot, nonce, size, timeStamp, index, tx);
+    }
 }

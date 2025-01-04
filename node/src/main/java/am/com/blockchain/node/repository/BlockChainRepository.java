@@ -1,6 +1,8 @@
 package am.com.blockchain.node.repository;
 
 import am.com.blockchain.common.block.Block;
+import am.com.blockchain.common.exceptions.BlockValidationException;
+import am.com.blockchain.common.util.BlockValidator;
 import am.com.blockchain.node.model.block.InsertionOnlyList;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,7 +25,6 @@ import java.util.List;
 @Repository
 public class BlockChainRepository {
 
-    @Getter
     private final List<Block> blocks = Collections.synchronizedList(new InsertionOnlyList<>());
     private final ObjectMapper objectMapper;
     private final String genesisFileName;
@@ -49,9 +51,17 @@ public class BlockChainRepository {
         }
     }
 
-    public synchronized void addBlock(Block block) {
+    public synchronized void addBlock(Block block) throws BlockValidationException {
+        log.info("Adding a block " + Thread.currentThread().threadId());
+        BlockValidator.validate(block, blocks.getLast());
         blocks.add(block);
         saveBlocksToFile();
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        log.info("Block added " + Thread.currentThread().threadId());
     }
 
     public synchronized Block getLastBlock() {
@@ -81,4 +91,11 @@ public class BlockChainRepository {
         }
     }
 
+    public synchronized List<Block> getBlocks() {
+        List<Block> tmp = new ArrayList<>();
+        for (Block b : blocks) {
+            tmp.add(b.copy());
+        }
+        return tmp;
+    }
 }

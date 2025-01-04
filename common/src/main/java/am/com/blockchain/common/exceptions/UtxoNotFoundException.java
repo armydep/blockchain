@@ -2,11 +2,11 @@ package am.com.blockchain.common.exceptions;
 
 import am.com.blockchain.common.tx.TX;
 
-public class MissingFeeException extends Exception {
+public class UtxoNotFoundException extends Exception {
     private final TX tx;
 
-    public MissingFeeException(TX tx, Double fee) {
-        super("Illegal fee: " + fee);
+    public UtxoNotFoundException(TX tx) {
+        super("Utxo tx: " + tx);
         this.tx = tx;
     }
 

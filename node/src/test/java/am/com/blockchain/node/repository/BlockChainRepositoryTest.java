@@ -66,9 +66,6 @@ class BlockChainRepositoryTest {
         repository.init();
         List<Block> blocks = repository.getBlocks();
         assertEquals(2, blocks.size());
-        assertThrows(UnsupportedOperationException.class, () -> {
-            blocks.remove(0);
-        });
         verify(objectMapper, times(1))
                 .readValue(any(InputStream.class), ArgumentMatchers.<TypeReference<List<Block>>>any());
     }
@@ -84,21 +81,6 @@ class BlockChainRepositoryTest {
                 ArgumentMatchers.<TypeReference<List<Block>>>any())).thenReturn(mockBlocks);
         repository.init();
         List<Block> blocks = repository.getBlocks();
-        assertThrows(UnsupportedOperationException.class, blocks::clear);
-        assertThrows(UnsupportedOperationException.class, blocks::removeFirst);
-        assertThrows(UnsupportedOperationException.class, blocks::removeLast);
-        assertThrows(UnsupportedOperationException.class, () -> {
-            blocks.removeAll(Collections.singleton(block));
-        });
-        assertThrows(UnsupportedOperationException.class, () -> {
-            blocks.remove(0);
-        });
-        assertThrows(UnsupportedOperationException.class, () -> {
-            blocks.remove(block);
-        });
-        assertThrows(UnsupportedOperationException.class, () -> {
-            blocks.retainAll(Collections.singleton(block));
-        });
         Block actual = blocks.getFirst();
         List<TX> txList = actual.getTx();
         assertThrows(UnsupportedOperationException.class, () -> {
