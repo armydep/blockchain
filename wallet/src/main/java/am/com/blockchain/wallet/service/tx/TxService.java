@@ -67,7 +67,7 @@ public class TxService {
         } else {
             return new CreateTxResponse(
                     "Not enough balance: " + balance.getAmount() + ". fee: " + FEE_SATOSHI,
-                    false, null, null);
+                    false, null, null, null);
         }
     }
 

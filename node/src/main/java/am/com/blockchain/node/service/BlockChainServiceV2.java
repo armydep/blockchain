@@ -96,7 +96,7 @@ public class BlockChainServiceV2 {
     public CreateTxResponse submitToMempoolV2(TX tx) throws SignatureException {
         TXValidator.validate(tx);
         mempoolRepository.addTX(tx.copy());
-        return CreateTxResponse.builder().submitted(true).build();
+        return CreateTxResponse.builder().submitted(true).txid(tx.getTxid()).build();
     }
 
     public List<TX> getMempoolBatch(int batchSize) {

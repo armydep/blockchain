@@ -124,6 +124,9 @@ public class MinerV2 {
                 return u;
             }
         }
+        // clearing tx from mempool
+        // because the utxo is already spent and included in a new block
+        // new tx arrived from wallet while miner was in the middle of cycle
         throw new UtxoNotFoundException(txid);
     }
 

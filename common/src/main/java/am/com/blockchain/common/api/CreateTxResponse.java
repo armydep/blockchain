@@ -14,15 +14,18 @@ public class CreateTxResponse {
     private Boolean submitted;
     private Double totalToSend;
     private Double remaining;
+    private String txid;
 
     @JsonCreator
     public CreateTxResponse(@JsonProperty("message") String message,
                             @JsonProperty("submitted") Boolean submitted,
                             @JsonProperty("totalToSend") Double totalToSend,
-                            @JsonProperty("remaining") Double remaining) {
+                            @JsonProperty("remaining") Double remaining,
+                            @JsonProperty("txid") String txid) {
         this.message = message;
         this.submitted = submitted;
         this.totalToSend = totalToSend;
         this.remaining = remaining;
+        this.txid = txid;
     }
 }
