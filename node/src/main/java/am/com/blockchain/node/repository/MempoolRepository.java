@@ -33,19 +33,19 @@ public class MempoolRepository {
         mempool.removeAll(validMempoolTXs);
     }
 
-    public synchronized void clearTX(TX clearTx) {
+    public synchronized void clearTX(String txid) {
         TX tx = null;
         for (TX t : mempool) {
-            if (t.equals(clearTx)) {
+            if (t.getTxid().equals(txid)) {
                 tx = t;
                 break;
             }
         }
         if (tx != null) {
             mempool.remove(tx);
-            log.info("TX cleared ok");
+            log.info("TX cleared ok: " + txid);
         } else {
-            log.warn("TX not found for clear: " + clearTx);
+            log.warn("TX not found for clear: " + txid);
         }
     }
 

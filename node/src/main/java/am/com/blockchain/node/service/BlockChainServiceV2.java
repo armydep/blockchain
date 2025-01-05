@@ -115,8 +115,8 @@ public class BlockChainServiceV2 {
         return blockChainRepository.getLastBlock();
     }
 
-    public void clearTX(TX tx) {
-        mempoolRepository.clearTX(tx);
+    public void clearTX(String txid) {
+        mempoolRepository.clearTX(txid);
     }
 
     public List<Block> getBlocks() {

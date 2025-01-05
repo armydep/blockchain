@@ -1,16 +1,14 @@
 package am.com.blockchain.common.exceptions;
 
-import am.com.blockchain.common.tx.TX;
-
 public class UtxoNotFoundException extends Exception {
-    private final TX tx;
+    private final String txid;
 
-    public UtxoNotFoundException(TX tx) {
-        super("Utxo tx: " + tx);
-        this.tx = tx;
+    public UtxoNotFoundException(String txid) {
+        super("Utxo tx: " + txid);
+        this.txid = txid;
     }
 
-    public TX getTX() {
-        return tx;
+    public String getTxId() {
+        return txid;
     }
 }

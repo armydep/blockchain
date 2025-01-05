@@ -1,16 +1,14 @@
 package am.com.blockchain.common.exceptions;
 
-import am.com.blockchain.common.tx.TX;
-
 public class MissingFeeException extends Exception {
-    private final TX tx;
+    private final String txid;
 
-    public MissingFeeException(TX tx, Double fee) {
-        super("Illegal fee: " + fee);
-        this.tx = tx;
+    public MissingFeeException(String txid, Double fee) {
+        super(String.format("Illegal fee: %s. txid: %s", fee, txid));
+        this.txid = txid;
     }
 
-    public TX getTX() {
-        return tx;
+    public String getTxId() {
+        return txid;
     }
 }

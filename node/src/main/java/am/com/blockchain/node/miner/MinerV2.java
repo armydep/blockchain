@@ -68,14 +68,13 @@ public class MinerV2 {
                 log.info("Mining finished., count: {}. {}", bCount, Thread.currentThread().threadId());
             } catch (MissingFeeException e) {
                 log.warn("Invalid TX. Missing fee - " + e.getMessage());
-                blockChainService.clearTX(e.getTX());
+                blockChainService.clearTX(e.getTxId());
             } catch (BlockValidationException e) {
                 log.warn("Couldn't validate assembled block - " + e.getMessage());
             } catch (UtxoNotFoundException e) {
                 log.warn("Utxo not found - " + e.getMessage());
-                blockChainService.clearTX(e.getTX());
-            }
-            catch (Exception e) {
+                blockChainService.clearTX(e.getTxId());
+            } catch (Exception e) {
                 log.warn("Mining cycle failed: {}", bCount, e);
             }
         } else {
@@ -105,7 +104,7 @@ public class MinerV2 {
         double in = 0;
         double out = 0;
         for (TxInEntry ine : tx.getVin()) {
-            UTXO utxo = findUtxoByTxid(tx, ine.getTxid(), ine.getVout());
+            UTXO utxo = findUtxoByTxid(tx.getTxid(), ine.getTxid(), ine.getVout());
             in = in + utxo.getValue();
         }
         for (TxOutEntry oute : tx.getVout()) {
@@ -113,19 +112,19 @@ public class MinerV2 {
         }
         double fee = in - out;
         if (fee <= 0) {
-            throw new MissingFeeException(tx, fee);
+            throw new MissingFeeException(tx.getTxid(), fee);
         }
         return fee;
     }
 
-    private UTXO findUtxoByTxid(TX tx, String txid, Integer vout) throws UtxoNotFoundException {
+    private UTXO findUtxoByTxid(String txid, String inTxId, Integer vout) throws UtxoNotFoundException {
         List<UTXO> utxos = blockChainService.getUTXO();
         for (UTXO u : utxos) {
-            if (u.getTx().equals(txid) && u.getVout().equals(vout)) {
+            if (u.getTx().equals(inTxId) && u.getVout().equals(vout)) {
                 return u;
             }
         }
-        throw new UtxoNotFoundException(tx);
+        throw new UtxoNotFoundException(txid);
     }
 
     public record MinerData(String previousHash, String merkleRoot, long timestamp, int index) {
