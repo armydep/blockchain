@@ -27,6 +27,7 @@
         <bouncy.castle.version>1.79</bouncy.castle.version>
         <h2database.version>2.3.232</h2database.version>
         <io.jsonwebtoken.version>0.12.6</io.jsonwebtoken.version>
+        <ch.qos.logback.version>1.5.16</ch.qos.logback.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -84,6 +85,16 @@
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt-jackson</artifactId>
                 <version>${io.jsonwebtoken.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${ch.qos.logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${ch.qos.logback.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
