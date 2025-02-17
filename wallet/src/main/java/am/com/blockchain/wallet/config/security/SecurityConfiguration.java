@@ -2,6 +2,7 @@ package am.com.blockchain.wallet.config.security;
 
 import am.com.blockchain.wallet.config.jwt.AuthEntryPointJwt;
 import am.com.blockchain.wallet.config.jwt.AuthTokenFilter;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,18 +28,17 @@ import java.util.List;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
+@AllArgsConstructor
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfiguration {
-
-    @Autowired
-    UserDetailsService userDetailsService;
-    @Autowired
-    private AuthEntryPointJwt unauthorizedHandler;
+    private final UserDetailsService userDetailsService;
+    private final AuthEntryPointJwt unauthorizedHandler;
 
     private static final String[] WHITE_LIST_URL = {
-            "/wallet/**",
+            "/wallet/api/user/whoami",
+            "/wallet/api/login/**",
             "/api/balance/**",
             "/swagger-ui/**",
             "/v3/api-docs/**", // Allow Swagger/OpenAPI endpoint
