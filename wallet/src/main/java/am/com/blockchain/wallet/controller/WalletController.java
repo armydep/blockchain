@@ -9,6 +9,7 @@ import am.com.blockchain.wallet.repository.UserRepository;
 import am.com.blockchain.wallet.service.tx.TxService;
 import am.com.blockchain.wallet.service.user.UserDetailsImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
@@ -31,15 +32,28 @@ public class WalletController {
         this.txService = txService;
     }
 
-    @GetMapping("/balance/{address}")
-    public ResponseEntity<Balance> getBalance(@PathVariable String address) {
+    @GetMapping("/balance")
+    public ResponseEntity<Balance> getBalance() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        String address = getUserAddress(username);
+        if (address == null) {
+            return new ResponseEntity<>(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+        }
+        Balance balance = txService.getBalance(address/*, usr.getUsername()*/);
+        return ResponseEntity.ok(balance);
+    }
+
+    //deprecate
+    @GetMapping("/balance/v1/{address}")
+    public ResponseEntity<Balance> getBalanceByAddress(@PathVariable String address) {
         Balance balance = txService.getBalance(address/*, usr.getUsername()*/);
         return ResponseEntity.ok(balance);
     }
 
     @PostMapping("/send")
     public ResponseEntity<?> send(@RequestBody WalletSend send) throws IOException {
-        UserDetailsImpl usr = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetailsImpl usr =
+                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("Usr: " + usr);
         try {
             if (!belongToUser(usr.getUsername(), send.getSender())) {
@@ -50,6 +64,11 @@ public class WalletController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    private String getUserAddress(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.map(User::getAddress).orElse(null);
     }
 
     private boolean belongToUser(String username, String address) {
