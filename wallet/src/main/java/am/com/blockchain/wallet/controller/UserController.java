@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("/wallet/home")
+@RequestMapping("/wallet/api/user")
 public class UserController {
 
     private UserRepository userRepository;

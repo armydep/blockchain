@@ -21,7 +21,7 @@ import java.util.Optional;
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/wallet/api/operation")
 public class WalletController {
     private final UserRepository userRepository;
     private final TxService txService;
