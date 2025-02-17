@@ -5,7 +5,6 @@ import am.com.blockchain.common.util.crypto.CryptoUtil;
 import am.com.blockchain.wallet.config.jwt.JwtUtils;
 import am.com.blockchain.wallet.model.User;
 import am.com.blockchain.wallet.model.login.JwtResponse;
-import am.com.blockchain.wallet.model.login.LoginRequest;
 import am.com.blockchain.wallet.repository.UserRepository;
 import am.com.blockchain.wallet.service.user.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,16 +16,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Validated
-@Controller
+@RestController
 public class LoginController {
 
     @Autowired
@@ -72,8 +67,6 @@ public class LoginController {
         user.setPrivateKey(key.getPrivateKey());
     }
 
-    //    @PostMapping("/signin")
-//    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestParam String username,
                                               @RequestParam String password) {
