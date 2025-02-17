@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 
 @Component
 public class RestClient {
@@ -24,7 +25,7 @@ public class RestClient {
             HttpResponse<String> response = httpClient.send(request,
                     HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == HttpStatus.NOT_FOUND.value()) {
-                Balance balance = new Balance(address, null);
+                Balance balance = new Balance(address, List.of());
                 return responseType.cast(balance);
             }
             if (response.statusCode() != HttpStatus.OK.value()) {
