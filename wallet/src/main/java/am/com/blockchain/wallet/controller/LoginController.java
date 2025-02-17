@@ -17,14 +17,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @Validated
-@RestController
+@Controller
 public class LoginController {
 
     @Autowired
@@ -38,6 +40,12 @@ public class LoginController {
 
     @Autowired
     UserRepository userRepository;
+
+    @GetMapping("/login")
+    public String showLoginPage() {
+        return "login";
+    }
+
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody User signUpRequest,
@@ -64,12 +72,13 @@ public class LoginController {
         user.setPrivateKey(key.getPrivateKey());
     }
 
+    //    @PostMapping("/signin")
+//    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-
+    public ResponseEntity<?> authenticateUser(@RequestParam String username,
+                                              @RequestParam String password) {
         Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
-                        loginRequest.getPassword()));
+                .authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
         SecurityContextHolder.getContext()
                 .setAuthentication(authentication);
@@ -78,31 +87,6 @@ public class LoginController {
         String jwt = jwtUtils.generateJwtToken(authentication);
 
         return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getUsername()));
-
     }
-
-    //@RequestMapping("/user-dashboard")
-    //@PreAuthorize("isAuthenticated()")
-    //public String dashboard() {
-//        return "My Dashboard";
-//    }
-
-
-//    @GetMapping("/login")
-//    public ResponseEntity<?> login() {
-//        return ResponseEntity.ok("Okk tx");
-//    }
-//
-//    @GetMapping("/register")
-//    public ResponseEntity<?> register() {
-//        return ResponseEntity.ok("Okk tx");
-//    }
-//
-//
-//    @GetMapping("/test")
-//    public ResponseEntity<?> testAuth() {
-//        return ResponseEntity.ok("authed");
-//    }
-
 
 }

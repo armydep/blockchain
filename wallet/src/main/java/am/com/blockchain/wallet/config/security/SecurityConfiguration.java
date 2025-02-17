@@ -39,7 +39,7 @@ public class SecurityConfiguration {
             "/v3/api-docs/**", // Allow Swagger/OpenAPI endpoint
             "/error",
             "/h2-ui/**",
-            "/signin", "/signup", "/user-dashboard"};
+            "/signin", "/signup", "/user-dashboard", "/login"};
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
