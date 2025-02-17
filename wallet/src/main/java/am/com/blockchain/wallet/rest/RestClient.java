@@ -1,7 +1,9 @@
 package am.com.blockchain.wallet.rest;
 
+import am.com.blockchain.common.balance.Balance;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import am.com.blockchain.wallet.controller.exceptions.NodeException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -16,11 +18,16 @@ public class RestClient {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
-    public <T> T sendGetRequest(String url, Class<T> responseType) {
+    public <T> T sendGetBalance(String address, String url, Class<T> responseType) {
         try {
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() != 200) {
+            HttpResponse<String> response = httpClient.send(request,
+                    HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == HttpStatus.NOT_FOUND.value()) {
+                Balance balance = new Balance(address, null);
+                return responseType.cast(balance);
+            }
+            if (response.statusCode() != HttpStatus.OK.value()) {
                 throw new NodeException("Node response status for GET: " + response.statusCode());
             }
             return objectMapper.readValue(response.body(), responseType);
@@ -37,7 +44,8 @@ public class RestClient {
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
                     .build();
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = httpClient.send(request,
+                    HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() != 200) {
                 throw new NodeException("Node response status for POST: " +
                         response.statusCode() + ". " + response.body());

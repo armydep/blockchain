@@ -32,7 +32,8 @@ public class TxService {
     private final AtomicInteger count = new AtomicInteger(0);
 
 
-    public TxService(UserRepository userRepository, RestClient restClient, @Value("${node.url}") String nodeUrl) {
+    public TxService(UserRepository userRepository, RestClient restClient,
+                     @Value("${node.url}") String nodeUrl) {
         this.userRepository = userRepository;
         this.restClient = restClient;
         this.nodeUrl = nodeUrl;
@@ -40,7 +41,7 @@ public class TxService {
 
     public Balance getBalance(String address/*, String username*/) {
         String fullUrl = String.format("%s/%s/%s/%s", nodeUrl, "api", "balance", address);
-        return restClient.sendGetRequest(fullUrl, Balance.class);
+        return restClient.sendGetBalance(address, fullUrl, Balance.class);
     }
 
     public CreateTxResponse send(WalletSend request, String username) throws SignatureException {
