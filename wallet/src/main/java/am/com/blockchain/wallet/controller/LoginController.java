@@ -21,7 +21,8 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Validated
-@RestController("/wallet/api/login")
+@RestController
+@RequestMapping("/wallet/api/login")
 public class LoginController {
 
     @Autowired
