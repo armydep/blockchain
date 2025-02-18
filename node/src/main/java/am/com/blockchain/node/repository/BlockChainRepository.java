@@ -14,7 +14,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -69,7 +71,8 @@ public class BlockChainRepository {
     }
 
     private List<Block> loadBlocks() throws IOException {
-        try (var inputStream = new ClassPathResource(genesisFileName).getInputStream()) {
+        try {
+            InputStream inputStream = new FileInputStream(genesisFileName);
             List<Block> data = objectMapper.readValue(inputStream,
                     new TypeReference<>() {
                     });
