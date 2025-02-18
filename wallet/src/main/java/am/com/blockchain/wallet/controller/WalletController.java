@@ -43,6 +43,14 @@ public class WalletController {
         return ResponseEntity.ok(balance);
     }
 
+    @GetMapping("/balance/all")
+    public ResponseEntity<Balance> getAllBalances() {
+        //return all wallets users addresses
+        // or
+        // all balances from node by calling node balance api
+        return ResponseEntity.noContent().build();
+    }
+
     //deprecate
     @GetMapping("/balance/v1/{address}")
     public ResponseEntity<Balance> getBalanceByAddress(@PathVariable String address) {
