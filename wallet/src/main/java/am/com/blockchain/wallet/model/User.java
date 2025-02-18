@@ -17,6 +17,7 @@ public class User {
     private String publicKey;
     private String privateKey;
     private String address;
+    private String plain;
 
     public User() {
     }
@@ -25,11 +26,13 @@ public class User {
                 String pass,
                 String address,
                 String publicKey,
-                String privateKey) {
+                String privateKey,
+                String plain) {
         this.username = user;
         this.password = pass;
         this.address = address;
         this.publicKey = publicKey;
         this.privateKey = privateKey;
+        this.plain = plain;
     }
 }

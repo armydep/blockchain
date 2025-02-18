@@ -38,6 +38,7 @@ public class SecurityConfiguration {
 
     private static final String[] WHITE_LIST_URL = {
             "/wallet/api/user/whoami",
+            "/wallet/api/user/user",
             "/wallet/api/login/**",
             "/api/balance/**",
             "/swagger-ui/**",

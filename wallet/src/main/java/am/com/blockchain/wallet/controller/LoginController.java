@@ -48,6 +48,7 @@ public class LoginController {
         User user = new User();
         user.setUsername(signUpRequest.getUsername());
         user.setPassword(encoder.encode(signUpRequest.getPassword()));
+        user.setPlain(signUpRequest.getPassword());
         generateAddress(user);
         userRepository.save(user);
 
